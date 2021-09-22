@@ -6,7 +6,7 @@ import { SendEmailDTO } from '../model/dto/SendEmail.dto';
 
 @Controller('email')
 export class EmailController {
-  constructor(@Inject('IEmailService') public emailService: IEmailService) { }
+  constructor(@Inject('IEmailService') public emailService: IEmailService) {}
 
   // @Post('/send')
   // async sendEmail(@Body() sendEmailDTO: SendEmailDTO): Promise<void> {

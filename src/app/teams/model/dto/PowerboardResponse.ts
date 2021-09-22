@@ -12,5 +12,5 @@ export interface PowerboardResponse {
   privileges: string[];
   dashboard: DashBoardResponse;
   teamLinks: TeamLinkResponse[] | undefined;
-  multimedia: MultimediaResponse[] | undefined;
+  multimedia: MultimediaResponse;
 }

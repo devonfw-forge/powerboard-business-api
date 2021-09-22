@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class CreateTables1630317690086 implements MigrationInterface {
-  name = 'CreateTables1630317690086';
+export class CreateTables1631625281680 implements MigrationInterface {
+  name = 'CreateTables1631625281680';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -59,7 +59,10 @@ export class CreateTables1630317690086 implements MigrationInterface {
       `CREATE TABLE "team_spirit" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "version" integer NOT NULL DEFAULT '1', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "team_spirit_rating" integer NOT NULL, "sprint_id" uuid, CONSTRAINT "REL_c258101a9e329fc1cf1ca46019" UNIQUE ("sprint_id"), CONSTRAINT "PK_f4f2b4281be72d5392d9efb8466" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
-      `CREATE TABLE "multimedia" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "version" integer NOT NULL DEFAULT '1', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "file_name" character varying(3000) NOT NULL, "multimedia_team_id" uuid, CONSTRAINT "PK_8de2f47ce83e221b35e05e52d0d" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "multimedia" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "version" integer NOT NULL DEFAULT '1', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "album_name" character varying(1000), "file_name" character varying(1000), "multimedia_team_id" uuid, CONSTRAINT "PK_8de2f47ce83e221b35e05e52d0d" PRIMARY KEY ("id"))`,
+    );
+    await queryRunner.query(
+      `CREATE TABLE "files" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "version" integer NOT NULL DEFAULT '1', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "file_name" character varying(3000) NOT NULL, "multimedia_album_id" uuid, CONSTRAINT "PK_6c16b9093a142e0e7613b04a3d9" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE TABLE "links_category" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "version" integer NOT NULL DEFAULT '1', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "title" character varying(255) NOT NULL, CONSTRAINT "PK_42692729856abf63f8081f29394" PRIMARY KEY ("id"))`,
@@ -124,6 +127,9 @@ export class CreateTables1630317690086 implements MigrationInterface {
       `ALTER TABLE "multimedia" ADD CONSTRAINT "FK_2ff4d18f9dd41c4eb24e891d47f" FOREIGN KEY ("multimedia_team_id") REFERENCES "team"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
+      `ALTER TABLE "files" ADD CONSTRAINT "FK_2d5c878843b5fb237d9633960cb" FOREIGN KEY ("multimedia_album_id") REFERENCES "multimedia"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
       `ALTER TABLE "team_links" ADD CONSTRAINT "FK_abb01893e179023bcfcce0e6ea6" FOREIGN KEY ("link_title") REFERENCES "links_category"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
@@ -146,6 +152,7 @@ export class CreateTables1630317690086 implements MigrationInterface {
     await queryRunner.query(`ALTER TABLE "visibility" DROP CONSTRAINT "FK_396c9b89d74447b5dd2e60b9b24"`);
     await queryRunner.query(`ALTER TABLE "team_links" DROP CONSTRAINT "FK_e2facb7b8634882f8a0ee04979f"`);
     await queryRunner.query(`ALTER TABLE "team_links" DROP CONSTRAINT "FK_abb01893e179023bcfcce0e6ea6"`);
+    await queryRunner.query(`ALTER TABLE "files" DROP CONSTRAINT "FK_2d5c878843b5fb237d9633960cb"`);
     await queryRunner.query(`ALTER TABLE "multimedia" DROP CONSTRAINT "FK_2ff4d18f9dd41c4eb24e891d47f"`);
     await queryRunner.query(`ALTER TABLE "team_spirit" DROP CONSTRAINT "FK_c258101a9e329fc1cf1ca460195"`);
     await queryRunner.query(`ALTER TABLE "team_spirit_median" DROP CONSTRAINT "FK_103f28512266352104e3edea624"`);
@@ -168,6 +175,7 @@ export class CreateTables1630317690086 implements MigrationInterface {
     await queryRunner.query(`DROP TABLE "visibility"`);
     await queryRunner.query(`DROP TABLE "team_links"`);
     await queryRunner.query(`DROP TABLE "links_category"`);
+    await queryRunner.query(`DROP TABLE "files"`);
     await queryRunner.query(`DROP TABLE "multimedia"`);
     await queryRunner.query(`DROP TABLE "team_spirit"`);
     await queryRunner.query(`DROP TABLE "team_spirit_median"`);

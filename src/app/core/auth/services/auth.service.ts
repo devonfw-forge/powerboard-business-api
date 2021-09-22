@@ -37,7 +37,7 @@ export class AuthService implements IAuthService {
     @Inject('IGlobalTeamService') private readonly globalTeamsService: IGlobalTeamsService,
     private readonly jwtService: JwtService,
     @Inject('IUserPrivilegeService') private readonly userPrivilegeService: IUserPrivilegeService,
-  ) { }
+  ) {}
   dash: DashBoardResponse = {} as DashBoardResponse;
   /**
    * validateUser method will validate User
@@ -93,8 +93,8 @@ export class AuthService implements IAuthService {
         loginResponse.powerboardResponse = await this.getPowerboard(visitedTeam, payload.id);
       } else {
         loginResponse.homeResponse = await this.getHomeDetailsForUserId(payload.id);
-        console.log('This is login home response')
-        console.log(loginResponse.homeResponse)
+        console.log('This is login home response');
+        console.log(loginResponse.homeResponse);
       }
       loginResponse.privileges = await this.getPrivileges(payload.id);
       return { loginResponse, accessToken };
@@ -264,7 +264,6 @@ export class AuthService implements IAuthService {
    * loginDetailsForTeamMemberAdmin method will return LoginResponse for team member and team admin login
    */
   async homeDetailsForTeamMemberAdmin(teamId: string, teamsDTOArray: MyProject[]) {
-
     console.log(teamsDTOArray);
 
     let homeResponse: HomeResponse = {} as HomeResponse;
@@ -280,7 +279,7 @@ export class AuthService implements IAuthService {
     const userTeam = (await this.userTeamService.findUserTeamsByUserId(userId)) as UserTeam[];
     if (userTeam[0].team == null) {
       privileges = await this.userPrivilegeService.getAllPrivilegeForAdmin(userTeam[0].user.id);
-      console.log('privilegesssss')
+      console.log('privilegesssss');
       console.log(privileges);
     } else {
       privileges = [];

@@ -24,7 +24,7 @@ export class DashboardService implements IDashboardService {
     @Inject('ISprintCrudService') private readonly sprintService: ISprintCrudService,
     @Inject('ITeamSpiritService') private readonly teamSpiritServiceInterface: ITeamSpiritService,
     @Inject('IClientStatusService') private readonly clientStatusService: IClientStatusService,
-  ) { }
+  ) {}
 
   dash: DashBoardResponse = {} as DashBoardResponse;
 

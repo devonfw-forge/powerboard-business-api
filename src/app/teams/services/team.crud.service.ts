@@ -95,8 +95,8 @@ export class TeamCrudService extends TypeOrmCrudService<Team> implements ITeamSe
    * @param {teamId} .Takes teamId as input
    * @return {MultimediaResponse[]} Array of files as response
    */
-  async getMultimediaForTeam(teamId: string): Promise<MultimediaResponse[]> {
-    const multimedia: MultimediaResponse[] = await this.multimediaService.getFilesForTeam(teamId);
+  async getMultimediaForTeam(teamId: string): Promise<MultimediaResponse> {
+    const multimedia: MultimediaResponse = await this.multimediaService.getDefaultMultimediaForTeam(teamId);
     return multimedia;
   }
 

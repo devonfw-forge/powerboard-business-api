@@ -3,42 +3,37 @@ import { TeamSpiritMockService } from '../../../../../test/mockedServices/team-s
 import { TeamSpiritCrudController } from './team-spirit.crud.controller';
 
 describe('TeamSpiritController', () => {
-    let teamSpiritController: TeamSpiritCrudController;
-    let teamSpiritService: TeamSpiritMockService;
+  let teamSpiritController: TeamSpiritCrudController;
+  let teamSpiritService: TeamSpiritMockService;
 
+  beforeAll(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [TeamSpiritCrudController],
+      providers: [
+        {
+          provide: 'ITeamSpiritService',
+          useClass: TeamSpiritMockService,
+        },
+      ],
+    }).compile();
 
-    beforeAll(async () => {
-        const module: TestingModule = await Test.createTestingModule({
+    teamSpiritController = module.get<TeamSpiritCrudController>(TeamSpiritCrudController);
+    teamSpiritService = module.get<TeamSpiritMockService>('ITeamSpiritService');
+  });
 
-            controllers: [TeamSpiritCrudController],
-            providers: [
+  it('should be defined after module initialization', () => {
+    expect(teamSpiritController).toBeDefined();
+    expect(teamSpiritService).toBeDefined();
+  });
 
-                {
-                    provide: 'ITeamSpiritService',
-                    useClass: TeamSpiritMockService,
-                },
+  describe('getTeamSpiritFromSurvery()', () => {
+    it('should fetch the team spirit rating for the team', async () => {
+      const teamName = 'Team A';
 
-            ],
-        }).compile();
-
-        teamSpiritController = module.get<TeamSpiritCrudController>(TeamSpiritCrudController);
-        teamSpiritService = module.get<TeamSpiritMockService>('ITeamSpiritService');
+      const teamSpiritRating = 7;
+      jest.spyOn(teamSpiritService, 'getTeamSpiritFromSurvey').mockImplementation(() => teamSpiritRating);
+      const result = await teamSpiritController.getTeamSpiritFromSurvery(teamName);
+      expect(result).toBe(teamSpiritRating);
     });
-
-    it('should be defined after module initialization', () => {
-        expect(teamSpiritController).toBeDefined();
-        expect(teamSpiritService).toBeDefined();
-    });
-
-    describe('getTeamSpiritFromSurvery()', () => {
-        it('should fetch the team spirit rating for the team', async () => {
-
-            const teamName = "Team A";
-
-            const teamSpiritRating = 7;
-            jest.spyOn(teamSpiritService, 'getTeamSpiritFromSurvey').mockImplementation(() => teamSpiritRating);
-            const result = await teamSpiritController.getTeamSpiritFromSurvery(teamName);
-            expect(result).toBe(teamSpiritRating);
-        })
-    })
-})
+  });
+});

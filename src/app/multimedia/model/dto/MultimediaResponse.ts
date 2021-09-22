@@ -1,4 +1,7 @@
+import { DisplayResponse } from './DisplayResponse';
+import { RootResponse } from './RootResponse';
+
 export interface MultimediaResponse {
-  fileId: string;
-  fileName: string;
+  root?: RootResponse[];
+  display?: DisplayResponse[];
 }

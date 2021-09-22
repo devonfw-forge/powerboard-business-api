@@ -84,8 +84,8 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
     const logoName = team.logo;
     // const pathOfLogo= `./uploads/multimedia/logo/${team.id}/${logoName}`;
     const pathOfLogo = `uploads/logo/${teamId}/` + logoName;
-    const fileDeltedFromStorage = await this.fileStorageService.deleteFile(pathOfLogo);
-    if (!fileDeltedFromStorage) {
+    const result = await this.fileStorageService.deleteFile(pathOfLogo);
+    if (!result) {
       team.logo = null;
       await this.teamRepository.save(team);
     } else {

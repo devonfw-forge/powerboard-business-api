@@ -10,9 +10,8 @@ import { ITeamSpiritService } from './team-spirit.interface';
 @Injectable()
 export class TeamSpiritCrudService extends TypeOrmCrudService<TeamSpiritMedian> implements ITeamSpiritService {
   constructor(
-    @InjectRepository(TeamSpiritMedian) private readonly teamSpiritRepository: Repository<TeamSpiritMedian>, //@InjectRepository(Team) private readonly teamRepository: Repository<Team>, // private readonly http: HttpService,
-  ) // private readonly http: HttpService
-  {
+    @InjectRepository(TeamSpiritMedian) private readonly teamSpiritRepository: Repository<TeamSpiritMedian>, //@InjectRepository(Team) private readonly teamRepository: Repository<Team>, // private readonly http: HttpService, // private readonly http: HttpService
+  ) {
     super(teamSpiritRepository);
   }
   teamSpiritResponse: TeamSpiritResponse = {} as TeamSpiritResponse;
