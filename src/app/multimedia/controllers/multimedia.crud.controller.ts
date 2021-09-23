@@ -16,6 +16,7 @@ import { Response as eResponse } from 'express';
 import { Multimedia } from '../model/entities/multimedia.entity';
 import { IMultimediaService } from '../services/multimedia.crud.service.interface';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { DeleteResponse } from '../model/dto/DeleteResponse.interface';
 
 @Crud({
   model: {
@@ -68,31 +69,15 @@ export class MultimediaCrudController {
     res.status(200).json(result);
   }
 
-  @Delete('/deleteFiles')
-  async deleteMultipleFiles(@Body() fileIds: string[]): Promise<any> {
-    console.log('These are file Ids');
-    console.log(fileIds);
-    return await this.multimediaService.deleteMultipleFiles(fileIds);
-  }
-  @Delete('/deleteFolders')
-  async deleteMultipleFolders(@Body() folderIds: string[]): Promise<any> {
-    console.log('These are folder Ids');
-    console.log(folderIds);
-    return await this.multimediaService.deleteMultipleFolders(folderIds);
-  }
-
-  @Delete('deleteFile/:teamId/:fileId')
-  //@UseGuards(AuthGuard('jwt'))
-  async deleteFileById(
-    @Param('fileId') fileId: string,
+  @Delete('deleteFilesAndFolders/:teamId')
+  async deleteMultipleFilesAndFolders(
     @Param('teamId') teamId: string,
+    @Body() deleteResponse: DeleteResponse,
     @Response() res: eResponse,
   ): Promise<void> {
-    console.log('This is file Id');
-    console.log(fileId);
-    const result = await this.multimediaService.deleteFileById(fileId, teamId);
+    const result = await this.multimediaService.deleteMultipleFilesAndFolders(teamId, deleteResponse);
     console.log(result);
-    res.status(200).json({ message: 'File successfully Deleted' });
+    res.status(200).json({ message: 'File or Folders successfully Deleted' });
   }
 
   @Get('getAllFilesForTeam/:teamId')
@@ -100,5 +85,16 @@ export class MultimediaCrudController {
   async getAllFilesForTeam(@Param('teamId') teamId: string, @Response() res: eResponse): Promise<any> {
     const result = await this.multimediaService.getAllFilesForTeam(teamId);
     res.status(200).json(result);
+  }
+
+  @Post('addFolder/:teamId')
+  async addFolderInRoot(
+    @Param('teamId') teamId: string,
+    @Body() folderName: { name: string },
+    @Response() res: eResponse,
+  ): Promise<void> {
+    console.log(folderName);
+    const result = await this.multimediaService.addFolder(teamId, folderName.name);
+    res.status(201).json(result);
   }
 }
