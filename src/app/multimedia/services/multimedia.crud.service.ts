@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { Repository } from 'typeorm';
@@ -12,6 +12,7 @@ import { Multimedia } from '../model/entities/multimedia.entity';
 import { IMultimediaService } from './multimedia.crud.service.interface';
 import * as dotenv from 'dotenv';
 import { DisplayResponse } from '../model/dto/DisplayResponse';
+import { DeleteResponse } from '../model/dto/DeleteResponse.interface';
 
 dotenv.config();
 //const Thumbler = require('thumbler');
@@ -176,28 +177,84 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     }
   }
 
-  /**
-   * deleteImageById method will delete the images on basis of id
-   */
-  async deleteFileById(fileId: string, teamId: string): Promise<any> {
-    const File = (await this.multimediaRepository.findOne(fileId)) as Multimedia;
-    const filePath = `uploads/multimedia/${teamId}/` + File.albumName;
-    console.log(filePath);
-    const fileDeletedFromDB = await this.multimediaRepository.delete(fileId);
+  private async deleteFilesFromSubFolder(teamId: string, subFolderId: string, filesId: string[]) {
+    let filesPath: string[] = [];
+    const subFolder = await this.multimediaRepository.findOne(subFolderId);
+
+    const commanPath = 'uploads/uploads/multimedia/' + teamId + '/' + subFolder?.albumName + '/';
+
+    const fileDeletedFromDB = await this.filesRepository.delete(filesId);
+
     if (fileDeletedFromDB) {
-      return await this.fileStorageService.deleteFile(filePath);
+      for (var k = 0; k < filesId.length; k++) {
+        const file = (await this.filesRepository.findOne(filesId[k])) as Files;
+        filesPath.push(commanPath + file.fileName);
+      }
+      console.log(filesPath);
+      if (filesPath.length > 0) {
+        return await this.fileStorageService.deleteMultipleFiles(filesPath);
+      }
     }
   }
 
-  async deleteMultipleFiles(fileIds: string[]): Promise<any> {
-    return await this.fileStorageService.deleteMultipleFiles(fileIds);
+  private async deleteFilesAndFoldersFromRoot(teamId: string, filesId: string[], foldersId: string[]) {
+    const commanPath = 'uploads/uploads/multimedia/' + teamId + '/';
+    let foldersPath: string[] = [];
+    let filesPath: string[] = [];
+    const finalList = filesId.concat(foldersId);
+    const fileDeletedFromDB = await this.multimediaRepository.delete(finalList);
+    if (fileDeletedFromDB) {
+      for (var i = 0; i < foldersId.length; i++) {
+        const folder = (await this.multimediaRepository.findOne(foldersId[i])) as Multimedia;
+        foldersPath.push(commanPath + folder.albumName);
+      }
+      for (var i = 0; i < filesId.length; i++) {
+        const file = (await this.multimediaRepository.findOne(filesId[i])) as Multimedia;
+        filesPath.push(commanPath + file.fileName);
+      }
+
+      let folderSuccess;
+      let fileSuccess;
+
+      if (foldersPath.length > 0) {
+        folderSuccess = await this.fileStorageService.deleteMultipleFolders(foldersPath);
+      }
+      if (filesPath.length > 0) {
+        fileSuccess = await this.fileStorageService.deleteMultipleFiles(filesPath);
+      }
+      if (folderSuccess && fileSuccess) {
+        return folderSuccess;
+      }
+    }
   }
 
-  async deleteMultipleFolders(folderIds: string[]): Promise<any> {
-    console.log('Folder Ids in service');
-    console.log(folderIds);
-    return await this.fileStorageService.deleteMultipleFolders(folderIds);
+  /**
+   * deleteMultipleFilesAndFolders method will delete multiple files & folders from root as well as subFolder
+   * @param {teamId} .Takes teamId as input
+   * @return {DeleteResponse} DeleteResponse as response having subfolder details, folderIds[] details & fileIds[] details
+   */
+  async deleteMultipleFilesAndFolders(teamId: string, deleteResponse: DeleteResponse): Promise<any> {
+    if (deleteResponse.subFolderId === null) {
+      return await this.deleteFilesAndFoldersFromRoot(teamId, deleteResponse.filesId, deleteResponse.foldersId);
+    } else {
+      return await this.deleteFilesFromSubFolder(teamId, deleteResponse.subFolderId, deleteResponse.filesId);
+    }
   }
+
+  async addFolder(teamId: string, folderName: string): Promise<Multimedia> {
+    if (folderName === '') {
+      throw new NotAcceptableException();
+    }
+    folderName = folderName.toLowerCase();
+    let multimediaOBJ = new Multimedia();
+    multimediaOBJ.albumName = folderName;
+    multimediaOBJ.team = teamId;
+    const result = await this.multimediaRepository.save(multimediaOBJ);
+
+    console.log(result);
+    return result;
+  }
+
   /**
    * getFilesForTeam method will fetch all images fot that team
    * @param {teamId} .Takes teamId as input
