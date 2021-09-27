@@ -42,7 +42,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     let multimedia = new Multimedia();
     // console.log('Multimedia Service');
     // console.log(file);
-    const originalPath = `uploads/multimedia/${teamId}/`;
+    const originalPath = `uploads/uploads/multimedia/${teamId}/`;
 
     const output = await this.fileStorageService.uploadFile(file, originalPath);
     console.log('This is output');
@@ -50,7 +50,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
 
     if (output) {
       const key = output.Key.split('/');
-      multimedia.albumName = key[key.length - 1];
+      multimedia.fileName = key[key.length - 1];
       multimedia.team = teamId;
       console.log(multimedia);
       console.log(multimedia.team);
@@ -66,7 +66,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     const multimedia = (await this.multimediaRepository.findOne({ where: { id: albumId } })) as Multimedia;
     const albumName = multimedia.albumName;
     let fileEntry = new Files();
-    const originalPath = `uploads/multimedia/${teamId}/${albumName}/`;
+    const originalPath = `uploads/uploads/multimedia/${teamId}/${albumName}/`;
     const fileUploaded = await this.fileStorageService.uploadFile(file, originalPath);
     if (fileUploaded) {
       const key = fileUploaded.Key.split('/');
@@ -199,6 +199,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
 
   private async deleteFilesAndFoldersFromRoot(teamId: string, filesId: string[], foldersId: string[]) {
     const commanPath = 'uploads/uploads/multimedia/' + teamId + '/';
+
     let foldersPath: string[] = [];
     let filesPath: string[] = [];
     for (var i = 0; i < foldersId.length; i++) {
@@ -234,8 +235,12 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
    */
   async deleteMultipleFilesAndFolders(teamId: string, deleteResponse: DeleteResponse): Promise<any> {
     if (deleteResponse.subFolderId === null) {
+      console.log('delete files from root');
+      console.log(deleteResponse);
       return await this.deleteFilesAndFoldersFromRoot(teamId, deleteResponse.filesId, deleteResponse.foldersId);
     } else {
+      console.log('delete files from sub folder');
+      console.log(deleteResponse);
       return await this.deleteFilesFromSubFolder(teamId, deleteResponse.subFolderId, deleteResponse.filesId);
     }
   }
