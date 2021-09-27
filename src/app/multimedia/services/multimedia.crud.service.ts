@@ -42,7 +42,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     let multimedia = new Multimedia();
     // console.log('Multimedia Service');
     // console.log(file);
-    const originalPath = `uploads/multimedia/${teamId}/`;
+    const originalPath = `uploads/uploads/multimedia/${teamId}/`;
 
     const output = await this.fileStorageService.uploadFile(file, originalPath);
     console.log('This is output');
@@ -66,7 +66,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     const multimedia = (await this.multimediaRepository.findOne({ where: { id: albumId } })) as Multimedia;
     const albumName = multimedia.albumName;
     let fileEntry = new Files();
-    const originalPath = `uploads/multimedia/${teamId}/${albumName}/`;
+    const originalPath = `uploads/uploads/multimedia/${teamId}/${albumName}/`;
     const fileUploaded = await this.fileStorageService.uploadFile(file, originalPath);
     if (fileUploaded) {
       const key = fileUploaded.Key.split('/');
