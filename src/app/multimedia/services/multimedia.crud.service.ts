@@ -50,7 +50,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
 
     if (output) {
       const key = output.Key.split('/');
-      multimedia.albumName = key[key.length - 1];
+      multimedia.fileName = key[key.length - 1];
       multimedia.team = teamId;
       console.log(multimedia);
       console.log(multimedia.team);
