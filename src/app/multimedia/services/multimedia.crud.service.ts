@@ -182,15 +182,15 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     const subFolder = await this.multimediaRepository.findOne(subFolderId);
 
     const commanPath = 'uploads/uploads/multimedia/' + teamId + '/' + subFolder?.albumName + '/';
+    for (var k = 0; k < filesId.length; k++) {
+      const file = (await this.filesRepository.findOne(filesId[k])) as Files;
+      filesPath.push(commanPath + file.fileName);
+    }
+    console.log(filesPath);
 
     const fileDeletedFromDB = await this.filesRepository.delete(filesId);
 
     if (fileDeletedFromDB) {
-      for (var k = 0; k < filesId.length; k++) {
-        const file = (await this.filesRepository.findOne(filesId[k])) as Files;
-        filesPath.push(commanPath + file.fileName);
-      }
-      console.log(filesPath);
       if (filesPath.length > 0) {
         return await this.fileStorageService.deleteMultipleFiles(filesPath);
       }
@@ -201,18 +201,17 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     const commanPath = 'uploads/uploads/multimedia/' + teamId + '/';
     let foldersPath: string[] = [];
     let filesPath: string[] = [];
+    for (var i = 0; i < foldersId.length; i++) {
+      const folder = (await this.multimediaRepository.findOne(foldersId[i])) as Multimedia;
+      foldersPath.push(commanPath + folder.albumName);
+    }
+    for (var i = 0; i < filesId.length; i++) {
+      const file = (await this.multimediaRepository.findOne(filesId[i])) as Multimedia;
+      filesPath.push(commanPath + file.fileName);
+    }
     const finalList = filesId.concat(foldersId);
     const fileDeletedFromDB = await this.multimediaRepository.delete(finalList);
     if (fileDeletedFromDB) {
-      for (var i = 0; i < foldersId.length; i++) {
-        const folder = (await this.multimediaRepository.findOne(foldersId[i])) as Multimedia;
-        foldersPath.push(commanPath + folder.albumName);
-      }
-      for (var i = 0; i < filesId.length; i++) {
-        const file = (await this.multimediaRepository.findOne(filesId[i])) as Multimedia;
-        filesPath.push(commanPath + file.fileName);
-      }
-
       let folderSuccess;
       let fileSuccess;
 
@@ -304,5 +303,18 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
       }
     }
     return filesArray;
+  }
+
+  async addFilesAndFoldersIntoSlideshow(teamId: string, fileAndFolderIds: string[]): Promise<Multimedia[]> {
+    let finalMultimediaList: Multimedia[] = [];
+    for (var i = 0; i < fileAndFolderIds.length; i++) {
+      let multimedia = (await this.multimediaRepository.findOne({
+        where: { team: teamId, id: fileAndFolderIds[i] },
+      })) as Multimedia;
+      multimedia.inSlideshow = true;
+      finalMultimediaList.push(multimedia);
+    }
+    console.log(finalMultimediaList);
+    return await this.multimediaRepository.save(finalMultimediaList);
   }
 }

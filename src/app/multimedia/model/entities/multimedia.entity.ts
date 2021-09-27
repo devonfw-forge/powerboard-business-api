@@ -11,6 +11,9 @@ export class Multimedia extends BaseEntity {
   @Column('varchar', { name: 'file_name', length: 1000, nullable: true })
   fileName!: string;
 
+  @Column('boolean', { name: 'in_slideshow', default: false })
+  inSlideshow!: boolean;
+
   @ManyToOne(() => Team, { eager: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'multimedia_team_id', referencedColumnName: 'id' })
   team!: string;
