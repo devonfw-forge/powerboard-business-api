@@ -26,7 +26,7 @@ import { DeleteResponse } from '../model/dto/DeleteResponse.interface';
 @CrudType(Multimedia)
 @Controller('multimedia')
 export class MultimediaCrudController {
-  constructor(@Inject('IMultimediaService') public multimediaService: IMultimediaService) { }
+  constructor(@Inject('IMultimediaService') public multimediaService: IMultimediaService) {}
 
   @Post('uploadFile/:teamId')
   @UseInterceptors(FileInterceptor('file'))
@@ -76,7 +76,7 @@ export class MultimediaCrudController {
     @Response() res: eResponse,
   ): Promise<void> {
     const result = await this.multimediaService.deleteMultipleFilesAndFolders(teamId, deleteResponse);
-    console.log('delete files controller')
+    console.log('delete files controller');
     console.log(result);
     res.status(200).json({ message: 'File or Folders successfully Deleted' });
   }
@@ -97,5 +97,21 @@ export class MultimediaCrudController {
     console.log(folderName);
     const result = await this.multimediaService.addFolder(teamId, folderName.name);
     res.status(201).json(result);
+  }
+
+  @Post('addToSlideshow/:teamId')
+  async addFilesAndFoldersIntoSlideshow(
+    @Param('teamId') teamId: string,
+    @Body() itemIds: { fileAndFolderIds: string[] },
+    @Response() res: eResponse,
+  ): Promise<void> {
+    const result = await this.multimediaService.addFilesAndFoldersIntoSlideshow(teamId, itemIds.fileAndFolderIds);
+    res.status(201).json(result);
+  }
+
+  @Get('slideshow/:teamid')
+  async getMultimediaForSlideshow(@Param('teamid') teamId: string, @Response() res: eResponse): Promise<void> {
+    const result = await this.multimediaService.getMultimediaForSlideshow(teamId);
+    res.status(200).json(result);
   }
 }

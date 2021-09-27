@@ -191,7 +191,6 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     const fileDeletedFromDB = await this.filesRepository.delete(filesId);
 
     if (fileDeletedFromDB) {
-
       if (filesPath.length > 0) {
         return await this.fileStorageService.deleteMultipleFiles(filesPath);
       }
@@ -214,7 +213,6 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     const finalList = filesId.concat(foldersId);
     const fileDeletedFromDB = await this.multimediaRepository.delete(finalList);
     if (fileDeletedFromDB) {
-
       let folderSuccess;
       let fileSuccess;
 
@@ -241,8 +239,8 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
       console.log(deleteResponse);
       return await this.deleteFilesAndFoldersFromRoot(teamId, deleteResponse.filesId, deleteResponse.foldersId);
     } else {
-      console.log('delete files from sub folder')
-      console.log(deleteResponse)
+      console.log('delete files from sub folder');
+      console.log(deleteResponse);
       return await this.deleteFilesFromSubFolder(teamId, deleteResponse.subFolderId, deleteResponse.filesId);
     }
   }
@@ -310,5 +308,36 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
       }
     }
     return filesArray;
+  }
+
+  async addFilesAndFoldersIntoSlideshow(teamId: string, fileAndFolderIds: string[]): Promise<Multimedia[]> {
+    let finalMultimediaList: Multimedia[] = [];
+    for (var i = 0; i < fileAndFolderIds.length; i++) {
+      let multimedia = (await this.multimediaRepository.findOne({
+        where: { team: teamId, id: fileAndFolderIds[i] },
+      })) as Multimedia;
+      multimedia.inSlideshow = true;
+      finalMultimediaList.push(multimedia);
+    }
+    console.log(finalMultimediaList);
+    return await this.multimediaRepository.save(finalMultimediaList);
+  }
+
+  async getMultimediaForSlideshow(teamId: string): Promise<any> {
+    let result: { fileURL: string }[] = [];
+    const commanPath = 'uploads/uploads/multimedia/' + teamId + '/';
+
+    let multimedia = await this.multimediaRepository.find({ where: { team: teamId, inSlideshow: true } });
+
+    for (var i = 0; i < multimedia.length; i++) {
+      if (multimedia[i].albumName === null) {
+        result.push({ fileURL: commanPath + multimedia[i].fileName });
+      } else {
+        for (var j = 0; j < multimedia[i].files.length; j++) {
+          result.push({ fileURL: commanPath + multimedia[i].files[j].fileName });
+        }
+      }
+    }
+    return result;
   }
 }

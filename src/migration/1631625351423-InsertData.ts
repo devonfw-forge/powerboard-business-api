@@ -83,25 +83,25 @@ export class InsertData1631625351423 implements MigrationInterface {
     );
 
     await queryRunner.query(
-      `INSERT INTO "multimedia" ("id", "album_name", "multimedia_team_id") VALUES ('aaad19f7-1b66-44aa-a443-4fcdd173f385' ,'resort','46455bf7-ada7-495c-8019-8d7ab76d488e');`,
+      `INSERT INTO "multimedia" ("id", "album_name", "in_slideshow","multimedia_team_id") VALUES ('aaad19f7-1b66-44aa-a443-4fcdd173f385' ,'resort',false,'46455bf7-ada7-495c-8019-8d7ab76d488e');`,
     );
     await queryRunner.query(
-      `INSERT INTO "multimedia" ("id", "album_name", "multimedia_team_id") VALUES ('aaad19f7-1b66-44aa-a443-4fcdd173f386' ,'farewell','46455bf7-ada7-495c-8019-8d7ab76d488e');`,
+      `INSERT INTO "multimedia" ("id", "album_name", "in_slideshow","multimedia_team_id") VALUES ('aaad19f7-1b66-44aa-a443-4fcdd173f386' ,'farewell',false,'46455bf7-ada7-495c-8019-8d7ab76d488e');`,
     );
     await queryRunner.query(
-      `INSERT INTO "multimedia" ("id", "album_name", "multimedia_team_id") VALUES ('aaad19f7-1b66-44aa-a443-4fcdd173f387' ,'Carnival','46455bf7-ada7-495c-8019-8d7ab76d489e');`,
+      `INSERT INTO "multimedia" ("id", "album_name", "in_slideshow","multimedia_team_id") VALUES ('aaad19f7-1b66-44aa-a443-4fcdd173f387' ,'Carnival',false,'46455bf7-ada7-495c-8019-8d7ab76d489e');`,
     );
     await queryRunner.query(
-      `INSERT INTO "multimedia" ("id", "album_name", "multimedia_team_id") VALUES ('aaad19f7-1b66-44aa-a443-4fcdd173f388' ,'birthday','46455bf7-ada7-495c-8019-8d7ab76d489e');`,
+      `INSERT INTO "multimedia" ("id", "album_name", "in_slideshow","multimedia_team_id") VALUES ('aaad19f7-1b66-44aa-a443-4fcdd173f388' ,'birthday',true,'46455bf7-ada7-495c-8019-8d7ab76d489e');`,
     );
     await queryRunner.query(
-      `INSERT INTO "multimedia" ("id", "album_name", "multimedia_team_id") VALUES ('aaad19f7-1b66-44aa-a443-4fcdd173f389' ,'anniversary','46455bf7-ada7-495c-8019-8d7ab76d490e');`,
+      `INSERT INTO "multimedia" ("id", "album_name","in_slideshow", "multimedia_team_id") VALUES ('aaad19f7-1b66-44aa-a443-4fcdd173f389' ,'anniversary',false,'46455bf7-ada7-495c-8019-8d7ab76d490e');`,
     );
     await queryRunner.query(
-      `INSERT INTO "multimedia" ("id", "album_name", "multimedia_team_id") VALUES ('aaad19f7-1b66-44aa-a443-4fcdd173f390' ,'festival','46455bf7-ada7-495c-8019-8d7ab76d491e');`,
+      `INSERT INTO "multimedia" ("id", "album_name", "in_slideshow","multimedia_team_id") VALUES ('aaad19f7-1b66-44aa-a443-4fcdd173f390' ,'festival',false,'46455bf7-ada7-495c-8019-8d7ab76d491e');`,
     );
     await queryRunner.query(
-      `INSERT INTO "multimedia" ("id", "file_name", "multimedia_team_id") VALUES ('aaad19f7-1b66-44aa-a443-4fcdd173f391' ,'bannerd8a32383-b767-44e7-b48c-d15fbecc9a49.jpg','46455bf7-ada7-495c-8019-8d7ab76d491e');`,
+      `INSERT INTO "multimedia" ("id", "file_name", "in_slideshow","multimedia_team_id") VALUES ('aaad19f7-1b66-44aa-a443-4fcdd173f391' ,'bannerd8a32383-b767-44e7-b48c-d15fbecc9a49.jpg',true,'46455bf7-ada7-495c-8019-8d7ab76d491e');`,
     );
 
     await queryRunner.query(
