@@ -317,4 +317,22 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     console.log(finalMultimediaList);
     return await this.multimediaRepository.save(finalMultimediaList);
   }
+
+  async getMultimediaForSlideshow(teamId: string): Promise<any> {
+    let result: { fileURL: string }[] = [];
+    const commanPath = 'uploads/uploads/multimedia/' + teamId + '/';
+
+    let multimedia = await this.multimediaRepository.find({ where: { team: teamId, inSlideshow: true } });
+
+    for (var i = 0; i < multimedia.length; i++) {
+      if (multimedia[i].albumName === null) {
+        result.push({ fileURL: commanPath + multimedia[i].fileName });
+      } else {
+        for (var j = 0; j < multimedia[i].files.length; j++) {
+          result.push({ fileURL: commanPath + multimedia[i].files[j].fileName });
+        }
+      }
+    }
+    return result;
+  }
 }

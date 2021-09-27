@@ -12,4 +12,5 @@ export interface IMultimediaService {
   getAllFilesForTeam(teamId: string): Promise<DisplayResponse[]>;
   addFolder(teamId: string, folderName: string): Promise<Multimedia>;
   addFilesAndFoldersIntoSlideshow(teamId: string, fileAndFolderIds: string[]): Promise<Multimedia[]>;
+  getMultimediaForSlideshow(teamId: string): Promise<any>;
 }

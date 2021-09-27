@@ -104,9 +104,13 @@ export class MultimediaCrudController {
     @Body() itemIds: { fileAndFolderIds: string[] },
     @Response() res: eResponse,
   ): Promise<void> {
-    console.log(itemIds);
-    console.log('@@@@@@@@@@@@@@@@@@@@@@@@');
     const result = await this.multimediaService.addFilesAndFoldersIntoSlideshow(teamId, itemIds.fileAndFolderIds);
     res.status(201).json(result);
+  }
+
+  @Get('slideshow/:teamid')
+  async getMultimediaForSlideshow(@Param('teamid') teamId: string, @Response() res: eResponse): Promise<void> {
+    const result = await this.multimediaService.getMultimediaForSlideshow(teamId);
+    res.status(200).json(result);
   }
 }
