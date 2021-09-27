@@ -26,7 +26,7 @@ import { DeleteResponse } from '../model/dto/DeleteResponse.interface';
 @CrudType(Multimedia)
 @Controller('multimedia')
 export class MultimediaCrudController {
-  constructor(@Inject('IMultimediaService') public multimediaService: IMultimediaService) {}
+  constructor(@Inject('IMultimediaService') public multimediaService: IMultimediaService) { }
 
   @Post('uploadFile/:teamId')
   @UseInterceptors(FileInterceptor('file'))
@@ -76,6 +76,7 @@ export class MultimediaCrudController {
     @Response() res: eResponse,
   ): Promise<void> {
     const result = await this.multimediaService.deleteMultipleFilesAndFolders(teamId, deleteResponse);
+    console.log('delete files controller')
     console.log(result);
     res.status(200).json({ message: 'File or Folders successfully Deleted' });
   }

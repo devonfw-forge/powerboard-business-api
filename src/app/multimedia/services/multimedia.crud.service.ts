@@ -182,15 +182,16 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     const subFolder = await this.multimediaRepository.findOne(subFolderId);
 
     const commanPath = 'uploads/uploads/multimedia/' + teamId + '/' + subFolder?.albumName + '/';
+    for (var k = 0; k < filesId.length; k++) {
+      const file = (await this.filesRepository.findOne(filesId[k])) as Files;
+      filesPath.push(commanPath + file.fileName);
+    }
+    console.log(filesPath);
 
     const fileDeletedFromDB = await this.filesRepository.delete(filesId);
 
     if (fileDeletedFromDB) {
-      for (var k = 0; k < filesId.length; k++) {
-        const file = (await this.filesRepository.findOne(filesId[k])) as Files;
-        filesPath.push(commanPath + file.fileName);
-      }
-      console.log(filesPath);
+
       if (filesPath.length > 0) {
         return await this.fileStorageService.deleteMultipleFiles(filesPath);
       }
@@ -199,19 +200,20 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
 
   private async deleteFilesAndFoldersFromRoot(teamId: string, filesId: string[], foldersId: string[]) {
     const commanPath = 'uploads/uploads/multimedia/' + teamId + '/';
+
     let foldersPath: string[] = [];
     let filesPath: string[] = [];
+    for (var i = 0; i < foldersId.length; i++) {
+      const folder = (await this.multimediaRepository.findOne(foldersId[i])) as Multimedia;
+      foldersPath.push(commanPath + folder.albumName);
+    }
+    for (var i = 0; i < filesId.length; i++) {
+      const file = (await this.multimediaRepository.findOne(filesId[i])) as Multimedia;
+      filesPath.push(commanPath + file.fileName);
+    }
     const finalList = filesId.concat(foldersId);
     const fileDeletedFromDB = await this.multimediaRepository.delete(finalList);
     if (fileDeletedFromDB) {
-      for (var i = 0; i < foldersId.length; i++) {
-        const folder = (await this.multimediaRepository.findOne(foldersId[i])) as Multimedia;
-        foldersPath.push(commanPath + folder.albumName);
-      }
-      for (var i = 0; i < filesId.length; i++) {
-        const file = (await this.multimediaRepository.findOne(filesId[i])) as Multimedia;
-        filesPath.push(commanPath + file.fileName);
-      }
 
       let folderSuccess;
       let fileSuccess;
@@ -235,8 +237,12 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
    */
   async deleteMultipleFilesAndFolders(teamId: string, deleteResponse: DeleteResponse): Promise<any> {
     if (deleteResponse.subFolderId === null) {
+      console.log('delete files from root');
+      console.log(deleteResponse);
       return await this.deleteFilesAndFoldersFromRoot(teamId, deleteResponse.filesId, deleteResponse.foldersId);
     } else {
+      console.log('delete files from sub folder')
+      console.log(deleteResponse)
       return await this.deleteFilesFromSubFolder(teamId, deleteResponse.subFolderId, deleteResponse.filesId);
     }
   }
