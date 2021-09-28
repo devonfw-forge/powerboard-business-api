@@ -17,6 +17,8 @@ import { IUserTeamService } from '../../core/user/services/user-team.service.int
 import { IUserPrivilegeService } from '../../core/user/services/user-privilege.service.inteface';
 import { ITeamService } from './team.service.interface';
 import { IGlobalTeamsService } from './global.team.service.interface';
+import * as dotenv from 'dotenv';
+dotenv.config();
 @Injectable()
 export class TeamCrudService extends TypeOrmCrudService<Team> implements ITeamService {
   constructor(
@@ -32,7 +34,7 @@ export class TeamCrudService extends TypeOrmCrudService<Team> implements ITeamSe
   ) {
     super(teamRepository);
   }
-
+  globalLink = process.env.AWS_lOGO_URL;
   powerboardResponse: PowerboardResponse = {} as PowerboardResponse;
 
   /**
@@ -61,7 +63,7 @@ export class TeamCrudService extends TypeOrmCrudService<Team> implements ITeamSe
     this.powerboardResponse.project_key = teams.projectKey;
     this.powerboardResponse.center = teams.ad_center.name;
     this.powerboardResponse.team_code = teams.teamCode;
-    this.powerboardResponse.logo = teams.logo!;
+    this.powerboardResponse.logo = `${this.globalLink}/${teamId}/` + teams.logo!;
     this.powerboardResponse.dashboard = await this.dashboardService.getDashboardByTeamId(teams);
     // console.log("This is dashboard response");
     // console.log(this.powerboardResponse.dashboard);

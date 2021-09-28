@@ -34,16 +34,16 @@ export class InsertData1631625351423 implements MigrationInterface {
     );
 
     await queryRunner.query(
-      `INSERT INTO "team" ("id","team_code", "project_key", "name", "ad_center_id","team_status_id","logo") VALUES ('46455bf7-ada7-495c-8019-8d7ab76d488e' ,'10012345','P12343','Team A','99055bf7-ada7-495c-8019-8d7ab62d488e',1,'team_Addbe4501-674b-4273-9f90-029fced12593.png');`,
+      `INSERT INTO "team" ("id","team_code", "project_key", "name", "ad_center_id","team_status_id","logo") VALUES ('46455bf7-ada7-495c-8019-8d7ab76d488e' ,'10012345','P12343','Team A','99055bf7-ada7-495c-8019-8d7ab62d488e',1,'logo_Aa4aa8e7a-85d6-4b75-8f93-6a11dee9b13c.png');`,
     );
     await queryRunner.query(
-      `INSERT INTO "team" ("id","team_code","project_key", "name", "ad_center_id","team_status_id","logo") VALUES ('46455bf7-ada7-495c-8019-8d7ab76d489e' ,'10012346','P1212' ,'Team B','99055bf7-ada7-495c-8019-8d7ab62d488e',1,'team_B0de69c6c-b308-4d98-8ca6-3a364bed21fd.png');`,
+      `INSERT INTO "team" ("id","team_code","project_key", "name", "ad_center_id","team_status_id","logo") VALUES ('46455bf7-ada7-495c-8019-8d7ab76d489e' ,'10012346','P1212' ,'Team B','99055bf7-ada7-495c-8019-8d7ab62d488e',1,'logo_B12597528e-2208-4ce8-9bfd-588704041831.png');`,
     );
     await queryRunner.query(
-      `INSERT INTO "team" ("id", "team_code","project_key","name", "ad_center_id","team_status_id","logo") VALUES ('46455bf7-ada7-495c-8019-8d7ab76d490e' ,'10012347','P87695', 'Team C','99055bf7-ada7-495c-8019-8d7ab62d488e',1,'team_Cb9aab3ef-6f28-4189-8898-39c798c4cc7a.png');`,
+      `INSERT INTO "team" ("id", "team_code","project_key","name", "ad_center_id","team_status_id","logo") VALUES ('46455bf7-ada7-495c-8019-8d7ab76d490e' ,'10012347','P87695', 'Team C','99055bf7-ada7-495c-8019-8d7ab62d488e',1,'logo_Cba48ed82-f863-455e-b87e-141ac186f992.png');`,
     );
     await queryRunner.query(
-      `INSERT INTO "team" ("id", "team_code","project_key","name", "ad_center_id","team_status_id" ,"logo") VALUES ('46455bf7-ada7-495c-8019-8d7ab76d491e' ,'10033347','P43567', 'Team D','98755bf7-ada7-495c-8019-8d7ab62d488e',1 ,'team_D24af0e08-4d81-4976-b3cf-90c948a65c3d.png');`,
+      `INSERT INTO "team" ("id", "team_code","project_key","name", "ad_center_id","team_status_id" ,"logo") VALUES ('46455bf7-ada7-495c-8019-8d7ab76d491e' ,'10033347','P43567', 'Team D','98755bf7-ada7-495c-8019-8d7ab62d488e',1 ,'logo_Dffe7f9f8-1262-4658-80f9-06c58dc3100e.png');`,
     );
 
     await queryRunner.query(

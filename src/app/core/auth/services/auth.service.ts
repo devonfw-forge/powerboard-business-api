@@ -24,7 +24,8 @@ import { UserTeamDTO } from '../../../teams/model/dto/UserTeamDTO';
 import { ITeamService } from '../../../teams/services/team.service.interface';
 import { IGlobalTeamsService } from '../../../teams/services/global.team.service.interface';
 import { HomeResponse } from '../model/HomeResponse';
-
+import * as dotenv from 'dotenv';
+dotenv.config();
 @Injectable()
 export class AuthService implements IAuthService {
   constructor(
@@ -38,6 +39,7 @@ export class AuthService implements IAuthService {
     private readonly jwtService: JwtService,
     @Inject('IUserPrivilegeService') private readonly userPrivilegeService: IUserPrivilegeService,
   ) {}
+  globalLink = process.env.AWS_lOGO_URL;
   dash: DashBoardResponse = {} as DashBoardResponse;
   /**
    * validateUser method will validate User
@@ -246,7 +248,7 @@ export class AuthService implements IAuthService {
       for (i = 0; i < userTeam.length; i++) {
         teamsWithinUser.teamId = userTeam[i].team.id;
         teamsWithinUser.teamName = userTeam[i].team.name;
-        teamsWithinUser.teamLogo = userTeam[i].team.logo!;
+        teamsWithinUser.teamLogo = `${this.globalLink}/${userTeam[i].team.id}/` + userTeam[i].team.logo!;
         teamsWithinUser.myRole = userTeam[i].role.roleName;
         //this.dash = (await this.dashboardService.getDashboardByTeamId(userTeam[i].team)) as DashBoardResponse;
         //teamsWithinUser.teamStatus = this.dashboardService.fetchStatus(this.dash);
