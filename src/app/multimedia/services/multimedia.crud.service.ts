@@ -312,20 +312,31 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
 
   async addFilesAndFoldersIntoSlideshow(teamId: string, fileAndFolderIds: string[]): Promise<Multimedia[]> {
     let finalMultimediaList: Multimedia[] = [];
-    for (var i = 0; i < fileAndFolderIds.length; i++) {
-      let multimedia = (await this.multimediaRepository.findOne({
-        where: { team: teamId, id: fileAndFolderIds[i] },
-      })) as Multimedia;
-      multimedia.inSlideshow = true;
-      finalMultimediaList.push(multimedia);
+    let resetMultimedia = (await this.multimediaRepository.find({
+      where: { team: teamId },
+    })) as Multimedia[];
+    for (var i = 0; i < resetMultimedia.length; i++) {
+      resetMultimedia[i].inSlideshow = false;
     }
+    let multimedia = await this.multimediaRepository.save(resetMultimedia);
+    console.log(multimedia);
+    for (var j = 0; j < multimedia.length; j++) {
+      if (fileAndFolderIds.includes(multimedia[j].id)) {
+        multimedia[j].inSlideshow = true;
+        console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+        console.log(multimedia[j]);
+        finalMultimediaList.push(multimedia[j]);
+      }
+    }
+    console.log('#########################');
     console.log(finalMultimediaList);
     return await this.multimediaRepository.save(finalMultimediaList);
   }
 
   async getMultimediaForSlideshow(teamId: string): Promise<any> {
     let result: { fileURL: string }[] = [];
-    const commanPath = 'uploads/uploads/multimedia/' + teamId + '/';
+    const commanPath =
+      'https://powerboard-test.s3.eu-central-1.amazonaws.com/uploads/uploads/multimedia/' + teamId + '/';
 
     let multimedia = await this.multimediaRepository.find({ where: { team: teamId, inSlideshow: true } });
 
