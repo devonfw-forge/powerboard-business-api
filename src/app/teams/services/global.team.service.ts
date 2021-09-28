@@ -37,6 +37,7 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
     console.log(CenterId);
     const teams: Team[] = await this.teamRepository.find({ where: { ad_center: CenterId } });
     console.log(teams);
+    console.log('llllllllllllllll');
     let teamsResponse: TeamsInADC = {} as TeamsInADC;
     let teamsDTOArray: TeamsInADC[] = [],
       i;
@@ -54,6 +55,7 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
       teamsDTOArray.push(teamsResponse);
       teamsResponse = {} as TeamsInADC;
     }
+    console.log(teamsDTOArray);
     return teamsDTOArray;
   }
 
@@ -113,6 +115,7 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
       team.teamCode = addteam.teamCode;
       team.projectKey = addteam.projectKey;
       team.ad_center = addteam.ad_center;
+      team.team_status = (await this.teamStatusRepository.findOne({ where: { id: 2 } })) as TeamStatus;
 
       const teamCreated = await this.teamRepository.save(team);
       if (teamCreated && logo) {
