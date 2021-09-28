@@ -106,12 +106,13 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     for (i = 0; i < files.length; i++) {
       this.displayResponse.id = files[i].fileId;
       this.displayResponse.urlName = files[i].fileName;
+      this.displayResponse.inSlideShow = files[i].inSlideShow;
       displayArray.push(this.displayResponse);
       this.displayResponse = {} as DisplayResponse;
     }
     return displayArray;
   }
-  addFiles(files: Files[], albumName: string, link?: string) {
+  addFiles(files: Files[], albumName: string, inSlideShow: boolean, link?: string) {
     let displayArray = [] as DisplayResponse[],
       i;
     link = `${link}${albumName}/`;
@@ -119,6 +120,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     for (i = 0; i < files.length; i++) {
       this.displayResponse.id = files[i].id;
       this.displayResponse.urlName = link + files[i].fileName;
+      this.displayResponse.inSlideShow = inSlideShow;
       displayArray.push(this.displayResponse);
       this.displayResponse = {} as DisplayResponse;
     }
@@ -131,6 +133,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
       if (result[i].fileName != null && result[i].albumName == null) {
         this.fileResponse.fileId = result[i].id;
         this.fileResponse.fileName = link + result[i].fileName;
+        this.fileResponse.inSlideShow = result[i].inSlideshow;
         fileArray.push(this.fileResponse);
         this.fileResponse = {} as FileResponse;
       }
@@ -143,7 +146,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
       i;
     for (i = 0; i < result.length; i++) {
       if (result[i].albumName != null && result[i].fileName == null) {
-        return this.addFiles(result[i].files, result[i].albumName, link);
+        return this.addFiles(result[i].files, result[i].albumName, result[i].inSlideshow, link);
       }
     }
     return fileArray;
