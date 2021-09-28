@@ -77,7 +77,9 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
       team.logo = key[key.length - 1];
     }
 
-    return this.teamRepository.save(team);
+    let team1 = await this.teamRepository.save(team);
+    team1.logo = `${this.globalLink}/${teamId}/` + team.logo!;
+    return team1;
   }
 
   async deleteLogoFromTeam(teamId: string): Promise<void> {

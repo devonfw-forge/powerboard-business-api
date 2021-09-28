@@ -58,6 +58,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
       // if (result && this.videos.includes(output.split('.')[1])) {
       //   this.fileStorageService.saveThumbail(output, originalPath);
       // }
+      result.fileName = `${this.globalLink}/${teamId}/${result.fileName}`;
       return result;
     }
   }
@@ -73,6 +74,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
       fileEntry.fileName = key[key.length - 1];
       fileEntry.album = multimedia.id;
       const fileSaved = await this.filesRepository.save(fileEntry);
+      fileSaved.fileName = `${this.globalLink}/${teamId}/${albumName}/${fileSaved.fileName}`;
       return fileSaved;
     }
   }
