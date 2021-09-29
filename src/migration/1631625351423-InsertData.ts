@@ -37,13 +37,13 @@ export class InsertData1631625351423 implements MigrationInterface {
       `INSERT INTO "team" ("id","team_code", "project_key", "name", "ad_center_id","team_status_id","logo") VALUES ('46455bf7-ada7-495c-8019-8d7ab76d488e' ,'10012345','P12343','Team A','99055bf7-ada7-495c-8019-8d7ab62d488e',1,'logo_Aa4aa8e7a-85d6-4b75-8f93-6a11dee9b13c.png');`,
     );
     await queryRunner.query(
-      `INSERT INTO "team" ("id","team_code","project_key", "name", "ad_center_id","team_status_id","logo") VALUES ('46455bf7-ada7-495c-8019-8d7ab76d489e' ,'10012346','P1212' ,'Team B','99055bf7-ada7-495c-8019-8d7ab62d488e',1,'logo_B12597528e-2208-4ce8-9bfd-588704041831.png');`,
+      `INSERT INTO "team" ("id","team_code","project_key", "name", "ad_center_id","team_status_id","logo") VALUES ('46455bf7-ada7-495c-8019-8d7ab76d489e' ,'10012346','P1212' ,'Team B','99055bf7-ada7-495c-8019-8d7ab62d488e',1,'logo_B2dd2f2b41-3f0f-44dc-9598-05acc1569771.png');`,
     );
     await queryRunner.query(
       `INSERT INTO "team" ("id", "team_code","project_key","name", "ad_center_id","team_status_id","logo") VALUES ('46455bf7-ada7-495c-8019-8d7ab76d490e' ,'10012347','P87695', 'Team C','99055bf7-ada7-495c-8019-8d7ab62d488e',1,'logo_Cba48ed82-f863-455e-b87e-141ac186f992.png');`,
     );
     await queryRunner.query(
-      `INSERT INTO "team" ("id", "team_code","project_key","name", "ad_center_id","team_status_id" ,"logo") VALUES ('46455bf7-ada7-495c-8019-8d7ab76d491e' ,'10033347','P43567', 'Team D','98755bf7-ada7-495c-8019-8d7ab62d488e',1 ,'logo_Dffe7f9f8-1262-4658-80f9-06c58dc3100e.png');`,
+      `INSERT INTO "team" ("id", "team_code","project_key","name", "ad_center_id","team_status_id" ,"logo") VALUES ('46455bf7-ada7-495c-8019-8d7ab76d491e' ,'10033347','P43567', 'Team D','98755bf7-ada7-495c-8019-8d7ab62d488e',1 ,'logo_D1ae253f6b-1c9c-4984-a4b5-a91ffb959c50.png');`,
     );
 
     await queryRunner.query(
