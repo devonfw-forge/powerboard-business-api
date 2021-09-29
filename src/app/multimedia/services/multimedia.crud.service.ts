@@ -160,6 +160,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
       if (result[i].albumName != null && result[i].fileName == null) {
         this.folderResponse.folderId = result[i].id;
         this.folderResponse.folderName = result[i].albumName;
+        this.folderResponse.inSlideShow = result[i].inSlideshow;
         this.folderResponse.status = this.getStatusForFolder(result[i].albumName);
         fileArray.push(this.folderResponse);
         this.folderResponse = {} as FolderResponse;
@@ -348,7 +349,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
         result.push({ fileURL: commanPath + multimedia[i].fileName });
       } else {
         for (var j = 0; j < multimedia[i].files.length; j++) {
-          result.push({ fileURL: commanPath + multimedia[i].files[j].fileName });
+          result.push({ fileURL: commanPath + multimedia[i].albumName + '/' + multimedia[i].files[j].fileName });
         }
       }
     }

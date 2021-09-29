@@ -34,6 +34,7 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
    * @return {TeamResponse[]} list of teams with their status
    */
   async getTeamsByCenterId(CenterId: string): Promise<TeamsInADC[]> {
+    console.log('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk');
     console.log(CenterId);
     const teams: Team[] = await this.teamRepository.find({ where: { ad_center: CenterId } });
     console.log(teams);
