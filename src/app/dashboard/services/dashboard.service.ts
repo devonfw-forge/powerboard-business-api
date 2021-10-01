@@ -69,10 +69,11 @@ export class DashboardService implements IDashboardService {
    * @return {number} number as status value
    */
   fetchStatus(dashboard: DashBoardResponse): number | undefined {
+    let statusResult;
     if (dashboard?.clientStatus == null) {
-      return undefined;
+      return (statusResult = 2);
     } else {
-      let statusResult;
+      statusResult;
       const codeQualityStatus = dashboard!.codeQuality!.status;
       //const teamSpiritStatus = dashboard!.teamSpirit!.teamSpiritRating;
       const clientStatus = dashboard!.clientStatus!.clientSatisfactionRating;
