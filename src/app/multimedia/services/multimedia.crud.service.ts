@@ -65,6 +65,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
 
   async uploadFileToFolder(teamId: string, albumId: string, file: any): Promise<any> {
     const multimedia = (await this.multimediaRepository.findOne({ where: { id: albumId } })) as Multimedia;
+    console.log(multimedia);
     const albumName = multimedia.albumName;
     let fileEntry = new Files();
     const originalPath = `uploads/uploads/multimedia/${teamId}/${albumName}/`;
