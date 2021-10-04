@@ -10,6 +10,7 @@ import { Multimedia } from '../model/entities/multimedia.entity';
 import { MultimediaCrudService } from './multimedia.crud.service';
 import { Files } from '../model/entities/files.entity';
 import { DeleteResult } from 'typeorm';
+import { NotAcceptableException } from '@nestjs/common';
 
 //import { NotAcceptableException } from '@nestjs/common';
 
@@ -749,12 +750,12 @@ describe('MultimdeiaCrudService', () => {
       expect(result).toHaveProperty('albumName');
       expect(result).toHaveProperty('team');
     })
-    // it('should throw error if empty folderName is given', async () => {
-    //   const folderName = '';
-    //   const result = await multimediaCrudService.addFolder(teamId, folderName)
-    //   expect(result).rejects.toThrow();
+    it('should throw error if empty folderName is given', async () => {
+      const folderName = '';
+      const result = multimediaCrudService.addFolder(teamId, folderName)
+      expect(result).rejects.toThrow(NotAcceptableException);
 
-    // })
+    })
   })
   describe('getAllFilesInFolderForTeam()', () => {
     it('should return all files present in the folder', async () => {
