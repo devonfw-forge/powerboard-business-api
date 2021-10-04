@@ -90,7 +90,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     const result = await this.multimediaRepository.find({ where: { team: teamId } });
     console.log(result);
     if (result == null) {
-      throw new NotFoundException('not found');
+      throw new NotFoundException('No multimedia found');
     } else {
       let rootFiles = this.getCommonFiles(result, link);
 
@@ -183,7 +183,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     }
   }
 
-  private async deleteFilesFromSubFolder(teamId: string, subFolderId: string, filesId: string[]) {
+  async deleteFilesFromSubFolder(teamId: string, subFolderId: string, filesId: string[]) {
     let filesPath: string[] = [];
     const subFolder = await this.multimediaRepository.findOne(subFolderId);
 
@@ -203,7 +203,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     }
   }
 
-  private async deleteFilesAndFoldersFromRoot(teamId: string, filesId: string[], foldersId: string[]) {
+  async deleteFilesAndFoldersFromRoot(teamId: string, filesId: string[], foldersId: string[]) {
     const commanPath = 'uploads/uploads/multimedia/' + teamId + '/';
 
     let foldersPath: string[] = [];
