@@ -93,17 +93,17 @@ describe('CloudFileStorageService', () => {
         // const s3Object: any = jest.mock('aws-sdk', () => {
         //   return { S3: jest.fn(() => mS3Instance) };
         // });
-        mS3Instance.promise = jest.fn().mockResolvedValue({
-          Key: 'some-key',
-          Location: 'some-location',
-        });
+        // mS3Instance.promise = jest.fn().mockResolvedValue({
+        //   Key: 'some-key',
+        //   Location: 'some-location',
+        // });
         jest.spyOn(fileStorageService, 'getS3').mockImplementation(() => mS3Instance);
         const result = fileStorageService.uploadS3(file, bucket, filePath);
         expect(result).toBeDefined();
       })
       it('should throw error if there any', async () => {
         const mS3Instance = {
-          upload: jest.fn().mockRejectedValue,
+          upload: jest.fn().mockReturnThis(),
           promise: jest.fn().mockRejectedValue(null)
           // deleteObject: jest.fn().mockReturnThis(),
           // listObject: jest.fn().mockReturnThis()
