@@ -48,9 +48,11 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
     for (i = 0; i < teams.length; i++) {
       teamsResponse.teamId = teams[i].id;
       teamsResponse.teamName = teams[i].name;
-      teamsResponse.teamLogo = `${this.globalLink}/${teams[i].id}/` + teams[i].logo!;
-      // const dashboard = (await this.dashboardService.getDashboardByTeamId(teams[i])) as DashBoardResponse;
-      // teamsResponse.teamStatus = this.dashboardService.fetchStatus(dashboard);
+      if (teams[i].logo == null) {
+        teamsResponse.teamLogo = null;
+      } else {
+        teamsResponse.teamLogo = `${this.globalLink}/${teams[i].id}/` + teams[i].logo!;
+      }
       teamsResponse.teamStatus = await this.findStatusByTeam(teams[i]);
       teamsDTOArray.push(teamsResponse);
       teamsResponse = {} as TeamsInADC;
@@ -174,7 +176,11 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
     for (i = 0; i < teamList.length; i++) {
       viewTeamsInADC.teamId = teamList[i].id;
       viewTeamsInADC.teamName = teamList[i].name;
-      viewTeamsInADC.teamLogo = `${this.globalLink}/${teamList[i].id}/` + teamList[i].logo!;
+      if (teamList[i].logo == null) {
+        viewTeamsInADC.teamLogo = null;
+      } else {
+        viewTeamsInADC.teamLogo = `${this.globalLink}/${teamList[i].id}/` + teamList[i].logo!;
+      }
       // const dashboard = (await this.dashboardService.getDashboardByTeamId(teamList[i])) as DashBoardResponse;
       //viewTeamsInADC.teamStatus = this.dashboardService.fetchStatus(dashboard);
       viewTeamsInADC.teamStatus = await this.findStatusByTeam(teamList[i]);
