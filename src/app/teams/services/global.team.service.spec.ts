@@ -15,6 +15,8 @@ import {
   UserSessionDetailsRepositoryMock,
   MultimediaRepositoryMock,
   VisibilityMock,
+  FilesRepositoryMock,
+  TeamStatusRepositoryMock,
 } from '../../../../test/mockCrudRepository/crudRepository.mock';
 import { ADCenter } from '../../ad-center/model/entities/ad-center.entity';
 import { User } from '../../core/user/model/entities/user.entity';
@@ -45,7 +47,7 @@ import { TeamSpiritMedian } from '../../dashboard/team-spirit/model/entities/tea
 import { TeamSpiritCrudService } from '../../dashboard/team-spirit/services/team-spirit.crud.service';
 import { ITeamSpiritService } from '../../dashboard/team-spirit/services/team-spirit.interface';
 import { IFileStorageService } from '../../file-storage/services/file-storage.service.interface';
-import { LocalFileStorageService } from '../../file-storage/services/cloud-file-storage.service';
+import { CloudFileStorageService } from '../../file-storage/services/cloud-file-storage.service';
 import { Multimedia } from '../../multimedia/model/entities/multimedia.entity';
 import { MultimediaCrudService } from '../../multimedia/services/multimedia.crud.service';
 import { IMultimediaService } from '../../multimedia/services/multimedia.crud.service.interface';
@@ -60,6 +62,10 @@ import { GlobalTeamsService } from './global.team.service';
 import { IGlobalTeamsService } from './global.team.service.interface';
 //import { IGlobalTeamsService } from './global.team.service.interface';
 import { TeamCrudService } from './team.crud.service';
+import { IEmailService } from '../../email/services/email.service.interface';
+import { EmailService } from '../../email/services/email.service';
+import { Files } from '../../multimedia/model/entities/files.entity';
+import { TeamStatus } from '../model/entities/team_status.entity';
 
 describe('TeamCrudService', () => {
   let teamService: TeamCrudService;
@@ -86,7 +92,9 @@ describe('TeamCrudService', () => {
   let globalTeamService: IGlobalTeamsService;
   let userPrivilegeService: IUserPrivilegeService;
   let fileStorageService: IFileStorageService;
-
+  let emailService: IEmailService;
+  let fileRepo: FilesRepositoryMock;
+  let teamStatusRepo: TeamStatusRepositoryMock;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [],
@@ -102,10 +110,14 @@ describe('TeamCrudService', () => {
         MultimediaCrudService,
         UserPrivilegeService,
         GlobalTeamsService,
-        LocalFileStorageService,
+        CloudFileStorageService,
         {
           provide: 'IFileStorageService',
-          useClass: LocalFileStorageService,
+          useClass: CloudFileStorageService,
+        },
+        {
+          provide: 'IEmailService',
+          useClass: EmailService,
         },
         {
           provide: 'IGlobalTeamsService',
@@ -140,6 +152,10 @@ describe('TeamCrudService', () => {
           useClass: MultimediaCrudService,
         },
         {
+          provide: getRepositoryToken(TeamStatus),
+          useClass: TeamStatusRepositoryMock,
+        },
+        {
           provide: 'IUserTeamService',
           useClass: UserTeamService,
         },
@@ -161,7 +177,7 @@ describe('TeamCrudService', () => {
         // },
         {
           provide: 'IFileStorageService',
-          useClass: LocalFileStorageService,
+          useClass: CloudFileStorageService,
         },
         {
           provide: getRepositoryToken(UserRole),
@@ -209,6 +225,10 @@ describe('TeamCrudService', () => {
           useClass: ClientStatusRepositoryMock,
         },
         {
+          provide: getRepositoryToken(Files),
+          useClass: FilesRepositoryMock,
+        },
+        {
           provide: getRepositoryToken(CodeQualitySnapshot),
           useClass: CodeQualityRepositoryMock,
         },
@@ -223,7 +243,7 @@ describe('TeamCrudService', () => {
       ],
     }).compile();
     //userTeamService = module.get<UserTeamService>('IUserTeamService');
-    fileStorageService = module.get<LocalFileStorageService>('IFileStorageService');
+    fileStorageService = module.get<CloudFileStorageService>('IFileStorageService');
     dashboardService = module.get<DashboardService>('IDashboardService');
     multimediaService = module.get<MultimediaCrudService>('IMultimediaService');
     teamService = module.get<TeamCrudService>(TeamCrudService);
@@ -247,9 +267,13 @@ describe('TeamCrudService', () => {
     userTeamRepo = module.get<UserTeamRepositoryMock>(getRepositoryToken(UserTeam));
     userService = module.get<UserService>(UserService);
     userTeamService = module.get<UserTeamService>('IUserTeamService');
+    emailService = module.get<EmailService>('IEmailService');
+    fileRepo = module.get<FilesRepositoryMock>(getRepositoryToken(Files));
+    teamStatusRepo = module.get<TeamStatusRepositoryMock>(getRepositoryToken(TeamStatus));
   });
 
   it('should be defined after module initialization', () => {
+    expect(fileRepo).toBeDefined();
     expect(userRoleRepo).toBeDefined();
     expect(userTeamRepo).toBeDefined();
     expect(teamService).toBeDefined();
@@ -273,7 +297,8 @@ describe('TeamCrudService', () => {
     expect(userTeamService).toBeDefined();
     expect(userPrivilegeService).toBeDefined();
     expect(globalTeamService).toBeDefined();
-    expect(fileStorageService).toBeDefined();
+    expect(emailService).toBeDefined();
+    expect(teamStatusRepo).toBeDefined();
   });
 
   describe('getTeamsByCenterId() should update the team', () => {
@@ -357,19 +382,19 @@ describe('TeamCrudService', () => {
           },
         },
       ];
-
-      const dashboard: any = {};
+      const teamStatus: any = 1;
+      // const dashboard: any = {};
       jest.spyOn(teamRepo, 'find').mockImplementation(() => teamsPresentInADCenter);
-      jest.spyOn(dashboardService, 'getDashboardByTeamId').mockImplementation(() => dashboard);
+      // jest.spyOn(dashboardService, 'getDashboardByTeamId').mockImplementation(() => dashboard);
+      jest.spyOn(globalTeamService, 'findStatusByTeam').mockImplementation(() => teamStatus);
       expect(await globalTeamService.getTeamsByCenterId(centerId)).toBeDefined();
-      expect(dashboardService.getDashboardByTeamId).toBeCalled();
-      expect(dashboardService.getDashboardByTeamId).toBeDefined();
     });
   });
 
   describe('uploadLogoForTeam() ', () => {
     test('should upload logo of a team', async () => {
       const logo: any = 'Screenshot(7)2028e7cb-69d5-4219-a748-d2449abb4cc8.png';
+      const teamId = 'fe4f8120-8a2c-47ad-bad7-86e412e323c1';
       const team: any = {
         id: 'fe4f8120-8a2c-47ad-bad7-86e412e323c1',
         version: 1,
@@ -404,15 +429,29 @@ describe('TeamCrudService', () => {
           name: 'ADCenter Murcia',
         },
       };
-      const fileName: any = 'Screenshot(7)2028e7cb-69d5-4219-a748-d2449abb4cc8.png';
-      jest.spyOn(fileStorageService, 'storeFile').mockImplementation(() => fileName);
-      jest.spyOn(teamRepo, 'save').mockResolvedValue(teamwithLogo);
-      expect(await globalTeamService.uploadLogoForTeam(logo, team)).toEqual(teamwithLogo);
+      const fileUploaded = {
+        ETag: '"50708655988b63ba7faa72b6da8e86"',
+        Location:
+          'https://powerboast.s3.onaws.com/uploads/uploads/multimedia/46455bf7-ada7-495c-8019-8d7ab76d488e/logo_B222bf72b3-3f3b-471d-b0d8-f21a6283d00e.png',
+        key:
+          'uploads/uploads/multimedia/46455bf7-ada7-495c-8019-8d7ab76d488e/logo_B222bf72b3-3f3b-471d-b0d8-f21a6283d00e.png',
+        Key:
+          'uploads/uploads/multimedia/46455bf7-ada7-495c-8019-8d7ab76d488e/logo_B222bf72b3-3f3b-471d-b0d8-f21a6283d00e.png',
+        Bucket: 'powerboard',
+      } as any;
+      const deleteFile = {} as any;
+      // const fileName: any = 'Screenshot(7)2028e7cb-69d5-4219-a748-d2449abb4cc8.png';
+      jest.spyOn(teamRepo, 'findOne').mockImplementation(() => team);
+      jest.spyOn(fileStorageService, 'deleteFile').mockImplementation(() => deleteFile);
+      jest.spyOn(fileStorageService, 'uploadFile').mockResolvedValue(fileUploaded);
+      jest.spyOn(teamRepo, 'save').mockImplementation(() => teamwithLogo);
+      expect(await globalTeamService.uploadLogoForTeam(logo, teamId)).toEqual(teamwithLogo);
     });
   });
 
   describe('deleteLogoForTeam() ', () => {
     //inputs
+    const teamId = 'fe4f8120-8a2c-47ad-bad7-86e412e323c1';
     const team: any = {
       id: 'fe4f8120-8a2c-47ad-bad7-86e412e323c1',
       version: 1,
@@ -435,13 +474,13 @@ describe('TeamCrudService', () => {
 
       jest.spyOn(fileStorageService, 'deleteFile').mockResolvedValue(deleted);
       jest.spyOn(teamRepo, 'save').mockImplementation(() => team);
-      expect(await globalTeamService.deleteLogoForTeam(team)).toBeDefined();
+      expect(await globalTeamService.deleteLogoFromTeam(teamId)).toBeDefined();
       expect(fileStorageService.deleteFile).toHaveBeenCalled();
     });
     test('should throw error if file not present in path', async () => {
       jest.spyOn(fileStorageService, 'deleteFile').mockResolvedValue(undefined);
       try {
-        await globalTeamService.deleteLogoForTeam(team);
+        await globalTeamService.deleteLogoFromTeam(team);
       } catch (e) {
         expect(e.message).toMatch('File not found');
       }
@@ -797,13 +836,11 @@ describe('TeamCrudService', () => {
         },
       ];
 
-      const dashboard: any = {};
+      const teamStatus: any = 1;
       jest.spyOn(teamRepo, 'findOne').mockImplementation(() => team);
       jest.spyOn(teamRepo, 'find').mockImplementation(() => teamsUnderADC);
-      jest.spyOn(dashboardService, 'getDashboardByTeamId').mockImplementation(() => dashboard);
+      jest.spyOn(globalTeamService, 'findStatusByTeam').mockImplementation(() => teamStatus);
       expect(await globalTeamService.viewTeamsInADC(teamId)).toBeDefined();
-      expect(dashboardService.getDashboardByTeamId).toBeCalled();
-      expect(dashboardService.getDashboardByTeamId).toBeDefined();
     });
   });
 
