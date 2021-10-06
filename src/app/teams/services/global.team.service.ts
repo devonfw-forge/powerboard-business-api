@@ -90,6 +90,7 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
     teamsResponse.projectKey = team1.projectKey;
     teamsResponse.teamCode = team1.teamCode;
     teamsResponse.ad_center = team1.ad_center.id;
+    teamsResponse.logo = team1.logo;
     return teamsResponse;
   }
 
