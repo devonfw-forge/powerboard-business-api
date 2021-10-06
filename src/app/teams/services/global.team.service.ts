@@ -15,6 +15,7 @@ import { TeamsInADC } from '../model/dto/TeamsInADC';
 import { IGlobalTeamsService } from './global.team.service.interface';
 import { TeamStatus } from '../model/entities/team_status.entity';
 import * as dotenv from 'dotenv';
+import { TeamResponse } from '../model/dto/TeamResponse';
 dotenv.config();
 @Injectable()
 export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlobalTeamsService {
@@ -67,7 +68,7 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
    * @return {Images} Images as response for that team
    */
 
-  async uploadLogoForTeam(logo: any, teamId: string): Promise<Team> {
+  async uploadLogoForTeam(logo: any, teamId: string): Promise<TeamResponse> {
     const team = await this.teamRepository.findOne(teamId);
     if (!team) {
       throw new NotFoundException('Team Not Found');
@@ -83,7 +84,13 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
 
     let team1 = await this.teamRepository.save(team);
     team1.logo = `${this.globalLink}/${teamId}/` + team.logo!;
-    return team1;
+    let teamsResponse: TeamResponse = {} as TeamResponse;
+    teamsResponse.id = team1.id;
+    teamsResponse.name = team1.name;
+    teamsResponse.projectKey = team1.projectKey;
+    teamsResponse.teamCode = team1.teamCode;
+    teamsResponse.ad_center = team1.ad_center.id;
+    return teamsResponse;
   }
 
   async deleteLogoFromTeam(teamId: string): Promise<void> {
@@ -105,7 +112,7 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
    * @param {AddTeamDTO} .Takes AddTeamDTO as input
    * @return {Team} Created Team as response
    */
-  async addTeam(addteam: AddTeam, logo: any): Promise<Team> {
+  async addTeam(addteam: AddTeam, logo: any): Promise<TeamResponse> {
     const teamCode = addteam.teamCode;
     const teamExisted = await this.teamRepository.findOne({ where: { teamCode: teamCode } });
     console.log(teamExisted);
@@ -123,7 +130,15 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
       if (teamCreated && logo) {
         return await this.uploadLogoForTeam(logo, teamCreated.id);
       } else {
-        return teamCreated;
+        console.log('team created');
+        console.log(teamCreated)
+        let teamsResponse: TeamResponse = {} as TeamResponse;
+        teamsResponse.id = teamCreated.id;
+        teamsResponse.name = teamCreated.name;
+        teamsResponse.projectKey = teamCreated.projectKey;
+        teamsResponse.teamCode = teamCreated.teamCode;
+        teamsResponse.ad_center = teamCreated.ad_center;
+        return teamsResponse
       }
     }
   }
