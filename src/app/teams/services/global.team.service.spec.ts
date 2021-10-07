@@ -429,6 +429,14 @@ describe('TeamCrudService', () => {
           name: 'ADCenter Murcia',
         },
       };
+      const teamResponse = {
+        id: 'fe4f8120-8a2c-47ad-bad7-86e412e323c1',
+        name: 'Team E',
+        projectKey: 'P112461',
+        teamCode: '9900918',
+        logo: 'undefined/fe4f8120-8a2c-47ad-bad7-86e412e323c1/logo_B222bf72b3-3f3b-471d-b0d8-f21a6283d00e.png',
+        ad_center: '98955bf7-ada7-495c-8019-8d7ab62d488e',
+      };
       const fileUploaded = {
         ETag: '"50708655988b63ba7faa72b6da8e86"',
         Location:
@@ -445,7 +453,7 @@ describe('TeamCrudService', () => {
       jest.spyOn(fileStorageService, 'deleteFile').mockImplementation(() => deleteFile);
       jest.spyOn(fileStorageService, 'uploadFile').mockResolvedValue(fileUploaded);
       jest.spyOn(teamRepo, 'save').mockImplementation(() => teamwithLogo);
-      expect(await globalTeamService.uploadLogoForTeam(logo, teamId)).toEqual(teamwithLogo);
+      expect(await globalTeamService.uploadLogoForTeam(logo, teamId)).toEqual(teamResponse);
     });
   });
 
@@ -453,6 +461,23 @@ describe('TeamCrudService', () => {
     //inputs
     const teamId = 'fe4f8120-8a2c-47ad-bad7-86e412e323c1';
     const team: any = {
+      id: 'fe4f8120-8a2c-47ad-bad7-86e412e323c1',
+      version: 1,
+      createdAt: '2021-08-09T11:35:56.959Z',
+      updatedAt: '2021-08-09T11:35:56.959Z',
+      name: 'Team E',
+      teamCode: '9900918',
+      projectKey: 'P112461',
+      logo: 'logo_B222bf72b3-3f3b-471d-b0d8-f21a6283d00e.png',
+      ad_center: {
+        id: '98955bf7-ada7-495c-8019-8d7ab62d488e',
+        version: 1,
+        createdAt: '2021-08-09T11:35:56.959Z',
+        updatedAt: '2021-08-09T11:35:56.959Z',
+        name: 'ADCenter Murcia',
+      },
+    };
+    const team1: any = {
       id: 'fe4f8120-8a2c-47ad-bad7-86e412e323c1',
       version: 1,
       createdAt: '2021-08-09T11:35:56.959Z',
@@ -470,17 +495,19 @@ describe('TeamCrudService', () => {
       },
     };
     test('should delete logo of a team', async () => {
-      const deleted = true;
-
+      const deleted = false;
+      jest.spyOn(teamRepo, 'findOne').mockImplementation(() => team);
       jest.spyOn(fileStorageService, 'deleteFile').mockResolvedValue(deleted);
-      jest.spyOn(teamRepo, 'save').mockImplementation(() => team);
-      expect(await globalTeamService.deleteLogoFromTeam(teamId)).toBeDefined();
+      jest.spyOn(teamRepo, 'save').mockImplementation(() => team1);
+      expect(await globalTeamService.deleteLogoFromTeam(teamId)).toBeUndefined;
       expect(fileStorageService.deleteFile).toHaveBeenCalled();
     });
     test('should throw error if file not present in path', async () => {
-      jest.spyOn(fileStorageService, 'deleteFile').mockResolvedValue(undefined);
+      const deleted1 = true;
+      jest.spyOn(teamRepo, 'findOne').mockImplementation(() => team);
+      jest.spyOn(fileStorageService, 'deleteFile').mockResolvedValue(deleted1);
       try {
-        await globalTeamService.deleteLogoFromTeam(team);
+        await globalTeamService.deleteLogoFromTeam(teamId);
       } catch (e) {
         expect(e.message).toMatch('File not found');
       }
@@ -551,15 +578,29 @@ describe('TeamCrudService', () => {
       expect(await globalTeamService.addTeam(addTeamDTO, logo)).toBeDefined();
     });
     test('should create new team if team is not already present in db and even if logo is not there', async () => {
+      // const createdTeam = {
+      //   id: 'fe4f8120-8a2c-47ad-bad7-86e412e323c1',
+      //   version: 1,
+      //   createdAt: '2021-08-09T11:35:56.959Z',
+      //   updatedAt: '2021-08-09T11:35:56.959Z',
+      //   name: 'Team E',
+      //   teamCode: '9900918',
+      //   projectKey: 'P112461',
+      //   logo: null,
+      //   ad_center: {
+      //     id: '98955bf7-ada7-495c-8019-8d7ab62d488e',
+      //     version: 1,
+      //     createdAt: '2021-08-09T11:35:56.959Z',
+      //     updatedAt: '2021-08-09T11:35:56.959Z',
+      //     name: 'ADCenter Murcia',
+      //   },
+
+      // }
       const createdTeam = {
         id: 'fe4f8120-8a2c-47ad-bad7-86e412e323c1',
-        version: 1,
-        createdAt: '2021-08-09T11:35:56.959Z',
-        updatedAt: '2021-08-09T11:35:56.959Z',
         name: 'Team E',
-        teamCode: '9900918',
         projectKey: 'P112461',
-        logo: null,
+        teamCode: '9900918',
         ad_center: {
           id: '98955bf7-ada7-495c-8019-8d7ab62d488e',
           version: 1,
@@ -567,8 +608,7 @@ describe('TeamCrudService', () => {
           updatedAt: '2021-08-09T11:35:56.959Z',
           name: 'ADCenter Murcia',
         },
-      } as Team;
-
+      };
       jest.spyOn(teamRepo, 'findOne').mockImplementation(() => undefined);
       jest.spyOn(teamRepo, 'save').mockImplementation(() => createdTeam);
       expect(await globalTeamService.addTeam(addTeamDTO, null)).toEqual(createdTeam);
@@ -866,6 +906,60 @@ describe('TeamCrudService', () => {
       };
       jest.spyOn(teamRepo, 'findOne').mockImplementation(() => team);
       expect(await globalTeamService.findTeamById(teamId)).toEqual(team);
+    });
+  });
+
+  describe('updateTeamStatus()', () => {
+    test('should update the status of team ', async () => {
+      const teamId = '46455bf7-ada7-495c-8019-8d7ab76d491e';
+      const team = {
+        id: '46455bf7-ada7-495c-8019-8d7ab76d491e',
+        version: 1,
+        createdAt: '2021-08-09T11:35:56.959Z',
+        updatedAt: '2021-08-09T11:35:56.959Z',
+        name: 'Team D',
+        teamCode: '10033347',
+        projectKey: 'P43567',
+        logo: null,
+        ad_center: {
+          id: '98755bf7-ada7-495c-8019-8d7ab62d488e',
+          version: 1,
+          createdAt: '2021-08-09T11:35:56.959Z',
+          updatedAt: '2021-08-09T11:35:56.959Z',
+          name: 'ADCenter Mumbai',
+        },
+        isStatusChanged: true,
+      };
+      const teamStatus = {
+        id: 1,
+        name: 'on track',
+      };
+      const team1 = {
+        id: '46455bf7-ada7-495c-8019-8d7ab76d491e',
+        version: 1,
+        createdAt: '2021-08-09T11:35:56.959Z',
+        updatedAt: '2021-08-09T11:35:56.959Z',
+        name: 'Team D',
+        teamCode: '10033347',
+        projectKey: 'P43567',
+        logo: null,
+        isStatusChanged: true,
+        teamStatus: {
+          id: 2,
+          name: 'off track',
+        },
+        ad_center: {
+          id: '98755bf7-ada7-495c-8019-8d7ab62d488e',
+          version: 1,
+          createdAt: '2021-08-09T11:35:56.959Z',
+          updatedAt: '2021-08-09T11:35:56.959Z',
+          name: 'ADCenter Mumbai',
+        },
+      };
+      jest.spyOn(teamRepo, 'findOne').mockImplementation(() => team);
+      jest.spyOn(teamStatusRepo, 'findOne').mockImplementation(() => teamStatus);
+      jest.spyOn(teamRepo, 'save').mockImplementation(() => team1);
+      expect(await globalTeamService.updateTeamStatus(teamId, 2)).toEqual(team1);
     });
   });
 });

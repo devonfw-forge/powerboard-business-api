@@ -132,14 +132,14 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
         return await this.uploadLogoForTeam(logo, teamCreated.id);
       } else {
         console.log('team created');
-        console.log(teamCreated)
+        console.log(teamCreated);
         let teamsResponse: TeamResponse = {} as TeamResponse;
         teamsResponse.id = teamCreated.id;
         teamsResponse.name = teamCreated.name;
         teamsResponse.projectKey = teamCreated.projectKey;
         teamsResponse.teamCode = teamCreated.teamCode;
         teamsResponse.ad_center = teamCreated.ad_center;
-        return teamsResponse
+        return teamsResponse;
       }
     }
   }
