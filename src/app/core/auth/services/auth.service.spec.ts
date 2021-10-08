@@ -17,7 +17,6 @@ import {
   UserRoleRepositoryMock,
   UserSessionDetailsRepositoryMock,
   UserTeamRepositoryMock,
-
 } from '../../../../../test/mockCrudRepository/crudRepository.mock';
 import { ViewCentersResponse } from '../../../ad-center/model/dto/ViewCentersResponse';
 import { ADCenter } from '../../../ad-center/model/entities/ad-center.entity';
@@ -183,7 +182,7 @@ describe('AuthService', () => {
         },
         {
           provide: 'ITeamLinksService',
-          useClass: TeamLinksCrudService
+          useClass: TeamLinksCrudService,
         },
         {
           provide: 'IUserService',
@@ -253,7 +252,7 @@ describe('AuthService', () => {
     userTeamService = module.get<UserTeamService>('IUserTeamService');
     userSessionDetailsService = module.get<UserSessionDetailsService>('IUserSessionDetailsService');
     globalTeamsService = module.get<GlobalTeamsService>('IGlobalTeamService');
-    userPrivilegeService = module.get<UserPrivilegeService>('IUserPrivilegeService')
+    userPrivilegeService = module.get<UserPrivilegeService>('IUserPrivilegeService');
     adcService = module.get<ADCenterCrudService>('IADCenterService');
     dashboardService = module.get<DashboardService>('IDashboardService');
     userService = module.get<UserService>('IUserService');
@@ -269,7 +268,7 @@ describe('AuthService', () => {
     clientStatusService = module.get<ClientStatusCrudService>('IClientStatusService');
     teamSpiritService = module.get<TeamSpiritCrudService>('ITeamSpiritService');
     codeQualityService = module.get<CodeQualitySnapshotCrudService>('ICodeQualityService');
-    fileStorageService = module.get<CloudFileStorageService>('IFileStorageService')
+    fileStorageService = module.get<CloudFileStorageService>('IFileStorageService');
     sprintRepo = module.get<SprintRepositoryMock>(getRepositoryToken(Sprint));
     clientRepo = module.get<ClientStatusRepositoryMock>(getRepositoryToken(ClientStatus));
     codeQualityRepo = module.get<CodeQualityRepositoryMock>(getRepositoryToken(CodeQualitySnapshot));
@@ -281,7 +280,6 @@ describe('AuthService', () => {
   });
 
   it('should be defined after module initialization', () => {
-
     expect(authService).toBeDefined();
     expect(adcService).toBeDefined();
     expect(dashboardService).toBeDefined();
@@ -314,11 +312,10 @@ describe('AuthService', () => {
     expect(multimediaRepo).toBeDefined();
   });
 
-
   describe('validateUser', () => {
     it('should return a defined user response if the user is present in the database', async () => {
-      const username = "siva11";
-      const password = "password";
+      const username = 'siva11';
+      const password = 'password';
       const user = {
         id: '11cf1dfd-43e9-4cc4-8257-a6ba5c70e33d',
         version: 1,
@@ -330,27 +327,27 @@ describe('AuthService', () => {
       } as User;
       jest.spyOn(userService, 'findUser').mockResolvedValue(user);
       expect(await authService.validateUser(username, password)).toBeDefined();
-    })
+    });
     it('should return undefined response if the user is not present in the database', async () => {
-      const username = "siva";
-      const password = "pass";
+      const username = 'siva';
+      const password = 'pass';
       jest.spyOn(userService, 'findUser').mockResolvedValue(undefined);
       expect(await authService.validateUser(username, password)).toBeUndefined();
-    })
-  })
+    });
+  });
   describe('singIn', () => {
     it('should return accessToken if the user is present in the database', async () => {
-      const username = "siva11";
-      const password = "password";
+      const username = 'siva11';
+      const password = 'password';
       expect(await authService.signIn(username, password)).toBeDefined();
-    })
-  })
+    });
+  });
   describe('login', () => {
     it('should return a JWT token and login response when a valid user is provided', async () => {
       let userDTO = {
-        username: "siva11",
-        password: "password"
-      }
+        username: 'siva11',
+        password: 'password',
+      };
       const user = {
         id: '11cf1dfd-43e9-4cc4-8257-a6ba5c70e33d',
         version: 1,
@@ -361,7 +358,7 @@ describe('AuthService', () => {
         email: 'siva@capgemini.com',
       } as User;
 
-      const accessToken: any = {}
+      const accessToken: any = {};
       const userSession: any = {
         id: '56cf1dfd-43e9-4cc4-8257-a6ba5c70e33d',
         version: 1,
@@ -369,67 +366,67 @@ describe('AuthService', () => {
         updatedAt: '2021-09-03T08:52:58.568Z',
         userId: '11cf1dfd-43e9-4cc4-8257-a6ba5c70e33d',
         isPasswordChanged: true,
-        lastCheckedInProjectId: null
-      }
+        lastCheckedInProjectId: null,
+      };
       const homeResponse: HomeResponse = {
         My_Center: {
           centerId: '99055bf7-ada7-495c-8019-8d7ab62d488e',
-          centerName: 'ADCenter Bangalore'
+          centerName: 'ADCenter Bangalore',
         },
         My_Team: [
           {
             teamId: '46455bf7-ada7-495c-8019-8d7ab76d489e',
             teamName: 'Team B',
             myRole: 'team_member',
-            teamStatus: 3
+            teamStatus: 3,
           },
           {
             teamId: '46455bf7-ada7-495c-8019-8d7ab76d490e',
             teamName: 'Team C',
             myRole: 'team_admin',
-            teamStatus: 3
-          }
+            teamStatus: 3,
+          },
         ],
         Teams_In_ADC: [
           {
             teamId: '46455bf7-ada7-495c-8019-8d7ab76d489e',
             teamName: 'Team B',
-            teamStatus: 3
+            teamStatus: 3,
           },
           {
             teamId: '46455bf7-ada7-495c-8019-8d7ab76d490e',
             teamName: 'Team C',
-            teamStatus: 3
+            teamStatus: 3,
           },
           {
             teamId: '46455bf7-ada7-495c-8019-8d7ab76d488e',
             teamName: 'Team A',
-            teamStatus: 3
-          }
+            teamStatus: 3,
+          },
         ],
         ADC_List: [
           {
             centerId: '98655bf7-ada7-495c-8019-8d7ab62d488e',
-            centerName: 'ADCenter Valencia'
+            centerName: 'ADCenter Valencia',
           },
           {
             centerId: '98755bf7-ada7-495c-8019-8d7ab62d488e',
-            centerName: 'ADCenter Mumbai'
+            centerName: 'ADCenter Mumbai',
           },
           {
             centerId: '98855bf7-ada7-495c-8019-8d7ab62d488e',
-            centerName: 'ADCenter Poland'
+            centerName: 'ADCenter Poland',
           },
           {
             centerId: '98955bf7-ada7-495c-8019-8d7ab62d488e',
-            centerName: 'ADCenter Murcia'
+            centerName: 'ADCenter Murcia',
           },
           {
             centerId: '99055bf7-ada7-495c-8019-8d7ab62d488e',
-            centerName: 'ADCenter Bangalore'
-          }
-        ]
-      }
+            centerName: 'ADCenter Bangalore',
+          },
+        ],
+      };
       const privileges: any = [];
       jest.spyOn(authService, 'validateUser').mockResolvedValue(user);
       jest.spyOn(authService, 'signIn').mockImplementation(() => accessToken);
@@ -452,21 +449,21 @@ describe('AuthService', () => {
   describe('loginGuest()', () => {
     it('should call the loginResponseForGuest() method and return login response for a guest user', async () => {
       let userDTO = {
-        username: "siva11",
-        password: "password"
-      }
+        username: 'siva11',
+        password: 'password',
+      };
 
       const homeResponse: HomeResponse = {} as HomeResponse;
-      const accessToken: any = "anAccessToken"
+      const accessToken: any = 'anAccessToken';
       const loginResponse: any = {
         homeResponse,
-        accessToken
-      }
+        accessToken,
+      };
       jest.spyOn(authService, 'signIn').mockImplementation(() => accessToken);
       jest.spyOn(authService, 'loginResponseForGuest').mockResolvedValue(loginResponse);
       expect(await authService.loginGuest(userDTO)).toBeDefined();
-    })
-  })
+    });
+  });
 
   describe('loginResponseForGuest()', () => {
     it('should return login response for a guest user', async () => {
@@ -475,35 +472,35 @@ describe('AuthService', () => {
         [
           {
             centerId: '98655bf7-ada7-495c-8019-8d7ab62d488e',
-            centerName: 'ADCenter Valencia'
+            centerName: 'ADCenter Valencia',
           },
           {
             centerId: '98755bf7-ada7-495c-8019-8d7ab62d488e',
-            centerName: 'ADCenter Mumbai'
+            centerName: 'ADCenter Mumbai',
           },
           {
             centerId: '98855bf7-ada7-495c-8019-8d7ab62d488e',
-            centerName: 'ADCenter Poland'
+            centerName: 'ADCenter Poland',
           },
           {
             centerId: '98955bf7-ada7-495c-8019-8d7ab62d488e',
-            centerName: 'ADCenter Murcia'
+            centerName: 'ADCenter Murcia',
           },
           {
             centerId: '99055bf7-ada7-495c-8019-8d7ab62d488e',
-            centerName: 'ADCenter Bangalore'
-          }
-        ]
+            centerName: 'ADCenter Bangalore',
+          },
+        ],
       ];
-      const allTeams: any = {}
+      const allTeams: any = {};
       jest.spyOn(adcService, 'getAllCenters').mockImplementation(() => adcenters);
       jest.spyOn(globalTeamsService, 'getTeamsByCenterId').mockImplementation(() => allTeams);
       expect(await authService.loginResponseForGuest(accessToken)).toBeDefined();
-    })
-  })
+    });
+  });
   describe('getHomeDetailsForUserId', () => {
     it('should return a home detail response for the given user', async () => {
-      const userId = '11cf1dfd-43e9-4cc4-8257-a6ba5c70e33d'
+      const userId = '11cf1dfd-43e9-4cc4-8257-a6ba5c70e33d';
       const userTeam = [
         {
           id: '762f1dfd-43e9-4cc4-8257-a6ba5c70e33d',
@@ -517,7 +514,7 @@ describe('AuthService', () => {
             updatedAt: '2021-09-08T11:39:39.145Z',
             username: 'raj11',
             password: '$2b$12$.hA7MmRGIzsr7v.eYFRtuOUTNw5WEqkGPcE92EX6opaiVMbr77fme',
-            email: 'raj@mail.com'
+            email: 'raj@mail.com',
           },
           team: {
             id: '46455bf7-ada7-495c-8019-8d7ab76d488e',
@@ -530,7 +527,7 @@ describe('AuthService', () => {
             logo: null,
             isStatusChanged: false,
             ad_center: [ADCenter],
-            team_status: [TeamStatus]
+            team_status: [TeamStatus],
           },
           role: {
             id: '555f1dfd-43e9-4cc4-8257-a6ba5c70e34d',
@@ -539,71 +536,69 @@ describe('AuthService', () => {
             updatedAt: '2021-09-08T11:39:39.145Z',
             roleName: 'team_member',
             description: null,
-            privilege: [Array]
-          }
-        }
-      ]
+            privilege: [Array],
+          },
+        },
+      ];
       const homeResponse: HomeResponse = {} as HomeResponse;
       jest.spyOn(userTeamService, 'findUserTeamsByUserId').mockImplementation(() => userTeam);
-      jest.spyOn(authService, 'teamMemberTeamAdminHome').mockResolvedValue(homeResponse)
+      jest.spyOn(authService, 'teamMemberTeamAdminHome').mockResolvedValue(homeResponse);
       expect(await authService.getHomeDetailsForUserId(userId)).toBeDefined();
-    })
-  })
+    });
+  });
   describe('getPowerboard()', () => {
     it('should return the powerboard response inside login response for a user who visited any team earlier', async () => {
       const visitedTeam = '46455bf7-ada7-495c-8019-8d7ab76d488e';
       const userId = '10cf1dfd-43e9-4cc4-8257-a6ba5c70e33d';
-      const powerboardResponse: PowerboardResponse = {} as PowerboardResponse
+      const powerboardResponse: PowerboardResponse = {} as PowerboardResponse;
       jest.spyOn(teamService, 'getTeamInfoById').mockResolvedValue(powerboardResponse);
       expect(await authService.getPowerboard(visitedTeam, userId)).toBeDefined();
-
-    })
-  })
+    });
+  });
   describe('changePassword()', () => {
     it('should return the user with updated password', async () => {
-      const changePasswordDTO =
-      {
+      const changePasswordDTO = {
         userId: '10cf1dfd-43e9-4cc4-8257-a6ba5c70e33d',
         oldPassword: 'password',
-        newPassword: 'pass'
-      }
+        newPassword: 'pass',
+      };
       const user = new User();
       jest.spyOn(userService, 'changePassword').mockResolvedValue(user);
       expect(await authService.changePassword(changePasswordDTO)).toBeDefined();
-    })
-  })
+    });
+  });
   describe('systemAdminHome()', () => {
     it('should return home response for system admin', async () => {
       const adcenters: any = [
         [
           {
             centerId: '98655bf7-ada7-495c-8019-8d7ab62d488e',
-            centerName: 'ADCenter Valencia'
+            centerName: 'ADCenter Valencia',
           },
           {
             centerId: '98755bf7-ada7-495c-8019-8d7ab62d488e',
-            centerName: 'ADCenter Mumbai'
+            centerName: 'ADCenter Mumbai',
           },
           {
             centerId: '98855bf7-ada7-495c-8019-8d7ab62d488e',
-            centerName: 'ADCenter Poland'
+            centerName: 'ADCenter Poland',
           },
           {
             centerId: '98955bf7-ada7-495c-8019-8d7ab62d488e',
-            centerName: 'ADCenter Murcia'
+            centerName: 'ADCenter Murcia',
           },
           {
             centerId: '99055bf7-ada7-495c-8019-8d7ab62d488e',
-            centerName: 'ADCenter Bangalore'
-          }
-        ]
+            centerName: 'ADCenter Bangalore',
+          },
+        ],
       ];
-      const allTeams: any = {}
+      const allTeams: any = {};
       jest.spyOn(adcService, 'getAllCenters').mockImplementation(() => adcenters);
       jest.spyOn(globalTeamsService, 'getTeamsByCenterId').mockImplementation(() => allTeams);
       expect(await authService.systemAdminHome()).toBeDefined();
-    })
-  })
+    });
+  });
 
   describe('teamMemberTeamAdminHome()', () => {
     it('should return a home detail response for the team member or team admin', async () => {
@@ -620,7 +615,7 @@ describe('AuthService', () => {
             updatedAt: '2021-09-08T11:39:39.145Z',
             username: 'raj11',
             password: '$2b$12$.hA7MmRGIzsr7v.eYFRtuOUTNw5WEqkGPcE92EX6opaiVMbr77fme',
-            email: 'raj@mail.com'
+            email: 'raj@mail.com',
           },
           team: {
             id: '46455bf7-ada7-495c-8019-8d7ab76d488e',
@@ -633,7 +628,7 @@ describe('AuthService', () => {
             logo: null,
             isStatusChanged: false,
             ad_center: [ADCenter],
-            team_status: [TeamStatus]
+            team_status: [TeamStatus],
           },
           role: {
             id: '555f1dfd-43e9-4cc4-8257-a6ba5c70e34d',
@@ -642,16 +637,16 @@ describe('AuthService', () => {
             updatedAt: '2021-09-08T11:39:39.145Z',
             roleName: 'team_member',
             description: null,
-            privilege: [Array]
-          }
-        }
-      ]
-      const homeResponse: HomeResponse = {} as HomeResponse
+            privilege: [Array],
+          },
+        },
+      ];
+      const homeResponse: HomeResponse = {} as HomeResponse;
       jest.spyOn(globalTeamsService, 'findStatusByTeam').mockImplementation(() => userTeam);
       jest.spyOn(authService, 'homeDetailsForTeamMemberAdmin').mockResolvedValue(homeResponse);
       expect(await authService.teamMemberTeamAdminHome(userTeam)).toBeDefined();
-    })
-  })
+    });
+  });
   describe('homeDetailsForTeamMemberAdmin()', () => {
     it('should return home detail for the team member or team admin', async () => {
       const teamsDTOArray = [
@@ -659,19 +654,19 @@ describe('AuthService', () => {
           teamId: '46455bf7-ada7-495c-8019-8d7ab76d488e',
           teamName: 'Team A',
           myRole: 'team_member',
-          teamStatus: 3
-        }
-      ]
+          teamStatus: 3,
+        },
+      ];
       const teamId = ' 46455bf7-ada7-495c-8019-8d7ab76d488e';
       const myCenter: MyCenter = {} as MyCenter;
       const teamsView: any = {};
-      const allCenters: ViewCentersResponse[] = []
+      const allCenters: ViewCentersResponse[] = [];
       jest.spyOn(teamService, 'getCenterByTeamId').mockResolvedValue(myCenter);
       jest.spyOn(globalTeamsService, 'viewTeamsInADC').mockImplementation(() => teamsView);
       jest.spyOn(adcService, 'getAllCenters').mockResolvedValue(allCenters);
       expect(await authService.homeDetailsForTeamMemberAdmin(teamId, teamsDTOArray)).toBeDefined();
-    })
-  })
+    });
+  });
   describe('getPrivileges()', () => {
     it('should return the priveleges if the user is system admin or guest ', async () => {
       const userId = '35afbdf8-9035-4bc6-ae04-28c6140495ad';
@@ -688,7 +683,7 @@ describe('AuthService', () => {
             updatedAt: '2021-09-08T11:39:39.145Z',
             username: 'raj11',
             password: '$2b$12$.hA7MmRGIzsr7v.eYFRtuOUTNw5WEqkGPcE92EX6opaiVMbr77fme',
-            email: 'raj@mail.com'
+            email: 'raj@mail.com',
           },
           // team: {
           //   id: '46455bf7-ada7-495c-8019-8d7ab76d488e',
@@ -710,10 +705,10 @@ describe('AuthService', () => {
             updatedAt: '2021-09-08T11:39:39.145Z',
             roleName: 'team_member',
             description: null,
-            privilege: [Array]
-          }
-        }
-      ]
+            privilege: [Array],
+          },
+        },
+      ];
       const privileges: any = [
         'add_team_admin',
         'view_links',
@@ -726,12 +721,12 @@ describe('AuthService', () => {
         'update_role',
         'delete_team_members',
         'add_team_member',
-        'add_guest_user'
-      ]
+        'add_guest_user',
+      ];
       jest.spyOn(userTeamService, 'findUserTeamsByUserId').mockImplementation(() => userTeam);
       jest.spyOn(userPrivilegeService, 'getAllPrivilegeForAdmin').mockImplementation(() => privileges);
       expect(await authService.getPrivileges(userId)).toEqual(privileges);
-    })
+    });
     it('should return the priveleges if the user is team admin or team member associated with any team', async () => {
       const userId = '35afbdf8-9035-4bc6-ae04-28c6140495ad';
       const userTeam: any = [
@@ -747,7 +742,7 @@ describe('AuthService', () => {
             updatedAt: '2021-09-08T11:39:39.145Z',
             username: 'raj11',
             password: '$2b$12$.hA7MmRGIzsr7v.eYFRtuOUTNw5WEqkGPcE92EX6opaiVMbr77fme',
-            email: 'raj@mail.com'
+            email: 'raj@mail.com',
           },
           team: {
             id: '46455bf7-ada7-495c-8019-8d7ab76d488e',
@@ -760,7 +755,7 @@ describe('AuthService', () => {
             logo: null,
             isStatusChanged: false,
             ad_center: [ADCenter],
-            team_status: [TeamStatus]
+            team_status: [TeamStatus],
           },
           role: {
             id: '555f1dfd-43e9-4cc4-8257-a6ba5c70e34d',
@@ -769,16 +764,16 @@ describe('AuthService', () => {
             updatedAt: '2021-09-08T11:39:39.145Z',
             roleName: 'team_member',
             description: null,
-            privilege: [Array]
-          }
-        }
-      ]
+            privilege: [Array],
+          },
+        },
+      ];
       const privileges: any = [];
       jest.spyOn(userTeamService, 'findUserTeamsByUserId').mockImplementation(() => userTeam);
       jest.spyOn(userPrivilegeService, 'getAllPrivilegeForAdmin').mockImplementation(() => privileges);
       expect(await authService.getPrivileges(userId)).toEqual(privileges);
-    })
-  })
+    });
+  });
   describe('register', () => {
     it('should register a new user if not exists', async () => {
       const userDTO = {
@@ -798,6 +793,4 @@ describe('AuthService', () => {
       //expect(authService.register).toBeCalledTimes(1);
     });
   });
-
-
 });

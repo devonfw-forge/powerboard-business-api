@@ -14,7 +14,8 @@ import { IFileStorageService } from '../../file-storage/services/file-storage.se
 import { TeamsInADC } from '../model/dto/TeamsInADC';
 import { IGlobalTeamsService } from './global.team.service.interface';
 import { TeamStatus } from '../model/entities/team_status.entity';
-
+import * as dotenv from 'dotenv';
+dotenv.config();
 @Injectable()
 export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlobalTeamsService {
   constructor(
@@ -26,16 +27,14 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
   ) {
     super(teamRepository);
   }
-
+  globalLink = process.env.AWS_lOGO_URL;
   /**
    * getTeamsyBUId method will fetch the list of all teams belong to particular BU
    * @param {Bu_id} Bu_id it takes Business Unit as input
    * @return {TeamResponse[]} list of teams with their status
    */
   async getTeamsByCenterId(CenterId: string): Promise<TeamsInADC[]> {
-    console.log(CenterId);
     const teams: Team[] = await this.teamRepository.find({ where: { ad_center: CenterId } });
-    console.log(teams);
     let teamsResponse: TeamsInADC = {} as TeamsInADC;
     let teamsDTOArray: TeamsInADC[] = [],
       i;
@@ -46,13 +45,12 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
     for (i = 0; i < teams.length; i++) {
       teamsResponse.teamId = teams[i].id;
       teamsResponse.teamName = teams[i].name;
-      teamsResponse.teamLogo = teams[i].logo!;
-      // const dashboard = (await this.dashboardService.getDashboardByTeamId(teams[i])) as DashBoardResponse;
-      // teamsResponse.teamStatus = this.dashboardService.fetchStatus(dashboard);
+      teamsResponse.teamLogo = `${this.globalLink}/${teams[i].id}/` + teams[i].logo!;
       teamsResponse.teamStatus = await this.findStatusByTeam(teams[i]);
       teamsDTOArray.push(teamsResponse);
       teamsResponse = {} as TeamsInADC;
     }
+    console.log(teamsDTOArray);
     return teamsDTOArray;
   }
 
@@ -67,8 +65,8 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
     if (!team) {
       throw new NotFoundException('Team Not Found');
     }
-    const directory = `uploads/logo/${teamId}/`;
-    const existingLogoOfTeam = `uploads/logo/${teamId}/` + team.logo;
+    const directory = `uploads/uploads/logo/${teamId}/`;
+    const existingLogoOfTeam = `uploads/uploads/logo/${teamId}/` + team.logo;
     await this.fileStorageService.deleteFile(existingLogoOfTeam);
     const fileUploaded = await this.fileStorageService.uploadFile(logo, directory);
     if (fileUploaded) {
@@ -76,16 +74,17 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
       team.logo = key[key.length - 1];
     }
 
-    return this.teamRepository.save(team);
+    let team1 = await this.teamRepository.save(team);
+    team1.logo = `${this.globalLink}/${teamId}/` + team.logo!;
+    return team1;
   }
 
   async deleteLogoFromTeam(teamId: string): Promise<void> {
     const team = (await this.teamRepository.findOne({ where: { id: teamId } })) as Team;
     const logoName = team.logo;
-    // const pathOfLogo= `./uploads/multimedia/logo/${team.id}/${logoName}`;
-    const pathOfLogo = `uploads/logo/${teamId}/` + logoName;
-    const fileDeltedFromStorage = await this.fileStorageService.deleteFile(pathOfLogo);
-    if (!fileDeltedFromStorage) {
+    const pathOfLogo = `uploads/uploads/logo/${teamId}/` + logoName;
+    const result = await this.fileStorageService.deleteFile(pathOfLogo);
+    if (!result) {
       team.logo = null;
       await this.teamRepository.save(team);
     } else {
@@ -110,6 +109,7 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
       team.teamCode = addteam.teamCode;
       team.projectKey = addteam.projectKey;
       team.ad_center = addteam.ad_center;
+      team.team_status = (await this.teamStatusRepository.findOne({ where: { id: 2 } })) as TeamStatus;
 
       const teamCreated = await this.teamRepository.save(team);
       if (teamCreated && logo) {
@@ -168,7 +168,7 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
     for (i = 0; i < teamList.length; i++) {
       viewTeamsInADC.teamId = teamList[i].id;
       viewTeamsInADC.teamName = teamList[i].name;
-      viewTeamsInADC.teamLogo = teamList[i].logo!;
+      viewTeamsInADC.teamLogo = `${this.globalLink}/${teamList[i].id}/` + teamList[i].logo!;
       // const dashboard = (await this.dashboardService.getDashboardByTeamId(teamList[i])) as DashBoardResponse;
       //viewTeamsInADC.teamStatus = this.dashboardService.fetchStatus(dashboard);
       viewTeamsInADC.teamStatus = await this.findStatusByTeam(teamList[i]);
@@ -184,10 +184,10 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
 
   async findStatusByTeam(team: Team): Promise<number | undefined> {
     if (team.isStatusChanged) {
-      console.log('true status jjjjjjjjjjjjjjjjjjj');
       const dashboard = (await this.dashboardService.getDashboardByTeamId(team)) as DashBoardResponse;
       const status = this.dashboardService.fetchStatus(dashboard);
       const result = await this.updateTeamStatus(team.id, status);
+      console.log(result);
       return result.team_status.id;
     } else {
       console.log('status change ho chuka hhhhh');

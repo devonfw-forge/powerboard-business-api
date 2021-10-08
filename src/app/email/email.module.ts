@@ -13,4 +13,4 @@ import { EmailService } from './services/email.service';
   ],
   exports: ['IEmailService'],
 })
-export class EmailModule { }
+export class EmailModule {}

@@ -8,7 +8,7 @@ import { ChangePasswordDTO } from '../model/ChangePasswordDTO';
 
 @Controller('auth')
 export class AuthController {
-  constructor(@Inject('IAuthService') private readonly authService: IAuthService) { }
+  constructor(@Inject('IAuthService') private readonly authService: IAuthService) {}
 
   //Login the user
   @Post('login')

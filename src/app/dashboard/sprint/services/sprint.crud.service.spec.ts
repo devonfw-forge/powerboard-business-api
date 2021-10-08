@@ -6,7 +6,6 @@ import { SprintRepositoryMock } from '../../../../../test/mockCrudRepository/cru
 //import { Team } from '../../../teams/model/entities/team.entity';
 //import { SprintDetailResponse } from '../model/dto/SprintDetailResponse';
 
-
 import { Sprint } from '../model/entities/sprint.entity';
 
 import { SprintCrudService } from './sprint.crud.service';
@@ -296,6 +295,6 @@ describe('SprintCrudService', () => {
       };
       jest.spyOn(sprintRepo, 'createQueryBuilder').mockImplementation(() => createQueryBuilder);
       expect(await service.getVelocityComparison(teamId)).toBeUndefined();
-    })
-  })
+    });
+  });
 });

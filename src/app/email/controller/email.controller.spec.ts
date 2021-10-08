@@ -4,49 +4,41 @@ import { SendEmailDTO } from '../model/dto/SendEmail.dto';
 import { EmailController } from './email.controller';
 
 describe('EmailController', () => {
-    let emailController: EmailController;
-    let emailService: EmailMockService;
+  let emailController: EmailController;
+  let emailService: EmailMockService;
 
-    beforeAll(async () => {
-        const module: TestingModule = await Test.createTestingModule({
+  beforeAll(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [EmailController],
+      providers: [
+        {
+          provide: 'IEmailService',
+          useClass: EmailMockService,
+        },
+      ],
+    }).compile();
 
-            controllers: [EmailController],
-            providers: [
+    emailController = module.get<EmailController>(EmailController);
+    emailService = module.get<EmailMockService>('IEmailService');
+  });
 
-                {
-                    provide: 'IEmailService',
-                    useClass: EmailMockService,
-                },
+  it('should be defined after module initialization', () => {
+    expect(emailController).toBeDefined();
+    expect(emailService).toBeDefined();
+  });
 
-            ],
-        }).compile();
+  describe('sendEmailToNewUser', () => {
+    it('should send templated email to new user', async () => {
+      const sendEmailDTO = {
+        toEmail: 'abc@mail.com',
+        username: 'abc',
+        defaultPassword: 'abcdef',
+        fullName: 'abc def',
+      } as SendEmailDTO;
 
-        emailController = module.get<EmailController>(EmailController);
-        emailService = module.get<EmailMockService>('IEmailService');
+      await emailController.sendEmailToNewUser(sendEmailDTO);
+      expect(emailService.sendTeamplateEmail).toBeCalled();
+      expect(emailService.sendTeamplateEmail).toBeCalledTimes(1);
     });
-
-    it('should be defined after module initialization', () => {
-        expect(emailController).toBeDefined();
-        expect(emailService).toBeDefined();
-
-    });
-
-    describe('sendEmailToNewUser', () => {
-        it('should send templated email to new user', async () => {
-
-            const sendEmailDTO = {
-                toEmail: 'abc@mail.com',
-                username: 'abc',
-                defaultPassword: 'abcdef',
-                fullName: 'abc def'
-            } as SendEmailDTO
-
-            await emailController.sendEmailToNewUser(sendEmailDTO);
-            expect(emailService.sendTeamplateEmail).toBeCalled();
-            expect(emailService.sendTeamplateEmail).toBeCalledTimes(1);
-
-        })
-    })
-
-
-})
+  });
+});

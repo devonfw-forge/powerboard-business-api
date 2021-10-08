@@ -148,11 +148,11 @@ describe('UserService', () => {
 
       const registerUserToOtherTeam = new UserTeam();
       const userSession = new UserSession();
-      const emailSent = {}
+      const emailSent = {};
       //const registerUserToOtherTeam = undefined;
       jest.spyOn(userRepo, 'findOne').mockImplementation(() => undefined);
       jest.spyOn(userRepo, 'save').mockImplementation(() => registeredUser);
-      jest.spyOn(emailService, 'sendTeamplateEmail').mockImplementation(() => emailSent)
+      jest.spyOn(emailService, 'sendTeamplateEmail').mockImplementation(() => emailSent);
       jest.spyOn(userTeamService, 'addUserToTeam').mockResolvedValue(registerUserToOtherTeam);
       jest.spyOn(userSessionDetailsService, 'registerUserIntoUserSession').mockResolvedValue(userSession);
       const actualResponse = await userService.registerUser(userDTO);

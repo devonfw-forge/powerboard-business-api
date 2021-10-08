@@ -1,4 +1,3 @@
-
 import { Test, TestingModule } from '@nestjs/testing';
 import { CloudFileStorageService } from './cloud-file-storage.service';
 import { IFileStorageService } from './file-storage.service.interface';
@@ -34,10 +33,8 @@ describe('CloudFileStorageService', () => {
     expect(fileStorageService).toBeDefined();
   });
 
-
   describe('uploadS3() method ', () => {
     it('should call the s3 with correct parameters to upload a file to aws', async () => {
-
       // const mS3Instance: any = {
       //   upload: () => {
       //     return jest.fn().mockReturnThis()
@@ -89,11 +86,9 @@ describe('CloudFileStorageService', () => {
       jest.spyOn(fileStorageService, 'getS3').mockImplementation(() => mockedS3);
       await fileStorageService.uploadS3(Buffer.from('ok'), bucketS3, fileName);
       //  expect(actual).toEqual('fake response');
-      expect(mockedS3.upload).toBeCalledWith({ Bucket: bucketS3, Key: fileName, Body: Buffer.from('ok') })
-
-    })
-  })
-
+      expect(mockedS3.upload).toBeCalledWith({ Bucket: bucketS3, Key: fileName, Body: Buffer.from('ok') });
+    });
+  });
 
   // describe('uploadS3() method ', () => {
   //   it('should call the s3 with correct parameters to upload a file to aws', async () => {
@@ -143,19 +138,13 @@ describe('CloudFileStorageService', () => {
 
   // })
   //})
-
-})
-  // describe('deleteFile() method ', () => {
-  //   it('should delete the file which is stored', async () => {
-  //     const fileName: string = 'Screenshot(7)5a74cfb0-a1ad-4053-92c0-6e1db1ac42a3.png'
-  //     expect(await fileStorageService.deleteFile(fileName)).toEqual(undefined);
-  //   })
-  // })
-
-
-
-
-
+});
+// describe('deleteFile() method ', () => {
+//   it('should delete the file which is stored', async () => {
+//     const fileName: string = 'Screenshot(7)5a74cfb0-a1ad-4053-92c0-6e1db1ac42a3.png'
+//     expect(await fileStorageService.deleteFile(fileName)).toEqual(undefined);
+//   })
+// })
 
 // import { CloudFileStorageService } from './cloud-file-storage.service';
 
@@ -194,21 +183,18 @@ describe('CloudFileStorageService', () => {
 // });
 // describe('uploadS3', () => {
 //   it('should upload file correctly', async () => {
-    // const config: any = {
-    //   get: jest
-    //     .fn()
-    //     .mockReturnValueOnce('accessKeyId')
-    //     .mockReturnValueOnce('secretAccessKey')
-    //     .mockReturnValueOnce('eu-east')
-    //   // .mockReturnValueOnce('bucket-dev'),
-    // };
-    // const bucketS3 = 'bucket-dev';
-    // const fileName = 'powerboard.png'
+// const config: any = {
+//   get: jest
+//     .fn()
+//     .mockReturnValueOnce('accessKeyId')
+//     .mockReturnValueOnce('secretAccessKey')
+//     .mockReturnValueOnce('eu-east')
+//   // .mockReturnValueOnce('bucket-dev'),
+// };
+// const bucketS3 = 'bucket-dev';
+// const fileName = 'powerboard.png'
 //     jest.spyOn(cloudFileStorageService, 'getS3').mockImplementation(() => config);
 //     expect(mS3Instance.upload).toBeCalledWith({ Bucket: bucketS3, Key: fileName, Body: Buffer.from('ok') });
 
 //   })
 // })
-
-
-

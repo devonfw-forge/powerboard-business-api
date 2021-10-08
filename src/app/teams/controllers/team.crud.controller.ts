@@ -98,14 +98,14 @@ export class TeamCrudController {
     res.status(200).json(result);
   }
   @Post('uploadLogo/:teamId')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('logo'))
   async uploadLogo(
-    @UploadedFile() file: any,
+    @UploadedFile() logo: any,
     @Param('teamId') teamId: string,
     @Response() res: eResponse,
   ): Promise<void> {
-    console.log(file);
-    const result = await this.globalTeamsService.uploadLogoForTeam(file, teamId);
+    console.log(logo);
+    const result = await this.globalTeamsService.uploadLogoForTeam(logo, teamId);
     res.status(201).json(result);
   }
 

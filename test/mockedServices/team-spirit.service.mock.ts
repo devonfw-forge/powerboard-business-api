@@ -1,5 +1,4 @@
 export class TeamSpiritMockService {
-    constructor() { }
-    public getTeamSpiritFromSurvey = jest.fn();
-
+  constructor() {}
+  public getTeamSpiritFromSurvey = jest.fn();
 }

@@ -12,4 +12,4 @@ import { CloudFileStorageService } from './services/cloud-file-storage.service';
   ],
   exports: ['IFileStorageService'],
 })
-export class FileStorageModule { }
+export class FileStorageModule {}

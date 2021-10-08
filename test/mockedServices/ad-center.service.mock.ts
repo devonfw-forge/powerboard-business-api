@@ -1,5 +1,4 @@
 export class AdCenterMockService {
-    constructor() { }
-    public getAllCenters = jest.fn();
-
+  constructor() {}
+  public getAllCenters = jest.fn();
 }

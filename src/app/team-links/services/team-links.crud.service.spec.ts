@@ -116,47 +116,44 @@ describe('TeamLinksCrudService', () => {
   });
   describe('getLinksCategory', () => {
     it(' should throw error message if the links are not present', async () => {
-
       jest.spyOn(teamLinkRepo, 'find').mockImplementation(() => undefined);
       try {
         await teamLinkService.getLinksCategory();
-      }
-      catch (e) {
+      } catch (e) {
         expect(e.message).toMatch('No links Found');
       }
-    })
+    });
     it(' should fetch all the links category present', async () => {
-
       const teamLinks = [
         {
           id: '10005bf7-ada7-495c-8019-8d7ab62d488e',
           version: 1,
           createdAt: '2021-09-08T11:39:39.145Z',
           updatedAt: '2021-09-08T11:39:39.145Z',
-          title: 'web_link'
+          title: 'web_link',
         },
         {
           id: '10006bf7-ada7-495c-8019-8d7ab62d488e',
           version: 1,
           createdAt: '2021-09-08T11:39:39.145Z',
           updatedAt: '2021-09-08T11:39:39.145Z',
-          title: 'meeting_link'
-        }
-      ]
+          title: 'meeting_link',
+        },
+      ];
       const linksCategories = [
         {
-          "linkId": "10005bf7-ada7-495c-8019-8d7ab62d488e",
-          "linkTitle": "web_link"
+          linkId: '10005bf7-ada7-495c-8019-8d7ab62d488e',
+          linkTitle: 'web_link',
         },
         {
-          "linkId": "10006bf7-ada7-495c-8019-8d7ab62d488e",
-          "linkTitle": "meeting_link"
-        }
-      ]
+          linkId: '10006bf7-ada7-495c-8019-8d7ab62d488e',
+          linkTitle: 'meeting_link',
+        },
+      ];
       jest.spyOn(linkCategoryRepo, 'find').mockImplementation(() => teamLinks);
 
       const result = await teamLinkService.getLinksCategory();
       expect(result).toEqual(linksCategories);
-    })
-  })
+    });
+  });
 });
