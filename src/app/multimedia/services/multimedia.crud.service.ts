@@ -87,8 +87,12 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
    */
   async getDefaultMultimediaForTeam(teamId: string): Promise<MultimediaResponse> {
     const link = `${this.globalLink}/${teamId}/`;
-    const result = await this.multimediaRepository.find({ where: { team: teamId } });
-    console.log(result);
+    const result = await this.multimediaRepository.find({
+      where: { team: teamId },
+      order: {
+        albumName: 'ASC',
+      },
+    });
     if (result == null) {
       throw new NotFoundException('No multimedia found');
     } else {
@@ -148,7 +152,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     let fileArray = [] as DisplayResponse[],
       i;
     for (i = 0; i < result.length; i++) {
-      if (result[i].albumName != null && result[i].fileName == null) {
+      if (result[i].albumName != null && result[i].fileName == null && result[i].files.length != 0) {
         return this.addFiles(result[i].files, result[i].albumName, result[i].inSlideshow, link);
       }
     }
@@ -161,6 +165,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
       if (result[i].albumName != null && result[i].fileName == null) {
         this.folderResponse.folderId = result[i].id;
         this.folderResponse.folderName = result[i].albumName;
+        this.folderResponse.inSlideShow = result[i].inSlideshow;
         this.folderResponse.status = this.getStatusForFolder(result[i].albumName);
         fileArray.push(this.folderResponse);
         this.folderResponse = {} as FolderResponse;
@@ -349,7 +354,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
         result.push({ fileURL: commanPath + multimedia[i].fileName });
       } else {
         for (var j = 0; j < multimedia[i].files.length; j++) {
-          result.push({ fileURL: commanPath + multimedia[i].files[j].fileName });
+          result.push({ fileURL: commanPath + multimedia[i].albumName + '/' + multimedia[i].files[j].fileName });
         }
       }
     }
