@@ -73,7 +73,6 @@ export class DashboardService implements IDashboardService {
     if (dashboard?.clientStatus == null) {
       return (statusResult = 2);
     } else {
-      statusResult;
       const codeQualityStatus = dashboard!.codeQuality!.status;
       //const teamSpiritStatus = dashboard!.teamSpirit!.teamSpiritRating;
       const clientStatus = dashboard!.clientStatus!.clientSatisfactionRating;
