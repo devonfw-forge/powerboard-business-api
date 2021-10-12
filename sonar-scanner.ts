@@ -64,7 +64,8 @@
 
 const scanner = require('sonarqube-scanner');
 import * as dotenv from 'dotenv';
-dotenv.config();
+const path = require('path')
+dotenv.config({ path: path.resolve('src/.env') });
 scanner(
     {
         // this uses local instance of SQ
@@ -78,8 +79,8 @@ scanner(
             // "sonar.test.inclusions": "**/*test*",
             'sonar.language': 'ts',
             // "sonar.test.inclusions": "src/**/*.spec.ts",
-            'sonar.login': '',
-            'sonar.password': '',
+            'sonar.login': process.env.SONAR_LOGIN,
+            'sonar.password': process.env.SONAR_PASSWORD,
             // "sonar.javacript.lcov.reportPaths": "coverage/lcov.info",
             // "sonar.testExecutionReportPaths": "coverage/clover.xml",
             'sonar.sourceEncoding': 'UTF-8',
