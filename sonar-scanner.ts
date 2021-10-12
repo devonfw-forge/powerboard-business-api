@@ -87,15 +87,18 @@ scanner(
             "sonar.sources": "src",
             //"sonar.exclusions": "**/*.spec.ts",
             "sonar.tests": "src",
+            //"sonar.inclusions":"src",
             "sonar.test.inclusions": "**/*.spec.ts",
             "sonar.typescript.coveragePlugin": "lcov",
             "sonar.coverage.exclusions": "src/app/shared/**/*.ts,src/config/**.ts,src/migration/**.ts,src/main.ts,src/app/visibility/**/**.ts,src/app/core/core.module.ts,src/app/core/auth/decorators/get-user.decorator.ts",
-
+            "sonar.testExecutionReportPaths": "test-report.xml",
             //"**/main.ts", "**/config/*", "**/migration/*", "**/*.module.ts",
             // "sonar.clover.reportPath": "coverage/clover.xml",
             //"sonar.junit.reportsPath": "coverage/lcov.info",
             // "sonar.testExecutionReportPaths": "coverage/clover.xml",
-            "sonar.typescript.lcov.reportPaths": "./coverage/lcov.info",
+            //"sonar.typescript.lcov.reportPaths": "./coverage/lcov.info",
+
+            //"sonar.typescript.lcov.reportPaths": "src/reports/jest-coverage/unit",
             // "sonar.javascript.lcov.reportPaths": "coverage/lcov.info"
             //"sonar.ts.coverage.lcovReportPath": "lcov.info"
 
