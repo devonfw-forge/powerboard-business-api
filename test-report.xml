@@ -1,74 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testExecutions version="1">
   <file path="C:\projects\my-projects\workspaces\New1\powerboard\powerboard-business-api\src\app\teams\services\team.crud.service.spec.ts">
-    <testCase name="TeamCrudService should be defined after module initialization" duration="341"/>
-    <testCase name="TeamCrudService updateTeam() should update the team test 1 if team not found" duration="86"/>
-    <testCase name="TeamCrudService updateTeam() should update the team test 2 if team found" duration="73"/>
-    <testCase name="TeamCrudService getTeamInfoById() get all 5 kpis details along with sprint and status test 1 if team not present in db " duration="50"/>
-    <testCase name="TeamCrudService getTeamInfoById() get all 5 kpis details along with sprint and status test 2 if team present in db and user is System Admin " duration="53"/>
-    <testCase name="TeamCrudService getTeamInfoById() get all 5 kpis details along with sprint and status test 3 if team present in db and user is not a System Admin " duration="43"/>
-    <testCase name="TeamCrudService getCenterByTeamId() should ftech all center in the team test 1 if team not found" duration="37"/>
-    <testCase name="TeamCrudService getCenterByTeamId() should ftech all center in the team test 2 if team found" duration="39"/>
-    <testCase name="TeamCrudService  getLinksForTeam() getLinksForTeam() should fetch the all the links of the team if priveleges includes view-links" duration="27"/>
-    <testCase name="TeamCrudService  getLinksForTeam() getLinksForTeam() should fetch the all the links of the team if priveleges does not include view-links" duration="37"/>
-    <testCase name="TeamCrudService  getMultimediaForTeam() it should return all the multimedia related to the team" duration="65"/>
+    <testCase name="TeamCrudService should be defined after module initialization" duration="528"/>
+    <testCase name="TeamCrudService updateTeam() should update the team test 1 if team not found" duration="166"/>
+    <testCase name="TeamCrudService updateTeam() should update the team test 2 if team found" duration="241"/>
+    <testCase name="TeamCrudService getTeamInfoById() get all 5 kpis details along with sprint and status test 1 if team not present in db " duration="185"/>
+    <testCase name="TeamCrudService getTeamInfoById() get all 5 kpis details along with sprint and status test 2 if team present in db and user is System Admin " duration="148"/>
+    <testCase name="TeamCrudService getTeamInfoById() get all 5 kpis details along with sprint and status test 3 if team present in db and user is not a System Admin " duration="373"/>
+    <testCase name="TeamCrudService getCenterByTeamId() should ftech all center in the team test 1 if team not found" duration="171"/>
+    <testCase name="TeamCrudService getCenterByTeamId() should ftech all center in the team test 2 if team found" duration="57"/>
+    <testCase name="TeamCrudService  getLinksForTeam() getLinksForTeam() should fetch the all the links of the team if priveleges includes view-links" duration="117"/>
+    <testCase name="TeamCrudService  getLinksForTeam() getLinksForTeam() should fetch the all the links of the team if priveleges does not include view-links" duration="128"/>
+    <testCase name="TeamCrudService  getMultimediaForTeam() it should return all the multimedia related to the team" duration="56"/>
   </file>
   <file path="C:\projects\my-projects\workspaces\New1\powerboard\powerboard-business-api\src\app\teams\services\global.team.service.spec.ts">
-    <testCase name="TeamCrudService should be defined after module initialization" duration="175"/>
-    <testCase name="TeamCrudService getTeamsByCenterId() should update the team test 1 if no team found inside centerId" duration="69"/>
-    <testCase name="TeamCrudService getTeamsByCenterId() should update the team test 2 if teams found inside centerId" duration="81"/>
-    <testCase name="TeamCrudService uploadLogoForTeam()  should upload logo of a team" duration="36"/>
-    <testCase name="TeamCrudService deleteLogoForTeam()  should delete logo of a team" duration="38"/>
-    <testCase name="TeamCrudService deleteLogoForTeam()  should throw error if file not present in path" duration="38"/>
-    <testCase name="TeamCrudService addTeam()  should throw error if team is already present in db" duration="84"/>
-    <testCase name="TeamCrudService addTeam()  should add team if team is not already present in db" duration="36"/>
-    <testCase name="TeamCrudService addTeam()  should create new team if team is not already present in db and even if logo is not there" duration="136"/>
-    <testCase name="TeamCrudService deleteTeamById()  should delete team if team is present in db" duration="62"/>
-    <testCase name="TeamCrudService deleteTeamById()  should throw error if team is not present in db" duration="105"/>
-    <testCase name="TeamCrudService getAllTeams()  should return all the teams present in the db" duration="98"/>
-    <testCase name="TeamCrudService getAllTeams()  should return a message when no team is found" duration="56"/>
-    <testCase name="TeamCrudService viewTeamsInADC() should return adc Team list" duration="71"/>
-    <testCase name="TeamCrudService findTeamById() should return the team if it is present in the db" duration="194"/>
-    <testCase name="TeamCrudService updateTeamStatus() should update the status of team " duration="60"/>
-  </file>
-  <file path="C:\projects\my-projects\workspaces\New1\powerboard\powerboard-business-api\src\app\core\user\services\user.service.spec.ts">
-    <testCase name="UserService should be defined after module initialization" duration="42"/>
-    <testCase name="UserService findUser() should return the User successfully if the user is present" duration="26"/>
-    <testCase name="UserService registerUser registerUser() should register the User successfully if the user is not already present" duration="525"/>
-    <testCase name="UserService registerUser registerUser() should successfully register the existing user to other team" duration="61"/>
-    <testCase name="UserService registerUser registerUser() should throw error message if the user is already present in that team" duration="35"/>
-    <testCase name="UserService changePassword() changePassword() method should change the password of a user successfully if user is present" duration="1508"/>
-    <testCase name="UserService changePassword() changePassword() method should throw error if user is not present" duration="43"/>
-    <testCase name="UserService deleteGuestById() deleteGuestById() should delete guest user if it is present" duration="76"/>
-    <testCase name="UserService deleteGuestById() deleteGuestById() should throw error if user is not present" duration="205"/>
+    <testCase name="TeamCrudService should be defined after module initialization" duration="489"/>
+    <testCase name="TeamCrudService getTeamsByCenterId() should update the team test 1 if no team found inside centerId" duration="212"/>
+    <testCase name="TeamCrudService getTeamsByCenterId() should update the team test 2 if teams found inside centerId" duration="272"/>
+    <testCase name="TeamCrudService uploadLogoForTeam()  should upload logo of a team" duration="129"/>
+    <testCase name="TeamCrudService deleteLogoForTeam()  should delete logo of a team" duration="349"/>
+    <testCase name="TeamCrudService deleteLogoForTeam()  should throw error if file not present in path" duration="344"/>
+    <testCase name="TeamCrudService addTeam()  should throw error if team is already present in db" duration="106"/>
+    <testCase name="TeamCrudService addTeam()  should add team if team is not already present in db" duration="116"/>
+    <testCase name="TeamCrudService addTeam()  should create new team if team is not already present in db and even if logo is not there" duration="56"/>
+    <testCase name="TeamCrudService deleteTeamById()  should delete team if team is present in db" duration="80"/>
+    <testCase name="TeamCrudService deleteTeamById()  should throw error if team is not present in db" duration="94"/>
+    <testCase name="TeamCrudService getAllTeams()  should return all the teams present in the db" duration="81"/>
+    <testCase name="TeamCrudService getAllTeams()  should return a message when no team is found" duration="39"/>
+    <testCase name="TeamCrudService viewTeamsInADC() should return adc Team list" duration="36"/>
+    <testCase name="TeamCrudService findTeamById() should return the team if it is present in the db" duration="170"/>
+    <testCase name="TeamCrudService updateTeamStatus() should update the status of team " duration="88"/>
   </file>
   <file path="C:\projects\my-projects\workspaces\New1\powerboard\powerboard-business-api\src\app\core\auth\services\auth.service.spec.ts">
-    <testCase name="AuthService should be defined after module initialization" duration="127"/>
-    <testCase name="AuthService validateUser should return a defined user response if the user is present in the database" duration="408"/>
-    <testCase name="AuthService validateUser should return undefined response if the user is not present in the database" duration="37"/>
-    <testCase name="AuthService singIn should return accessToken if the user is present in the database" duration="165"/>
-    <testCase name="AuthService login should return a JWT token and login response when a valid user is provided" duration="116"/>
-    <testCase name="AuthService login should return a exception when an invalid user is provided" duration="84"/>
-    <testCase name="AuthService loginGuest() should call the loginResponseForGuest() method and return login response for a guest user" duration="69"/>
-    <testCase name="AuthService loginResponseForGuest() should return login response for a guest user" duration="290"/>
-    <testCase name="AuthService getHomeDetailsForUserId should return a home detail response for the given user" duration="67"/>
-    <testCase name="AuthService getPowerboard() should return the powerboard response inside login response for a user who visited any team earlier" duration="75"/>
-    <testCase name="AuthService changePassword() should return the user with updated password" duration="85"/>
-    <testCase name="AuthService systemAdminHome() should return home response for system admin" duration="81"/>
-    <testCase name="AuthService teamMemberTeamAdminHome() should return a home detail response for the team member or team admin" duration="74"/>
-    <testCase name="AuthService homeDetailsForTeamMemberAdmin() should return home detail for the team member or team admin" duration="59"/>
-    <testCase name="AuthService getPrivileges() should return the priveleges if the user is system admin or guest " duration="174"/>
-    <testCase name="AuthService getPrivileges() should return the priveleges if the user is team admin or team member associated with any team" duration="185"/>
+    <testCase name="AuthService should be defined after module initialization" duration="652"/>
+    <testCase name="AuthService validateUser should return a defined user response if the user is present in the database" duration="612"/>
+    <testCase name="AuthService validateUser should return undefined response if the user is not present in the database" duration="58"/>
+    <testCase name="AuthService singIn should return accessToken if the user is present in the database" duration="105"/>
+    <testCase name="AuthService login should return a JWT token and login response when a valid user is provided" duration="128"/>
+    <testCase name="AuthService login should return a exception when an invalid user is provided" duration="76"/>
+    <testCase name="AuthService loginGuest() should call the loginResponseForGuest() method and return login response for a guest user" duration="45"/>
+    <testCase name="AuthService loginResponseForGuest() should return login response for a guest user" duration="176"/>
+    <testCase name="AuthService getHomeDetailsForUserId should return a home detail response for the given user" duration="75"/>
+    <testCase name="AuthService getPowerboard() should return the powerboard response inside login response for a user who visited any team earlier" duration="33"/>
+    <testCase name="AuthService changePassword() should return the user with updated password" duration="72"/>
+    <testCase name="AuthService systemAdminHome() should return home response for system admin" duration="41"/>
+    <testCase name="AuthService teamMemberTeamAdminHome() should return a home detail response for the team member or team admin" duration="46"/>
+    <testCase name="AuthService homeDetailsForTeamMemberAdmin() should return home detail for the team member or team admin" duration="74"/>
+    <testCase name="AuthService getPrivileges() should return the priveleges if the user is system admin or guest " duration="59"/>
+    <testCase name="AuthService getPrivileges() should return the priveleges if the user is team admin or team member associated with any team" duration="76"/>
     <testCase name="AuthService register should register a new user if not exists" duration="47"/>
   </file>
+  <file path="C:\projects\my-projects\workspaces\New1\powerboard\powerboard-business-api\src\app\core\user\services\user.service.spec.ts">
+    <testCase name="UserService should be defined after module initialization" duration="93"/>
+    <testCase name="UserService findUser() should return the User successfully if the user is present" duration="64"/>
+    <testCase name="UserService registerUser registerUser() should register the User successfully if the user is not already present" duration="761"/>
+    <testCase name="UserService registerUser registerUser() should successfully register the existing user to other team" duration="28"/>
+    <testCase name="UserService registerUser registerUser() should throw error message if the user is already present in that team" duration="30"/>
+    <testCase name="UserService changePassword() changePassword() method should change the password of a user successfully if user is present" duration="1289"/>
+    <testCase name="UserService changePassword() changePassword() method should throw error if user is not present" duration="31"/>
+    <testCase name="UserService deleteGuestById() deleteGuestById() should delete guest user if it is present" duration="49"/>
+    <testCase name="UserService deleteGuestById() deleteGuestById() should throw error if user is not present" duration="57"/>
+  </file>
   <file path="C:\projects\my-projects\workspaces\New1\powerboard\powerboard-business-api\src\app\dashboard\team-spirit\services\team-spirit.crud.service.spec.ts">
-    <testCase name="TeamSpiritCrudService should be defined after module initialization" duration="14"/>
-    <testCase name="TeamSpiritCrudService getTeamSpiritFromSurvey getTeamSpiritFromSurvey() method should return teamSpiritResponse" duration="11"/>
+    <testCase name="TeamSpiritCrudService should be defined after module initialization" duration="15"/>
+    <testCase name="TeamSpiritCrudService getTeamSpiritFromSurvey getTeamSpiritFromSurvey() method should return teamSpiritResponse" duration="9"/>
   </file>
   <file path="C:\projects\my-projects\workspaces\New1\powerboard\powerboard-business-api\src\app\dashboard\services\dashboard.service.spec.ts">
-    <testCase name="DashboardService should be defined after module initialization" duration="49"/>
-    <testCase name="DashboardService getDashboardByTeamId() test 1 if team present" duration="18"/>
-    <testCase name="DashboardService fetchStatus method will return status of project test 1 if client status is null" duration="11"/>
-    <testCase name="DashboardService fetchStatus method will return status of project test 1 if client status is null" duration="20"/>
+    <testCase name="DashboardService should be defined after module initialization" duration="26"/>
+    <testCase name="DashboardService getDashboardByTeamId() test 1 if team present" duration="25"/>
+    <testCase name="DashboardService fetchStatus method will return status of project test 1 if client status is null" duration="14"/>
+    <testCase name="DashboardService fetchStatus method will return status of project test 1 if client status is null" duration="24"/>
   </file>
 </testExecutions>
