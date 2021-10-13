@@ -21,7 +21,7 @@ export class UserSessionDetailsService extends TypeOrmCrudService<UserSession> i
     userSession.isPasswordChanged = false;
     console.log('Registering inside user session db');
     console.log(userSession);
-    return await this.userSessionDetailsRepository.save(userSession);
+    return this.userSessionDetailsRepository.save(userSession);
   }
 
   async getUserSessionDetails(userId: string): Promise<any> {
@@ -31,7 +31,7 @@ export class UserSessionDetailsService extends TypeOrmCrudService<UserSession> i
   async updateUserSessionAfterPasswordChange(userId: string): Promise<UserSession> {
     const userSession = (await this.userSessionDetailsRepository.findOne({ where: { userId: userId } })) as UserSession;
     userSession.isPasswordChanged = true;
-    return await this.userSessionDetailsRepository.save(userSession);
+    return this.userSessionDetailsRepository.save(userSession);
   }
 
   async updateLastLoggedInProject(loggedTeam: UpdateLastLoggedTeamDTO): Promise<void> {
