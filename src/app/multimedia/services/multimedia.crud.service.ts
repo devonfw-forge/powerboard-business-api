@@ -15,8 +15,6 @@ import { DisplayResponse } from '../model/dto/DisplayResponse';
 import { DeleteResponse } from '../model/dto/DeleteResponse.interface';
 
 dotenv.config();
-//const Thumbler = require('thumbler');
-
 @Injectable()
 export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implements IMultimediaService {
   constructor(
@@ -40,10 +38,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
    */
   async uploadFile(file: any, teamId: string): Promise<any> {
     let multimedia = new Multimedia();
-    // console.log('Multimedia Service');
-    // console.log(file);
     const originalPath = `uploads/uploads/multimedia/${teamId}/`;
-
     const output = await this.fileStorageService.uploadFile(file, originalPath);
     console.log('This is output');
     console.log(output);
@@ -55,9 +50,6 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
       console.log(multimedia);
       console.log(multimedia.team);
       const result = await this.multimediaRepository.save(multimedia);
-      // if (result && this.videos.includes(output.split('.')[1])) {
-      //   this.fileStorageService.saveThumbail(output, originalPath);
-      // }
       result.fileName = `${this.globalLink}/${teamId}/${result.fileName}`;
       return result;
     }
