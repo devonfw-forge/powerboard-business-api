@@ -73,10 +73,10 @@ export class DashboardService implements IDashboardService {
       statusResult = 2;
       return statusResult;
     } else {
-      const codeQualityStatus = dashboard!.codeQuality!.status;
+      const codeQualityStatus = dashboard.codeQuality!.status;
       //const teamSpiritStatus = dashboard!.teamSpirit!.teamSpiritRating;
-      const clientStatus = dashboard!.clientStatus!.clientSatisfactionRating;
-      const burndownStatus = dashboard!.burndown!.burndownStatus;
+      const clientStatus = dashboard.clientStatus.clientSatisfactionRating;
+      const burndownStatus = dashboard.burndown!.burndownStatus;
       if (
         clientStatus >= 6 &&
         //teamSpiritStatus >= 6 &&
