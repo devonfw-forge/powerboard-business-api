@@ -10,15 +10,7 @@ import { VisibilityModule } from './visibility/visibility.module';
 
 
 @Module({
-  imports: [
-    // ConfigModule.forRoot(),
-    CoreModule,
-    DashboardModule,
-    TeamLinksModule,
-    MultimediaModule,
-    VisibilityModule,
-    EmailModule,
-  ],
+  imports: [CoreModule, DashboardModule, TeamLinksModule, MultimediaModule, VisibilityModule, EmailModule],
   controllers: [AppController],
   providers: [AppService],
 })

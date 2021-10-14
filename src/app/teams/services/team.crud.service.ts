@@ -62,7 +62,7 @@ export class TeamCrudService extends TypeOrmCrudService<Team> implements ITeamSe
     if (teams.logo == null) {
       this.powerboardResponse.logo = null;
     } else {
-      this.powerboardResponse.logo = `${this.globalLink}/${teamId}/` + teams.logo!;
+      this.powerboardResponse.logo = `${this.globalLink}/${teamId}/` + teams.logo;
     }
     this.powerboardResponse.dashboard = await this.dashboardService.getDashboardByTeamId(teams);
     this.powerboardResponse.teamLinks = await this.getLinksForTeam(teams.id, privilegeList);
@@ -107,7 +107,7 @@ export class TeamCrudService extends TypeOrmCrudService<Team> implements ITeamSe
     teamExisted.name = updateTeam.teamName;
     teamExisted.projectKey = updateTeam.projectKey;
     teamExisted.teamCode = updateTeam.teamCode;
-    return await this.teamRepository.save(teamExisted);
+    return this.teamRepository.save(teamExisted);
   }
   async getCenterByTeamId(teamId: string): Promise<MyCenter> {
     const result = await this.teamRepository.findOne({ where: { id: teamId } });
