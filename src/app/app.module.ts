@@ -7,9 +7,7 @@ import { EmailModule } from './email/email.module';
 import { MultimediaModule } from './multimedia/multimedia.module';
 import { TeamLinksModule } from './team-links/team-links.module';
 import { VisibilityModule } from './visibility/visibility.module';
-//import * as dotenv from 'dotenv';
-//import { ConfigModule } from '@devon4node/config';
-//dotenv.config();
+
 
 @Module({
   imports: [
@@ -24,4 +22,4 @@ import { VisibilityModule } from './visibility/visibility.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
