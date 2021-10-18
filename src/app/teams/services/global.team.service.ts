@@ -201,7 +201,8 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
   }
 
   async findTeamById(teamId: string): Promise<Team | undefined> {
-    return (await this.teamRepository.findOne(teamId)) as Team;
+
+    return this.teamRepository.findOne({ where: { id: teamId } });
   }
 
   async findStatusByTeam(team: Team): Promise<number | undefined> {

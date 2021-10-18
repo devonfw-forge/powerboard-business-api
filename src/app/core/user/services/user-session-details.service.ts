@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common/exceptions/not-found.exception';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { Repository } from 'typeorm';
@@ -38,6 +39,11 @@ export class UserSessionDetailsService extends TypeOrmCrudService<UserSession> i
     const result = (await this.userSessionDetailsRepository.findOne({
       where: { userId: loggedTeam.userId },
     })) as UserSession;
+    if (!result) {
+      throw new NotFoundException('User Session not found');
+    }
+    // result.lastCheckedInProjectId = loggedTeam.teamId;
+    // await this.userSessionDetailsRepository.save(result);
     const session = new UserSession();
     console.log(';;;;;;;;;;;;;;;;;');
     console.log(result);

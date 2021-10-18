@@ -45,7 +45,9 @@ export class TeamCrudService extends TypeOrmCrudService<Team> implements ITeamSe
   async getTeamInfoById(userTeam: UserTeamDTO): Promise<PowerboardResponse> {
     const teamId = userTeam.teamId;
     const userId = userTeam.userId;
+
     const teams = await this.globalTeamService.findTeamById(teamId);
+
     if (!teams) {
       throw new NotFoundException('Team Not Found');
     }

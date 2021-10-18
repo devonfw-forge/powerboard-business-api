@@ -34,11 +34,12 @@ export class TeamCrudController {
   constructor(
     @Inject('ITeamService') public teamService: ITeamService,
     @Inject('IGlobalTeamService') public globalTeamsService: IGlobalTeamsService,
-  ) {}
+  ) { }
 
   @Post('powerboard/team')
   //@UseGuards(AuthGuard('jwt'))
   async getTeamInfoById(@Body() userTeam: UserTeamDTO, @Response() res: eResponse): Promise<void> {
+
     const result = await this.teamService.getTeamInfoById(userTeam);
     res.status(200).json(result);
   }
