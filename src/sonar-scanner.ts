@@ -91,7 +91,7 @@ scanner(
       'sonar.test.inclusions': '**/*.spec.ts',
       'sonar.typescript.coveragePlugin': 'lcov',
       'sonar.coverage.exclusions':
-        'src/app/shared/**/*.ts,src/config/**.ts,src/migration/**.ts,src/main.ts,src/app/visibility/**/**.ts,src/app/core/core.module.ts,src/app/core/auth/decorators/get-user.decorator.ts',
+        'src/app/shared/**/*.ts,src/config/**.ts,src/migration/**.ts,src/main.ts,src/app/visibility/**/**.ts,src/app/core/core.module.ts,src/app/core/auth/decorators/get-user.decorator.ts,src/sonar-scanner.ts',
       'sonar.testExecutionReportPaths': 'test-report.xml',
       //"**/main.ts", "**/config/*", "**/migration/*", "**/*.module.ts",
       // "sonar.clover.reportPath": "coverage/clover.xml",
