@@ -19,7 +19,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "sonar": "ts-node sonar-scanner.ts"
+    "sonar": "ts-node ./src/sonar-scanner.ts"
   },
   "dependencies": {
     "@devon4node/common": "^2.0.0",
@@ -100,11 +100,6 @@
       "ts"
     ],
     "testResultsProcessor": "jest-sonar-reporter",
-    "jestSonar": {
-      "reportPath": "coverage",
-      "reportFile": "test-reporter.xml",
-      "indent": 4
-    },
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {

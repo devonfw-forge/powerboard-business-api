@@ -12,7 +12,7 @@ export class UserController {
     @Inject('IUserTeamService') private readonly userTeamService: IUserTeamService,
     @Inject('IUserPrivilegeService') private readonly userPrivilegeService: IUserPrivilegeService,
     @Inject('IUserSessionDetailsService') private readonly userSessionService: IUserSessionDetailsService,
-  ) {}
+  ) { }
 
   //View All Team member of team by SystemADMIN
   @Get('viewAllMemberOfTeam/:teamId')

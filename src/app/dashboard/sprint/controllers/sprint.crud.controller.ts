@@ -11,7 +11,7 @@ import { Sprint } from '../model/entities/sprint.entity';
 @CrudType(Sprint)
 @Controller('sprint')
 export class SprintCrudController {
-  constructor() {}
+  // constructor() {}
 
   // @Get('burndown/demo/:teamId')
   // //@UseGuards(AuthGuard('jwt'))

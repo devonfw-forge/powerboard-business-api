@@ -13,10 +13,10 @@ import { VisibilityDTO } from '../model/dto/VisibilityDTO';
 @CrudType(Visibility)
 @Controller('visibility')
 export class VisibilityCrudController {
-  constructor(public visibilityService: VisibilityCrudService) {}
+  constructor(public visibilityService: VisibilityCrudService) { }
 
   @Post('teamId/create')
   async setVisibility(@Body() visibilityDTO: VisibilityDTO): Promise<Visibility> {
-    return await this.visibilityService.setVisibility(visibilityDTO);
+    return this.visibilityService.setVisibility(visibilityDTO);
   }
 }
