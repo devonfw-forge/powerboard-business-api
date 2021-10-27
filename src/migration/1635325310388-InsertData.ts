@@ -1,7 +1,8 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class InsertData1634822415061 implements MigrationInterface {
-    name = 'InsertData1634822415061'
+export class InsertData1635325310388 implements MigrationInterface {
+    name = 'InsertData1635325310388'
+
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(
@@ -37,13 +38,13 @@ export class InsertData1634822415061 implements MigrationInterface {
             `INSERT INTO "team" ("id","team_code", "project_key", "name", "ad_center_id","team_status_id","logo") VALUES ('46455bf7-ada7-495c-8019-8d7ab76d488e' ,'10012345','P12343','Team A','99055bf7-ada7-495c-8019-8d7ab62d488e',1,'logo_Aa4aa8e7a-85d6-4b75-8f93-6a11dee9b13c.png');`,
         );
         await queryRunner.query(
-            `INSERT INTO "team" ("id","team_code","project_key", "name", "ad_center_id","team_status_id","logo") VALUES ('46455bf7-ada7-495c-8019-8d7ab76d489e' ,'10012346','P1212' ,'Team B','99055bf7-ada7-495c-8019-8d7ab62d488e',1,'logo_B2dd2f2b41-3f0f-44dc-9598-05acc1569771.png');`,
+            `INSERT INTO "team" ("id","team_code","project_key", "name", "ad_center_id","team_status_id","logo") VALUES ('46455bf7-ada7-495c-8019-8d7ab76d489e' ,'10012346','P1212' ,'Team B','99055bf7-ada7-495c-8019-8d7ab62d488e',1,'logo_B203501497-bad7-41af-bd33-b52968805134.png');`,
         );
         await queryRunner.query(
             `INSERT INTO "team" ("id", "team_code","project_key","name", "ad_center_id","team_status_id","logo") VALUES ('46455bf7-ada7-495c-8019-8d7ab76d490e' ,'10012347','P87695', 'Team C','99055bf7-ada7-495c-8019-8d7ab62d488e',1,'logo_Cba48ed82-f863-455e-b87e-141ac186f992.png');`,
         );
         await queryRunner.query(
-            `INSERT INTO "team" ("id", "team_code","project_key","name", "ad_center_id","team_status_id" ,"logo") VALUES ('46455bf7-ada7-495c-8019-8d7ab76d491e' ,'10033347','P43567', 'Team D','98755bf7-ada7-495c-8019-8d7ab62d488e',1 ,'logo_D1ae253f6b-1c9c-4984-a4b5-a91ffb959c50.png');`,
+            `INSERT INTO "team" ("id", "team_code","project_key","name", "ad_center_id","team_status_id" ,"logo") VALUES ('46455bf7-ada7-495c-8019-8d7ab76d491e' ,'10033347','P43567', 'Team D','98755bf7-ada7-495c-8019-8d7ab62d488e',1 ,'logo_D2da57ddab-b1e5-4e06-aada-5eaf0f82ad67.png');`,
         );
 
         await queryRunner.query(
@@ -307,7 +308,7 @@ export class InsertData1634822415061 implements MigrationInterface {
         );
 
         await queryRunner.query(
-            `INSERT INTO "sprint_snapshot_metric" ("id","snapshot_id","metric_id","value" ) VALUES ('90455bf8-ada5-495c-8019-8d7ab76d488e', '80255bf8-ada5-495c-8019-8d7ab76d488e','11155bf2-ada5-495c-8019-8d7ab76d488e', 35);`,
+            `INSERT INTO "sprint_snapshot_metric" ("id","snapshot_id","metric_id","value" ) VALUES ('90455bf8-ada5-495c-8019-8d7ab76d488e', '80255bf8-ada5-495c-8019-8d7ab76d488e','11155bf2-ada5-495c-8019-8d7ab76d488e', 50);`,
         );
 
         await queryRunner.query(
@@ -320,13 +321,13 @@ export class InsertData1634822415061 implements MigrationInterface {
             `INSERT INTO "sprint_snapshot_metric" ("id","snapshot_id","metric_id","value" ) VALUES ('90755bf8-ada5-495c-8019-8d7ab76d488e', '80455bf8-ada5-495c-8019-8d7ab76d488e', '11155bf1-ada5-495c-8019-8d7ab76d488e', 112);`,
         );
         await queryRunner.query(
-            `INSERT INTO "sprint_snapshot_metric" ("id","snapshot_id","metric_id","value" ) VALUES ('90855bf8-ada5-495c-8019-8d7ab76d488e', '80455bf8-ada5-495c-8019-8d7ab76d488e', '11155bf2-ada5-495c-8019-8d7ab76d488e', 105);`,
+            `INSERT INTO "sprint_snapshot_metric" ("id","snapshot_id","metric_id","value" ) VALUES ('90855bf8-ada5-495c-8019-8d7ab76d488e', '80455bf8-ada5-495c-8019-8d7ab76d488e', '11155bf2-ada5-495c-8019-8d7ab76d488e', 115);`,
         );
         await queryRunner.query(
             `INSERT INTO "sprint_snapshot_metric" ("id","snapshot_id","metric_id","value" ) VALUES ('90955bf8-ada5-495c-8019-8d7ab76d488e', '80555bf8-ada5-495c-8019-8d7ab76d488e','11155bf1-ada5-495c-8019-8d7ab76d488e', 84);`,
         );
         await queryRunner.query(
-            `INSERT INTO "sprint_snapshot_metric" ("id","snapshot_id","metric_id","value" ) VALUES ('91055bf8-ada5-495c-8019-8d7ab76d488e', '80555bf8-ada5-495c-8019-8d7ab76d488e','11155bf2-ada5-495c-8019-8d7ab76d488e', 15);`,
+            `INSERT INTO "sprint_snapshot_metric" ("id","snapshot_id","metric_id","value" ) VALUES ('91055bf8-ada5-495c-8019-8d7ab76d488e', '80555bf8-ada5-495c-8019-8d7ab76d488e','11155bf2-ada5-495c-8019-8d7ab76d488e', 25);`,
         );
         await queryRunner.query(
             `INSERT INTO "sprint_snapshot_metric" ("id","snapshot_id","metric_id","value" ) VALUES ('91155bf8-ada5-495c-8019-8d7ab76d488e', '80655bf8-ada5-495c-8019-8d7ab76d488e','11155bf1-ada5-495c-8019-8d7ab76d488e', 112);`,
@@ -340,14 +341,14 @@ export class InsertData1634822415061 implements MigrationInterface {
         );
 
         await queryRunner.query(
-            `INSERT INTO "sprint_snapshot_metric" ("id","snapshot_id","metric_id","value" ) VALUES ('91455bf8-ada5-495c-8019-8d7ab76d488e', '80755bf8-ada5-495c-8019-8d7ab76d488e', '11155bf2-ada5-495c-8019-8d7ab76d488e', 15);`,
+            `INSERT INTO "sprint_snapshot_metric" ("id","snapshot_id","metric_id","value" ) VALUES ('91455bf8-ada5-495c-8019-8d7ab76d488e', '80755bf8-ada5-495c-8019-8d7ab76d488e', '11155bf2-ada5-495c-8019-8d7ab76d488e', 22);`,
         );
         await queryRunner.query(
             `INSERT INTO "sprint_snapshot_metric" ("id","snapshot_id","metric_id","value" ) VALUES ('91555bf8-ada5-495c-8019-8d7ab76d488e', '80855bf8-ada5-495c-8019-8d7ab76d488e', '11155bf1-ada5-495c-8019-8d7ab76d488e', 56);`,
         );
 
         await queryRunner.query(
-            `INSERT INTO "sprint_snapshot_metric" ("id","snapshot_id","metric_id","value" ) VALUES ('91655bf8-ada5-495c-8019-8d7ab76d488e', '80855bf8-ada5-495c-8019-8d7ab76d488e', '11155bf2-ada5-495c-8019-8d7ab76d488e', 6);`,
+            `INSERT INTO "sprint_snapshot_metric" ("id","snapshot_id","metric_id","value" ) VALUES ('91655bf8-ada5-495c-8019-8d7ab76d488e', '80855bf8-ada5-495c-8019-8d7ab76d488e', '11155bf2-ada5-495c-8019-8d7ab76d488e', 16);`,
         );
         await queryRunner.query(
             `INSERT INTO "sprint_snapshot_metric" ("id","snapshot_id","metric_id","value" ) VALUES ('91755bf8-ada5-495c-8019-8d7ab76d488e', '80955bf8-ada5-495c-8019-8d7ab76d488e', '11155bf1-ada5-495c-8019-8d7ab76d488e', 90);`,

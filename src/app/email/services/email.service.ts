@@ -51,7 +51,8 @@ export class EmailService implements IEmailService {
         const ses = this.getSES();
         return ses.sendEmail(params, (err: AWSError, data: SendEmailResponse) => {
           if (err) {
-            console.log(err, err.stack);
+            console.log(err);
+            console.log('Some Error occured while sending the mail to the recipient')
             return err;
           } else {
             console.log(data);
