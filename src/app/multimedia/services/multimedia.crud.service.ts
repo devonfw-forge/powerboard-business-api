@@ -159,6 +159,8 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
         this.folderResponse.folderName = result[i].albumName;
         this.folderResponse.inSlideShow = result[i].inSlideshow;
         this.folderResponse.status = this.getStatusForFolder(result[i].albumName);
+        console.log('Huhuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu');
+        console.log(this.folderResponse.status);
         fileArray.push(this.folderResponse);
         this.folderResponse = {} as FolderResponse;
       }
@@ -173,8 +175,8 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     this.flag = true;
   }
   getStatusForFolder(albumName: string) {
-    if (albumName == this.folderName) {
-      return this.flag;
+    if (this.folderName == albumName) {
+      return true;
     } else {
       return false;
     }
