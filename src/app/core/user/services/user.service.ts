@@ -62,12 +62,13 @@ export class UserService extends TypeOrmCrudService<User> implements IUserServic
     console.log(result.id);
     //save the user session object into the DB here
     if (result) {
-      let sendEmailDTO: SendEmailDTO = {} as SendEmailDTO;
-      sendEmailDTO.username = result.username;
-      sendEmailDTO.toEmail = result.email;
-      sendEmailDTO.defaultPassword = password;
-      this.emailService.sendTeamplateEmail(sendEmailDTO);
-      this.userSessionDetailsService.registerUserIntoUserSession(result.id);
+      // let sendEmailDTO: SendEmailDTO = {} as SendEmailDTO;
+      // sendEmailDTO.username = result.username;
+      // sendEmailDTO.toEmail = result.email;
+      // sendEmailDTO.defaultPassword = password;
+      // this.emailService.sendTeamplateEmail(sendEmailDTO);
+      // this.userSessionDetailsService.registerUserIntoUserSession(result.id);
+      console.log('Successssss');
       return this.userTeamService.addUserToTeam(result, userDTO);
     }
   }
