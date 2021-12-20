@@ -10,7 +10,7 @@ import { SendEmailDTO } from '../model/dto/SendEmail.dto';
 export class EmailService implements IEmailService {
   async sendTeamplateEmail(sendEmail: SendEmailDTO) {
     fs.readFile(
-      'src/app/templates/new-user-email.template.html',
+      'src/app/templates/new-user-email-template.html',
       { encoding: 'utf-8' },
       (err: any, emailHtmlTemplate: any) => {
         if (err) {
@@ -52,7 +52,7 @@ export class EmailService implements IEmailService {
         return ses.sendEmail(params, (err: AWSError, data: SendEmailResponse) => {
           if (err) {
             console.log(err);
-            console.log('Some Error occured while sending the mail to the recipient')
+            console.log('Some Error occured while sending the mail to the recipient');
             return err;
           } else {
             console.log(data);

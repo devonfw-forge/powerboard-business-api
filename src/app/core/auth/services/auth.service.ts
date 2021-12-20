@@ -3,7 +3,7 @@ import { classToPlain } from 'class-transformer';
 import { User } from '../../user/model/entities/user.entity';
 import { LoginDTO } from '../model/LoginDTO';
 import { JwtService } from '@nestjs/jwt';
-import { compare } from 'bcrypt';
+import { compare } from 'bcryptjs';
 import { UserDTO } from '../../user/model/dto/UserDTO';
 import { MyProject } from '../../user/model/dto/my_project.interface';
 import { LoginResponse } from '../model/LoginResponse';
@@ -34,8 +34,8 @@ export class AuthService implements IAuthService {
     @Inject('IGlobalTeamService') private readonly globalTeamsService: IGlobalTeamsService,
     private readonly jwtService: JwtService,
     @Inject('IUserPrivilegeService') private readonly userPrivilegeService: IUserPrivilegeService,
-  ) { }
-  globalLink = process.env.AWS_lOGO_URL;
+  ) {}
+  globalLink = process.env.AWS_URL + 'logo';
   dash: DashBoardResponse = {} as DashBoardResponse;
   /**
    * validateUser method will validate User
@@ -58,7 +58,6 @@ export class AuthService implements IAuthService {
   async signIn(username: string, password: string): Promise<string> {
     const user: any = { username, password };
     return this.jwtService.sign(user, { expiresIn: '1h' });
-
   }
 
   async loginGuest(user: LoginDTO): Promise<any> {
@@ -96,87 +95,11 @@ export class AuthService implements IAuthService {
       }
       loginResponse.privileges = await this.getPrivileges(payload.id);
       return { loginResponse, accessToken };
-
     } else {
       throw new UnauthorizedException('Wrong username or password, Please try again');
     }
   }
 
-  // /**
-  //  * systemAdminGuestUserLogin method will return LoginResponse for system admin and guest user login
-  //  */
-  // async systemAdminLogin(userTeam: UserTeam, accessToken: string, isPassword: boolean, visitedTeam: string) {
-  //   let loginResponse: LoginResponse = {} as LoginResponse;
-  //   loginResponse.userId = userTeam.user.id;
-  //   loginResponse.isPasswordChanged = isPassword;
-  //   loginResponse.My_Center = undefined;
-  //   loginResponse.My_Team = [];
-  //   loginResponse.ADC_List = await this.adCenterServiceInterface.getAllCenters();
-  //   loginResponse.Teams_In_ADC = await this.globalTeamsService.getTeamsByCenterId(loginResponse.ADC_List[0].centerId);
-  //   loginResponse.privileges = await this.userPrivilegeService.getAllPrivilegeForAdmin(userTeam.user.id);
-  //   loginResponse.powerboardResponse = await this.getPowerboard(visitedTeam, loginResponse.userId);
-  //   return { loginResponse, accessToken };
-  // }
-
-  // /**
-  //  * teamMemberTeamAdminLogin method will return LoginResponse for team member and team admin login
-  //  */
-  // async teamMemberTeamAdminLogin(
-  //   userTeam: UserTeam[],
-  //   accessToken: string,
-  //   payload: User,
-  //   isPassword: boolean,
-  //   visitedTeam: string,
-  // ) {
-  //   let teamsDTOArray = [],
-  //     i;
-  //   if (userTeam.length >= 1) {
-  //     let teamsWithinUser: MyProject = {} as MyProject;
-  //     for (i = 0; i < userTeam.length; i++) {
-  //       teamsWithinUser.teamId = userTeam[i].team.id;
-  //       teamsWithinUser.teamName = userTeam[i].team.name;
-  //       teamsWithinUser.myRole = userTeam[i].role.roleName;
-  //       this.dash = (await this.dashboardService.getDashboardByTeamId(userTeam[i].team)) as DashBoardResponse;
-  //       teamsWithinUser.teamStatus = this.dashboardService.fetchStatus(this.dash);
-  //       teamsDTOArray.push(teamsWithinUser);
-  //       teamsWithinUser = {} as MyProject;
-  //     }
-  //     let teamId = teamsDTOArray[0].teamId;
-  //     const loginResponse = await this.loginDetailsForTeamMemberAdmin(
-  //       teamId,
-  //       teamsDTOArray,
-  //       payload,
-  //       isPassword,
-  //       visitedTeam,
-  //     );
-  //     return { loginResponse, accessToken };
-  //   }
-  // }
-  /**
-   * loginDetailsForTeamMemberAdmin method will return LoginResponse for team member and team admin login
-   */
-  // async loginDetailsForTeamMemberAdmin(
-  //   teamId: string,
-  //   teamsDTOArray: MyProject[],
-  //   payload: User,
-  //   isPassword: boolean,
-  //   visitedTeam: string,
-  // ) {
-  //   let loginResponse: LoginResponse = {} as LoginResponse;
-  //   loginResponse.userId = payload.id;
-  //   loginResponse.isPasswordChanged = isPassword;
-  //   loginResponse.My_Center = await this.teamService.getCenterByTeamId(teamId);
-  //   loginResponse.My_Team = teamsDTOArray;
-  //   loginResponse.Teams_In_ADC = await this.globalTeamsService.viewTeamsInADC(teamId);
-  //   loginResponse.ADC_List = await this.adCenterServiceInterface.getAllCenters();
-  //   loginResponse.privileges = [];
-  //   loginResponse.powerboardResponse = await this.getPowerboard(visitedTeam, payload.id);
-  //   return loginResponse;
-  // }
-
-  /**
-   * register method will add the user except guest user
-   */
   register(user: UserDTO): Promise<User> {
     return this.userService.registerUser(user);
   }
@@ -248,7 +171,6 @@ export class AuthService implements IAuthService {
       }
       let teamId = teamsDTOArray[0].teamId;
       return this.homeDetailsForTeamMemberAdmin(teamId, teamsDTOArray);
-
     }
   }
 
