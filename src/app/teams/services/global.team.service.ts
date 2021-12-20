@@ -44,11 +44,13 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
     for (i = 0; i < teams.length; i++) {
       teamsResponse.teamId = teams[i].id;
       teamsResponse.teamName = teams[i].name;
+
       if (teams[i].logo == null) {
         teamsResponse.teamLogo = null;
       } else {
         teamsResponse.teamLogo = `${this.globalLink}/${teams[i].id}/` + teams[i].logo!;
       }
+
       teamsResponse.teamStatus = await this.findStatusByTeam(teams[i]);
       teamsDTOArray.push(teamsResponse);
       teamsResponse = {} as TeamsInADC;
