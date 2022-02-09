@@ -62,6 +62,45 @@ export class CloudFileStorageService implements IFileStorageService {
     });
   }
 
+  async getTemplate() {
+
+    // const filePath: string = 'https://powerboard-asset.s3.eu-central-1.amazonaws.com/new-user-email-template.html';
+    const file = 'new-user-email-template.html';
+    const s3 = this.getS3();
+
+    const getParams = {
+
+      Bucket: 'powerboard-asset', // your bucket name,
+      Key: file as string, // path to the object you're looking for
+
+    };
+
+    let { Body } = await s3.getObject(getParams).promise();
+    console.log('This is the body')
+    console.log(Body);
+    const stringBody = Body?.toString('utf-8');
+    console.log('Encoded Body')
+    console.log(stringBody);
+    return stringBody;
+    // s3.getObject(getParams, (error, data) => {
+
+    //   if (error) {
+
+    //     throw error;
+
+    //   } else {
+
+    //     console.log(data);
+    //     console.log('File has been fetched successfully');
+
+    //     return data;
+
+    //   }
+
+    // });
+
+  }
+
   async deleteMultipleFiles(filePaths: string[]) {
     var objects = [];
     for (var k in filePaths) {
@@ -153,88 +192,3 @@ export class CloudFileStorageService implements IFileStorageService {
     }
   }
 }
-// async deleteMultipleFolders(folderPaths: string[]) {
-
-//   console.log('jkrhjkwdssssssfwef')
-//   console.log(folderPaths);
-//   let k;
-//   for (k = 0; k < folderPaths.length; k++) {
-//     console.log(folderPaths[k])
-//     const listParams = {
-//       Bucket: process.env.AWS_BUCKET as string,
-//       Prefix: folderPaths[k]
-//     };
-//     const s3 = this.getS3();
-//     const listedObjects = await s3.listObjectsV2(listParams).promise() as any;
-// var keys = [];
-// for (var content of listedObjects.Contents) {
-//   keys.push(content.Key);
-// }
-//     console.log("listedObjects", listedObjects);
-//     if (listedObjects.Contents.lenght === 0) {
-//       return;
-//     }
-
-// const deleteParams = {
-//   Bucket: process.env.AWS_BUCKET as string,
-//   Delete:
-//   {
-//     Objects: keys
-//   }
-// };
-//     console.log('These are keys')
-//     console.log(keys);
-//     console.log("deleteParams", deleteParams);
-//     return s3.deleteObjects(deleteParams, (error, data) => {
-//       if (error) {
-//         console.log('error occurred')
-//         throw error;
-//       } else {
-//         console.log('Deleted successfully')
-//         console.log(data);
-//         //console.log('File has been deleted successfully');
-//         return data;
-//       }
-//     });
-//   }
-// }
-
-// var objects = [];
-// for (var k in directories) {
-//   objects.push({ Key: directories[k] });
-// }
-//   //const objects = filePaths.map(key => ({ Key: key }));
-//   const params = {
-//     Bucket: process.env.AWS_BUCKET as string,
-//     Delete: {
-//       Objects: objects,
-//     }
-//   }
-//   const s3 = this.getS3();
-//   return s3.deleteObjects(params, (error, data) => {
-//     if (error) {
-//       console.log('error occurred')
-//       throw error;
-//     } else {
-//       console.log('Deleted successfully')
-//       console.log(data);
-//       //console.log('File has been deleted successfully');
-//       return data;
-//     }
-//   });
-
-// async uploadFile(file: any, originalPath: string): Promise<any> {
-//   if (!fs.existsSync(originalPath)) {
-//     fs.mkdirSync(originalPath, {
-//       recursive: true,
-//     });
-//   }
-// const filename: string = path.parse(file.originalname).name.replace(/\s/g, '') + uuidv4();
-// const extension: string = path.parse(file.originalname).ext;
-// const name = `${filename}` + `${extension}`;
-//   const filePath: string = originalPath + name;
-//   let fileStream = createWriteStream(filePath);
-//   fileStream.write(file.buffer);
-//   fileStream.end();
-//   return name;
-// }

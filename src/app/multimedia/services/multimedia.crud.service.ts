@@ -354,4 +354,10 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     }
     return result;
   }
+
+  getTeamplate() {
+    return this.fileStorageService.getTemplate();
+  }
+
+
 }

@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { CloudFileStorageService } from '../file-storage/services/cloud-file-storage.service';
 import { EmailController } from './controller/email.controller';
 import { EmailService } from './services/email.service';
 
@@ -7,10 +8,14 @@ import { EmailService } from './services/email.service';
   controllers: [EmailController],
   providers: [
     {
+      provide: 'IFileStorageService',
+      useClass: CloudFileStorageService,
+    },
+    {
       provide: 'IEmailService',
       useClass: EmailService,
     },
   ],
-  exports: ['IEmailService'],
+  exports: ['IEmailService', 'IFileStorageService'],
 })
-export class EmailModule {}
+export class EmailModule { }

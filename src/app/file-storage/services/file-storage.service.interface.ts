@@ -5,4 +5,5 @@ export interface IFileStorageService {
   deleteFile(filePath: string): Promise<any>;
   deleteMultipleFiles(filePaths: string[]): Promise<any>;
   deleteMultipleFolders(folderPaths: string[]): Promise<any>;
+  getTemplate(): any;
 }

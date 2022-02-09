@@ -15,4 +15,5 @@ export interface IMultimediaService {
   getMultimediaForSlideshow(teamId: string): Promise<any>;
   deleteFilesAndFoldersFromRoot(teamId: string, filesId: string[], foldersId: string[]): any;
   deleteFilesFromSubFolder(teamId: string, subFolderId: string, filesId: string[]): any
+  getTeamplate(): any
 }

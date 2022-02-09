@@ -26,7 +26,7 @@ import { DeleteResponse } from '../model/dto/DeleteResponse.interface';
 @CrudType(Multimedia)
 @Controller('multimedia')
 export class MultimediaCrudController {
-  constructor(@Inject('IMultimediaService') public multimediaService: IMultimediaService) {}
+  constructor(@Inject('IMultimediaService') public multimediaService: IMultimediaService) { }
 
   @Post('uploadFile/:teamId')
   @UseInterceptors(FileInterceptor('file'))
@@ -113,5 +113,11 @@ export class MultimediaCrudController {
   async getMultimediaForSlideshow(@Param('teamid') teamId: string, @Response() res: eResponse): Promise<void> {
     const result = await this.multimediaService.getMultimediaForSlideshow(teamId);
     res.status(200).json(result);
+  }
+
+  @Get('getTeamplate')
+  async getTeamplate() {
+    const result = await this.multimediaService.getTeamplate();
+    return result;
   }
 }

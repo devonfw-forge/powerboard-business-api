@@ -5,7 +5,7 @@ import { Response } from 'express';
 
 @Catch()
 export class ErrorFilter implements ExceptionFilter {
-  constructor(@Optional() public readonly logger?: WinstonLogger) {}
+  constructor(@Optional() public readonly logger?: WinstonLogger) { }
   error_message = 'Something went wrong, Please try again in some moment';
 
   catch(exception: Error, host: ArgumentsHost): void {
@@ -19,7 +19,7 @@ export class ErrorFilter implements ExceptionFilter {
       message = exception.message;
     } else {
       status = HttpStatus.INTERNAL_SERVER_ERROR;
-      message = this.error_message;
+      message = exception.message;
     }
 
     response.status(status).json({
