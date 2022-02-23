@@ -34,7 +34,7 @@ export class AuthService implements IAuthService {
     @Inject('IGlobalTeamService') private readonly globalTeamsService: IGlobalTeamsService,
     private readonly jwtService: JwtService,
     @Inject('IUserPrivilegeService') private readonly userPrivilegeService: IUserPrivilegeService,
-  ) {}
+  ) { }
   globalLink = process.env.AWS_URL + 'logo';
   dash: DashBoardResponse = {} as DashBoardResponse;
   /**
@@ -60,6 +60,10 @@ export class AuthService implements IAuthService {
     return this.jwtService.sign(user, { expiresIn: '1h' });
   }
 
+  /**
+   * This method takes 
+   * @param {LoginDTO}. Takes LoginDTO (username and password) as input
+   */
   async loginGuest(user: LoginDTO): Promise<any> {
     const accessToken = await this.signIn(user.username, user.password);
     return this.loginResponseForGuest(accessToken);
@@ -67,7 +71,6 @@ export class AuthService implements IAuthService {
 
   /**
    * login method response is dynamic  , it will return LoginResponse
-   * 1-n , it will return list of teams
    * @param {LoginDTO} .Takes loginDTO as input (username and password)
    * @return {any}
    */
@@ -104,9 +107,14 @@ export class AuthService implements IAuthService {
     return this.userService.registerUser(user);
   }
 
+  /**
+   * This method changes the login password for a particular user
+   * @param {changePasswordDTO} . Takes changePasswordDTO (userId, oldPassword, newPassword) as input parameter
+   */
   async changePassword(changePassword: ChangePasswordDTO): Promise<any> {
     return this.userService.changePassword(changePassword);
   }
+
 
   async getPowerboard(visitedTeam: string, userId: string) {
     let userTeamDTO: UserTeamDTO = {} as UserTeamDTO;

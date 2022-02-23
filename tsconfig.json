@@ -18,5 +18,11 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "allowJs": true
+  },
+  "typedocOptions": {
+    "entryPoints": [
+      "src/main.ts"
+    ],
+    "out": "docs"
   }
 }

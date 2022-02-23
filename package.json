@@ -19,7 +19,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "sonar": "ts-node ./src/sonar-scanner.ts"
+    "sonar": "ts-node ./src/sonar-scanner.ts",
+    "compodoc": "compodoc",
+    "generate-docs": "compodoc -p tsconfig.json",
+    "serve-docs": "compodoc -s tsconfig.json"
   },
   "dependencies": {
     "@devon4node/common": "^2.0.0",
