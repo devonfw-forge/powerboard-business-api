@@ -137,104 +137,19 @@ export class CloudFileStorageService implements IFileStorageService {
 
           return success;
         });
-        // s3.deleteObjects(deleteParams, function (err, data) {
-        //   if (err) {
-        //     return err;
-        //   }
-        //   else (data.Deleted)
-        //   console.log()
-        //   return data;
-        //   // emptyBucket(bucketName, callback);
-        //   // } else {
-        //   //   callback();
-        //   // }
-        // });
       });
     }
   }
+
+  async getTemplate(): Promise<any> {
+    const filePath: string = 'new-user-email-template.html';
+    const s3 = this.getS3();
+    const getParams = {
+      Bucket: process.env.AWS_ASSETS_BUCKET as string, // your bucket name,
+      Key: filePath as string, // path to the object you're looking for
+    };
+
+    let { Body } = await s3.getObject(getParams).promise();
+    return Body;
+  }
 }
-// async deleteMultipleFolders(folderPaths: string[]) {
-
-//   console.log('jkrhjkwdssssssfwef')
-//   console.log(folderPaths);
-//   let k;
-//   for (k = 0; k < folderPaths.length; k++) {
-//     console.log(folderPaths[k])
-//     const listParams = {
-//       Bucket: process.env.AWS_BUCKET as string,
-//       Prefix: folderPaths[k]
-//     };
-//     const s3 = this.getS3();
-//     const listedObjects = await s3.listObjectsV2(listParams).promise() as any;
-// var keys = [];
-// for (var content of listedObjects.Contents) {
-//   keys.push(content.Key);
-// }
-//     console.log("listedObjects", listedObjects);
-//     if (listedObjects.Contents.lenght === 0) {
-//       return;
-//     }
-
-// const deleteParams = {
-//   Bucket: process.env.AWS_BUCKET as string,
-//   Delete:
-//   {
-//     Objects: keys
-//   }
-// };
-//     console.log('These are keys')
-//     console.log(keys);
-//     console.log("deleteParams", deleteParams);
-//     return s3.deleteObjects(deleteParams, (error, data) => {
-//       if (error) {
-//         console.log('error occurred')
-//         throw error;
-//       } else {
-//         console.log('Deleted successfully')
-//         console.log(data);
-//         //console.log('File has been deleted successfully');
-//         return data;
-//       }
-//     });
-//   }
-// }
-
-// var objects = [];
-// for (var k in directories) {
-//   objects.push({ Key: directories[k] });
-// }
-//   //const objects = filePaths.map(key => ({ Key: key }));
-//   const params = {
-//     Bucket: process.env.AWS_BUCKET as string,
-//     Delete: {
-//       Objects: objects,
-//     }
-//   }
-//   const s3 = this.getS3();
-//   return s3.deleteObjects(params, (error, data) => {
-//     if (error) {
-//       console.log('error occurred')
-//       throw error;
-//     } else {
-//       console.log('Deleted successfully')
-//       console.log(data);
-//       //console.log('File has been deleted successfully');
-//       return data;
-//     }
-//   });
-
-// async uploadFile(file: any, originalPath: string): Promise<any> {
-//   if (!fs.existsSync(originalPath)) {
-//     fs.mkdirSync(originalPath, {
-//       recursive: true,
-//     });
-//   }
-// const filename: string = path.parse(file.originalname).name.replace(/\s/g, '') + uuidv4();
-// const extension: string = path.parse(file.originalname).ext;
-// const name = `${filename}` + `${extension}`;
-//   const filePath: string = originalPath + name;
-//   let fileStream = createWriteStream(filePath);
-//   fileStream.write(file.buffer);
-//   fileStream.end();
-//   return name;
-// }
