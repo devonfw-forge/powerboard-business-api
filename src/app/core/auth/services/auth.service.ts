@@ -37,10 +37,9 @@ export class AuthService implements IAuthService {
   ) { }
   globalLink = process.env.AWS_URL + 'logo';
   dash: DashBoardResponse = {} as DashBoardResponse;
+
   /**
    * validateUser method will validate User
-   * @param {username, password} .Takes as input (username and password)
-   * @return {User} User as response
    */
   async validateUser(username: string, pass: string): Promise<User | undefined> {
     const user = (await this.userService.findUser(username)) as User;
@@ -52,8 +51,6 @@ export class AuthService implements IAuthService {
 
   /**
    * signIn method will generate accessToken
-   * @param {username, password} .Takes as input (username and password)
-   * @return {string} AccessToken as response
    */
   async signIn(username: string, password: string): Promise<string> {
     const user: any = { username, password };
@@ -61,8 +58,9 @@ export class AuthService implements IAuthService {
   }
 
   /**
-   * This method takes 
-   * @param {LoginDTO}. Takes LoginDTO (username and password) as input
+   * This method takes a dummy user name (guest) and passowrd (guest) from front end and logs in the guest user and returns
+   * the corresponding login response for guest
+   
    */
   async loginGuest(user: LoginDTO): Promise<any> {
     const accessToken = await this.signIn(user.username, user.password);
@@ -70,9 +68,8 @@ export class AuthService implements IAuthService {
   }
 
   /**
-   * login method response is dynamic  , it will return LoginResponse
-   * @param {LoginDTO} .Takes loginDTO as input (username and password)
-   * @return {any}
+   * login method response is dynamic  , it will return LoginResponse. The method first validates
+   * the user, gets access token and session details and then send the whole response for landing page after sucecessful login
    */
 
   async login(user: LoginDTO): Promise<any> {
@@ -109,13 +106,14 @@ export class AuthService implements IAuthService {
 
   /**
    * This method changes the login password for a particular user
-   * @param {changePasswordDTO} . Takes changePasswordDTO (userId, oldPassword, newPassword) as input parameter
    */
   async changePassword(changePassword: ChangePasswordDTO): Promise<any> {
     return this.userService.changePassword(changePassword);
   }
 
-
+  /**
+   * This method returns all the informations related to the last visited team by the user
+   */
   async getPowerboard(visitedTeam: string, userId: string) {
     let userTeamDTO: UserTeamDTO = {} as UserTeamDTO;
     userTeamDTO.userId = userId;
@@ -127,6 +125,9 @@ export class AuthService implements IAuthService {
     }
   }
 
+  /**
+   * This method returns all the teams for the ad center
+   */
   async loginResponseForGuest(accessToken: string) {
     let homeResponse: HomeResponse = {} as HomeResponse;
     homeResponse.My_Team = [];
