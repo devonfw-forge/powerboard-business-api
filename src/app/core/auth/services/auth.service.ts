@@ -69,7 +69,6 @@ export class AuthService implements IAuthService {
    *  it will return LoginResponse. The method first validates
    * the user, gets access token and session details and then send the whole response for landing page after sucecessful login
    */
-
   async login(user: LoginDTO): Promise<any> {
     let isPassword: boolean = false;
     const payload = await this.validateUser(user.username, user.password);
@@ -124,7 +123,8 @@ export class AuthService implements IAuthService {
   }
 
   /**
-   * This method returns all the teams for the ad center
+   * This method fetch ADCenter list along with teams associated with first center in
+   * ADCenter list.
    */
   async loginResponseForGuest(accessToken: string) {
     let homeResponse: HomeResponse = {} as HomeResponse;
@@ -133,6 +133,12 @@ export class AuthService implements IAuthService {
     homeResponse.Teams_In_ADC = await this.globalTeamsService.getTeamsByCenterId(homeResponse.ADC_List[0].centerId);
     return { homeResponse, accessToken };
   }
+
+  /**
+   * This method will check whether the user is system admin or team Member/Admin
+   * and call the respective method to fetch & return an object of
+   * HomeResponse according to user type.
+   */
 
   async getHomeDetailsForUserId(userId: string): Promise<HomeResponse | undefined> {
     const userTeam = await this.userTeamService.findUserTeamsByUserId(userId);
@@ -144,9 +150,11 @@ export class AuthService implements IAuthService {
     }
   }
 
-  // /**
-  //  * systemAdminHome method will return HomeResponse for system admin
-  //  */
+  /**
+   * This method fetch ADCenter list along with teams associated with first center in
+   * ADCenter list for system admin.
+   * and will return an HomeResponse object.
+   */
   async systemAdminHome(): Promise<any> {
     let homeResponse: HomeResponse = {} as HomeResponse;
     homeResponse.My_Center = undefined;
@@ -157,9 +165,12 @@ export class AuthService implements IAuthService {
     return homeResponse;
   }
 
-  // /**
-  //  * teamMemberTeamAdminHome method will return LoginResponse for team member and team admin login
-  //  */
+  /**
+   * This method will fetch details of each team in UserTeam object,
+   * create an array of MyProjects,
+   * and call homeDetailsForTeamMemberAdmin Method for fetching and Returning an object of
+   * HomeResponse.
+   */
   async teamMemberTeamAdminHome(userTeam: UserTeam[]): Promise<any> {
     let teamsDTOArray = [],
       i;
@@ -170,8 +181,6 @@ export class AuthService implements IAuthService {
         teamsWithinUser.teamName = userTeam[i].team.name;
         teamsWithinUser.teamLogo = `${this.globalLink}/${userTeam[i].team.id}/` + userTeam[i].team.logo!;
         teamsWithinUser.myRole = userTeam[i].role.roleName;
-        //this.dash = (await this.dashboardService.getDashboardByTeamId(userTeam[i].team)) as DashBoardResponse;
-        //teamsWithinUser.teamStatus = this.dashboardService.fetchStatus(this.dash);
         teamsWithinUser.teamStatus = await this.globalTeamsService.findStatusByTeam(userTeam[i].team);
         teamsDTOArray.push(teamsWithinUser);
         teamsWithinUser = {} as MyProject;
@@ -182,7 +191,10 @@ export class AuthService implements IAuthService {
   }
 
   /**
-   * loginDetailsForTeamMemberAdmin method will return LoginResponse for team member and team admin login
+   * This method will fetch the ADCenter associated with the team,
+   * All the teams in associated ADCenter,
+   * List of all the ADCenters.
+   * And will create and return an object of HomeResponse with the help of fetched Items.
    */
   async homeDetailsForTeamMemberAdmin(teamId: string, teamsDTOArray: MyProject[]) {
     console.log(teamsDTOArray);
@@ -195,6 +207,11 @@ export class AuthService implements IAuthService {
     return homeResponse;
   }
 
+  /**
+   * This method will first fetch the associated teams with this perticular user.
+   * if the user is not associated with any team then will return privileges for System Admin
+   * or else will return null array in privileges.
+   */
   async getPrivileges(userId: string): Promise<string[]> {
     let privileges: string[] = [];
     const userTeam = (await this.userTeamService.findUserTeamsByUserId(userId)) as UserTeam[];
