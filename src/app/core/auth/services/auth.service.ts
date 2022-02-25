@@ -60,7 +60,6 @@ export class AuthService implements IAuthService {
   /**
    * This method takes a dummy user name (guest) and passowrd (guest) from front end and logs in the guest user and returns
    * the corresponding login response for guest
-   
    */
   async loginGuest(user: LoginDTO): Promise<any> {
     const accessToken = await this.signIn(user.username, user.password);
@@ -138,7 +137,8 @@ export class AuthService implements IAuthService {
 
   /**
    * This method will check whether the user is system admin or team Member/Admin
-   * and call the respective method according to user type.
+   * and call the respective method to fetch & return an object of
+   * HomeResponse according to user type.
    */
 
   async getHomeDetailsForUserId(userId: string): Promise<HomeResponse | undefined> {
@@ -167,11 +167,10 @@ export class AuthService implements IAuthService {
   }
 
   /**
-   * This method will fetch details of each team in UserTeam object
-   * and push it into an array of MyProjects.
-   * Then call homeDetailsForTeamMemberAdmin Method for getting an object of
-   * HomeResponse and return it.
-   *
+   * This method will fetch details of each team in UserTeam object,
+   * create an array of MyProjects,
+   * and call homeDetailsForTeamMemberAdmin Method for fetching and Returning an object of
+   * HomeResponse.
    */
   async teamMemberTeamAdminHome(userTeam: UserTeam[]): Promise<any> {
     let teamsDTOArray = [],
