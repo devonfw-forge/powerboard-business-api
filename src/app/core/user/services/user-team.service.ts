@@ -20,9 +20,8 @@ export class UserTeamService extends TypeOrmCrudService<UserTeam> implements IUs
   }
 
   /**
-   * addUserToTeam method will add user to other teams
-   * @param {User, UserDTO} .Takes as input
-   * @return {UserTeam} UserTeam as response
+   * It will add an user to perticular Team,
+   * and will return an object of saved UserTeam Object.
    */
   async addUserToTeam(actualUser: User, userDTO: UserDTO): Promise<any> {
     let userTeam = new UserTeam();
@@ -43,9 +42,8 @@ export class UserTeamService extends TypeOrmCrudService<UserTeam> implements IUs
   }
 
   /**
-   * deleteUserFromTeamById method will delete user , and system admin can do so
-   * @param {userteamId} .Takes userTeamId as input
-   * @return {void}
+   * It will delete an user from Team by the help of UserTeamId,
+   * and will return an object of DeleteResult.
    */
   async deleteUserFromTeamById(id: string): Promise<DeleteResult> {
     const userTeam = (await this.userTeamRepository.findOne({ where: { id: id } })) as UserTeam;
@@ -57,9 +55,8 @@ export class UserTeamService extends TypeOrmCrudService<UserTeam> implements IUs
   }
 
   /**
-   * getAllMemberOfTeam method will fetch all user of team , and system admin can do so
-   * @param {teamId} .Takes teamId as input
-   * @return {TeamsMemberResponse[]} .Return array of team member as response
+   * It will fetch all the members associated with the incoming Team,
+   * and return an Array of TeamsMemberResponse.
    */
   async getAllMemberOfTeam(teamId: string): Promise<TeamsMemberResponse[]> {
     const result = await this.userTeamRepository.find({ where: { team: teamId } });
@@ -84,19 +81,18 @@ export class UserTeamService extends TypeOrmCrudService<UserTeam> implements IUs
   }
 
   /**
-   * findUserTeamForAdmin method will fetch object of UserTeam on basis of userId only for admin
-   * @param {userId} .Takes userId as input
-   * @return {UserTeam} .Return object of UserTeam as response
+   * It will fetch & return an object of UserTeam on basis of userId only
+   * for Team Admin.
    */
   async findUserTeamForAdmin(userId: string) {
     return (await this.userTeamRepository.findOne({ where: { user: userId } })) as UserTeam;
-
   }
 
   /**
-   * updateUserRole method will update role of user and admin can do so
-   * @param {UpdateUserRoleDTO} .Takes UpdateUserRoleDTO as input
-   * @return {UserTeam} .Return object of UserTeam as response
+   * It will update an role of user in perticular team,
+   * If UserTeam object not found for that perticular user and team then will throw
+   * an error,
+   * or else will return an updated UserTeam object.
    */
   async updateUserRole(updateRoleDTO: UpdateUserRoleDTO): Promise<UserTeam> {
     let userTeam = (await this.userTeamRepository.findOne({
@@ -110,22 +106,17 @@ export class UserTeamService extends TypeOrmCrudService<UserTeam> implements IUs
     userTeamOBJ.id = userTeam.id;
     userTeamOBJ.role = (await this.userRoleRepository.findOne({ where: { id: updateRoleDTO.roleId } })) as UserRole;
     return this.userTeamRepository.save(userTeamOBJ);
-
   }
 
   /**
-   * findUserTeamsByUserId method will fetch array of UserTeam on basis of userId
-   * @param {userId} .Takes userId as input
-   * @return {UserTeam[]} .Return array of UserTeam object as response
+   * This method will fetch array of UserTeam on basis of userId
    */
   findUserTeamsByUserId(id: string) {
     return this.userTeamRepository.find({ where: { user: id } });
   }
 
   /**
-   * isAdminOrGuest method will figure out whether the userId is admin or guest
-   * @param {userId} .Takes userId as input
-   * @return {boolean} .Return boolean value as response
+   * It will figure out whether the userId is System Admin or not.
    */
   async isSystemAdmin(userId: string): Promise<boolean> {
     const output = (await this.userTeamRepository.findOne({ where: { user: userId } })) as UserTeam;
@@ -136,12 +127,10 @@ export class UserTeamService extends TypeOrmCrudService<UserTeam> implements IUs
   }
 
   /**
-   * findUserTeamDetails method will fetch unique UserTeam object on basis of userId and teamId
-   * @param {userId, teamId} .Takes userId and teamId as input
-   * @return {UserTeam[]} .Return unique UserTeam object as response
+   * findUserTeamDetails method will fetch & return an UserTeam object on basis
+   * of userId and teamId
    */
   async findUserTeamDetails(userId: string, teamId: string) {
     return (await this.userTeamRepository.findOne({ where: { user: userId, team: teamId } })) as UserTeam;
-
   }
 }

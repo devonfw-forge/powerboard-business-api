@@ -34,7 +34,7 @@ export class AuthService implements IAuthService {
     @Inject('IGlobalTeamService') private readonly globalTeamsService: IGlobalTeamsService,
     private readonly jwtService: JwtService,
     @Inject('IUserPrivilegeService') private readonly userPrivilegeService: IUserPrivilegeService,
-  ) { }
+  ) {}
   globalLink = process.env.AWS_URL + 'logo';
   dash: DashBoardResponse = {} as DashBoardResponse;
 
@@ -58,7 +58,7 @@ export class AuthService implements IAuthService {
   }
 
   /**
-   * it will log-in a guest and returns its corresponding login response  
+   * it will log-in a guest and returns its corresponding login response
    */
   async loginGuest(user: LoginDTO): Promise<any> {
     const accessToken = await this.signIn(user.username, user.password);

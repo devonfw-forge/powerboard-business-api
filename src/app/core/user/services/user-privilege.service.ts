@@ -43,7 +43,6 @@ export class UserPrivilegeService extends TypeOrmCrudService<UserRole> implement
 
   async findRole(roleId: string): Promise<UserRole> {
     return (await this.userRoleRepository.findOne({ where: { id: roleId } })) as UserRole;
-
   }
 
   /**
