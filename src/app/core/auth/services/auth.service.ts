@@ -39,7 +39,7 @@ export class AuthService implements IAuthService {
   dash: DashBoardResponse = {} as DashBoardResponse;
 
   /**
-   * validateUser method will validate User
+   * it will validate User by username and comparing the db password and input password
    */
   async validateUser(username: string, pass: string): Promise<User | undefined> {
     const user = (await this.userService.findUser(username)) as User;
@@ -50,7 +50,7 @@ export class AuthService implements IAuthService {
   }
 
   /**
-   * signIn method will generate accessToken
+   * it will generate accessToken for a user
    */
   async signIn(username: string, password: string): Promise<string> {
     const user: any = { username, password };
@@ -58,8 +58,7 @@ export class AuthService implements IAuthService {
   }
 
   /**
-   * This method takes a dummy user name (guest) and passowrd (guest) from front end and logs in the guest user and returns
-   * the corresponding login response for guest
+   * it will log-in a guest and returns its corresponding login response
    */
   async loginGuest(user: LoginDTO): Promise<any> {
     const accessToken = await this.signIn(user.username, user.password);
@@ -67,7 +66,7 @@ export class AuthService implements IAuthService {
   }
 
   /**
-   * login method response is dynamic  , it will return LoginResponse. The method first validates
+   *  it will return LoginResponse. The method first validates
    * the user, gets access token and session details and then send the whole response for landing page after sucecessful login
    */
   async login(user: LoginDTO): Promise<any> {

@@ -11,9 +11,7 @@ export class ADCenterCrudService extends TypeOrmCrudService<ADCenter> {
     super(centerRepository);
   }
   /**
-   * getAllCenters method will fetch all center
-   * @param {} .Takes nothing as input
-   * @return {[]} return adcenter array as response
+   * it fetches all the ad centers from DB and returns back view response for ad centers
    */
   async getAllCenters(): Promise<ViewCentersResponse[]> {
     const centerList = await this.centerRepository.find();
