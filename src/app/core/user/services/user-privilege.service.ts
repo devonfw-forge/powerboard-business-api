@@ -18,8 +18,7 @@ export class UserPrivilegeService extends TypeOrmCrudService<UserRole> implement
   }
 
   /**
-   * It returns the privileges based on the fact that whether the user is system admin
-   *  or other user(team admin or team member)
+   * It returns the privileges of the user
    */
   async getUserPrivilegeForTeam(userId: string, teamId: string, isSystemAdmin: boolean): Promise<any> {
     if (isSystemAdmin) {
@@ -31,7 +30,7 @@ export class UserPrivilegeService extends TypeOrmCrudService<UserRole> implement
   }
 
   /**
-   * It returns the privilege list based on the role in the userTeam of the user
+   * It returns the privilege list based on the role of the user
    */
   getPrivilegeList(userTeam: UserTeam) {
     let privilegeArray: string[] = [],
@@ -48,8 +47,7 @@ export class UserPrivilegeService extends TypeOrmCrudService<UserRole> implement
   }
 
   /**
-   * It first fetches the userteam object of the admin user and returns all the privileges associated 
-   * with that admin 
+   * It returns all the privileges associated  with that system admin 
    */
   async getAllPrivilegeForAdmin(userId: string): Promise<string[]> {
     const userTeam = await this.userTeamService.findUserTeamForAdmin(userId);
@@ -61,8 +59,7 @@ export class UserPrivilegeService extends TypeOrmCrudService<UserRole> implement
   }
 
   /**
-   * It first fetches all the user roles present in the db and then creates the list of all those user
-   *  role ids and names and return it
+   * It first fetches all the user roles present in the db and returns it
    */
   async getAllUserRoles(): Promise<UserRolesDTO[]> {
     const roles = await this.userRoleRepository.find();
