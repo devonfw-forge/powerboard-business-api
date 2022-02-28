@@ -15,13 +15,10 @@ export class TeamSpiritCrudService extends TypeOrmCrudService<TeamSpiritMedian> 
   }
   teamSpiritResponse: TeamSpiritResponse = {} as TeamSpiritResponse;
   accessTokenForTeamSpirit = '';
-  /**
-   * getTeamSpiritFromSurvey method will fetch the spirit of team
-   * @param {teamName} ,Takes teamId as input
-   * @return {TeamSpiritResponse} TeamSpirit as response for that team
-   */
 
-  //To get the result of team's survey
+  /**
+   * It will fetch an team spirit rating of a perticular team
+   */
   async getTeamSpiritFromSurvey(teamName: string): Promise<TeamSpiritResponse | undefined> {
     const surveyResult: TeamSpiritMedian = (await this.teamSpiritRepository
       .createQueryBuilder('team_spirit_median')
