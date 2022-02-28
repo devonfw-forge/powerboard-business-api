@@ -21,7 +21,7 @@ export class UserTeamService extends TypeOrmCrudService<UserTeam> implements IUs
 
   /**
    * It will add an user to perticular Team,
-   * and will return an object of saved UserTeam Object.
+   * and will return an object of saved UserTeam object.
    */
   async addUserToTeam(actualUser: User, userDTO: UserDTO): Promise<any> {
     let userTeam = new UserTeam();
@@ -43,7 +43,7 @@ export class UserTeamService extends TypeOrmCrudService<UserTeam> implements IUs
 
   /**
    * It will delete an user from Team by the help of UserTeamId,
-   * and will return an object of DeleteResult.
+   * and will return an object of DeleteResult. //
    */
   async deleteUserFromTeamById(id: string): Promise<DeleteResult> {
     const userTeam = (await this.userTeamRepository.findOne({ where: { id: id } })) as UserTeam;
@@ -55,8 +55,8 @@ export class UserTeamService extends TypeOrmCrudService<UserTeam> implements IUs
   }
 
   /**
-   * It will fetch all the members associated with the incoming Team,
-   * and return an Array of TeamsMemberResponse.
+   * It will fetch all the members associated with the Team,
+   * and return an Array of TeamsMemberResponse. //
    */
   async getAllMemberOfTeam(teamId: string): Promise<TeamsMemberResponse[]> {
     const result = await this.userTeamRepository.find({ where: { team: teamId } });
@@ -81,15 +81,14 @@ export class UserTeamService extends TypeOrmCrudService<UserTeam> implements IUs
   }
 
   /**
-   * It will fetch & return an object of UserTeam on basis of userId only
-   * for Team Admin.
+   * It will fetch & return an object of UserTeam on basis of userId.
    */
   async findUserTeamForAdmin(userId: string) {
     return (await this.userTeamRepository.findOne({ where: { user: userId } })) as UserTeam;
   }
 
   /**
-   * It will update an role of user in perticular team,
+   * It will update a role of user in perticular team,
    * If UserTeam object not found for that perticular user and team then will throw
    * an error,
    * or else will return an updated UserTeam object.
@@ -109,7 +108,7 @@ export class UserTeamService extends TypeOrmCrudService<UserTeam> implements IUs
   }
 
   /**
-   * This method will fetch array of UserTeam on basis of userId
+   * This method will fetch array of UserTeam on basis of userId.
    */
   findUserTeamsByUserId(id: string) {
     return this.userTeamRepository.find({ where: { user: id } });
@@ -127,8 +126,8 @@ export class UserTeamService extends TypeOrmCrudService<UserTeam> implements IUs
   }
 
   /**
-   * findUserTeamDetails method will fetch & return an UserTeam object on basis
-   * of userId and teamId
+   * It will fetch & return an UserTeam object on basis
+   * of userId and teamId.
    */
   async findUserTeamDetails(userId: string, teamId: string) {
     return (await this.userTeamRepository.findOne({ where: { user: userId, team: teamId } })) as UserTeam;
