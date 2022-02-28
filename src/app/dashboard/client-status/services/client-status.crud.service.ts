@@ -20,6 +20,11 @@ export class ClientStatusCrudService extends TypeOrmCrudService<ClientStatus> {
    * @return {ClientStatusResponse} ClientStatus as response for that team's previous sprint
    */
   clientStatus: ClientStatusResponse = {} as ClientStatusResponse;
+
+  /**
+   * It will fetch the client's satisfaction rating for a particular team in a particular sprint 
+   * and returns it back 
+   */
   async getClientFeedback(team_Id: string): Promise<ClientStatusResponse | undefined> {
     const sprint = (await this.sprintRepository
       .createQueryBuilder('sprint')
