@@ -20,9 +20,7 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
   }
 
   /**
-   * getSprintDetailResponse method will fetch the current sprint details
-   * @param {teamId} ,Takes teamId as input
-   * @return {SprintDetailResponse} SprintDetail as response
+   * it will fetch the current sprint details from db and create a sprint detail response 
    */
   async getSprintDetailResponse(teamId: string): Promise<SprintDetailResponse | undefined> {
     let sprintDetailResponse: SprintDetailResponse = {} as SprintDetailResponse;
@@ -64,10 +62,9 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
     }
   }
   burndownResponse: BurndownResponse = {} as BurndownResponse;
+
   /**
-   * getBurndown method will retrieve the burndown report of current sprint
-   * @param {teamId} teamId Takes teamId as input
-   * @return {BurndownResponse} Burndown as response for that team's current sprint
+   * it will retrieve the burndown report of current sprint and create a burndown response for the team
    */
   async getBurndown(teamId: string): Promise<BurndownResponse | undefined> {
     let output: BurndownResponse = {} as BurndownResponse;
@@ -119,9 +116,8 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
   }
 
   /**
-   * calculateBurndownFirstCase method will retrieve the burndown report of current sprint if at 0 index , there is 'Work Committed'
-   * @param {result, totalDays, currentDay} .Takes these parameter as input
-   * @return {BurndownResponse} Burndown as response for that team's current sprint
+   * it will calculate the burndown and the burndown status of current sprint if 'Work Committed' is
+   * there at index 0 of sprintForBurndown array   
    */
   calculateBurnDownFirstCase(sprintForBurndown: any, totalDays: number, currentDay: number): BurndownResponse {
     if (Number(sprintForBurndown[0].ssm_value) > Number(sprintForBurndown[1].ssm_value)) {
@@ -137,10 +133,9 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
   }
 
   /**
-   * calculateBurndownSecondCase method will retrieve the burndown report of current sprint if at 0 index , there is 'Work Completed'
-   * @param {result, totalDays, currentDay} .Takes these parameter as input
-   * @return {BurndownResponse} Burndown as response for that team's current sprint
-   */
+    * it will calculate the burndown and the burndown status of current sprint if 'Work Completed' is
+    * there at index 0 of sprintForBurndown array   
+    */
   calculateBurnDownSecondCase(sprintForBurndown: any, totalDays: number, currentDay: number): BurndownResponse {
     if (Number(sprintForBurndown[0].ssm_value) < Number(sprintForBurndown[1].ssm_value)) {
       this.burndownResponse.workUnit = sprintForBurndown[0].sw_work_unit;
@@ -156,9 +151,7 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
   }
 
   /**
-   * getBurndownStatus method will fetch the status
-   * @param {ideal, actual} .Takes Ideal and actual rate as input
-   * @return {BurndownResponse} Burndown as response for that team's current sprint status
+   * it returns the current status of the burndown of sprint for a team
    */
   getBurndownStatus(ideal: number, actual: number): BurndownResponse {
     if (ideal > actual) {
@@ -175,9 +168,8 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
 
   velocityComparisonResponse = {} as VelocityComparisonResponse;
   /**
-   * getVelocityComparison method will retrieve the velocity report of current sprint
-   * @param {teamId} teamId Takes teamId as input
-   * @return {VelocityComparisonResponse} VelocityComparison as response for that team's current sprint
+   * it retrieves the velocity report of current sprint and also the same for previous sprints 
+   * and then creates the response for the velocity comparison
    */
   async getVelocityComparison(teamId: string): Promise<VelocityComparisonResponse | undefined> {
     const sprintMetricsResponse = await this.sprintRepository
@@ -232,9 +224,7 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
   }
 
   /**
-   * getAverageVelocity method will calculate the average velocity
-   * @param {previousSprintCompleted} previousSprintCompleted Takes these parameters as input
-   * @return {VelocityComparisonResponse} Average velocity as response
+   * it calculates the average velocity of all the previously completed sprints
    */
   getAverageVelocity(previousSprintCompleted: any): number {
     let sum = 0;
@@ -246,9 +236,8 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
   }
 
   /**
-   * getVelocityData method will fetch current sprints data
-   * @param {sprintMetricResponse} sprintMetricsResponse Takes as input
-   * @return {VelocityComparisonResponse} current sprint committed and completed as response
+   * it assigns the current sprint's metrics(work committed or work completed) data in the velocity 
+   * comparison response
    */
   getVelocityData(sprintMetricsResponse: any): VelocityComparisonResponse {
     if (sprintMetricsResponse[0].smt_name == 'Work Committed') {
@@ -261,14 +250,4 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
     return this.velocityComparisonResponse;
   }
 
-  // sprintWorkUnitResponse: SprintWorkUnitResponse = {} as SprintWorkUnitResponse;
-
-  // async sprintWorkUnit(teamId: string): Promise<SprintWorkUnitResponse | undefined> {
-
-  //   console.log("HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII")
-  //   const sprintForBurndown = await this.getBurndown(teamId) as BurndownResponse | undefined;
-  //   this.sprintWorkUnitResponse.workUnit = sprintForBurndown!.workUnit;
-  //   return this.sprintWorkUnitResponse;
-  // }
-  //spirint Service check
 }

@@ -15,11 +15,11 @@ export class CodeQualitySnapshotCrudService
   ) {
     super(codeQualityRepository);
   }
+
   /**
-   * getCodeQuality method will fetch the quality of code
-   * @param {teamId} .Takes teamId as input
-   * @return {CodeQualityResponse} Code Quality as response for that team
-   */
+  * It will fetch the code quality from db for a particular team in a particular sprint 
+  * and returns it back 
+  */
   codeQualityResponse: CodeQualityResponse = {} as CodeQualityResponse;
   async getCodeQualitySnapshot(team_Id: string): Promise<CodeQualityResponse | undefined> {
     const result = (await this.codeQualityRepository
