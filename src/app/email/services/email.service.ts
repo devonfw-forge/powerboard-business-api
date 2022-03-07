@@ -10,8 +10,11 @@ import { IFileStorageService } from '../../file-storage/services/file-storage.se
 import { Inject } from '@nestjs/common';
 
 export class EmailService implements IEmailService {
-  constructor(@Inject('IFileStorageService') private readonly fileStorageService: IFileStorageService) {}
+  constructor(@Inject('IFileStorageService') private readonly fileStorageService: IFileStorageService) { }
 
+  /**
+   * It sends templated email to the particular whose email address is present in the sendEmailDTO
+   */
   async sendTeamplateEmail(sendEmail: SendEmailDTO) {
     const emailHtml = await this.fileStorageService.getTemplate();
     const emailHtmlTemplate = emailHtml.toString('utf-8');
@@ -61,6 +64,9 @@ export class EmailService implements IEmailService {
     });
   }
 
+  /**
+   * It returns the AWS SES instance having the particular accessKeyId, secretAccessKey and region
+   */
   getSES() {
     return new SES({
       accessKeyId: process.env.AWS_ACCESS_KEY_ID,

@@ -7,7 +7,13 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
+
 export class CloudFileStorageService implements IFileStorageService {
+
+  /**
+ * It concatenates the uuid and extension to the filename and uploads the file to a particular
+ * path on AWS S3 with the help of uploadS3 method
+ */
   async uploadFile(file: any, filePath: string): Promise<any> {
     const filename: string = path.parse(file.originalname).name.replace(/\s/g, '') + uuidv4();
     const extension: string = path.parse(file.originalname).ext;
@@ -20,6 +26,9 @@ export class CloudFileStorageService implements IFileStorageService {
     return fileUploaded;
   }
 
+  /**
+   * It uploads a file to a given path inside an AWS S3 bucket
+   */
   async uploadS3(file: any, bucket: any, filePath: any) {
     const s3 = this.getS3();
     const params = {
@@ -38,6 +47,9 @@ export class CloudFileStorageService implements IFileStorageService {
     });
   }
 
+  /**
+   * It retrieves the AWS S3 instance with the particular AWS Access Key Id and AWS Secret Access key
+   */
   getS3() {
     return new S3({
       accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -45,6 +57,9 @@ export class CloudFileStorageService implements IFileStorageService {
     });
   }
 
+  /**
+   * It deletes the file present at a given path in the AWS S3 bucket
+   */
   async deleteFile(filePath: string) {
     const params = {
       Bucket: process.env.AWS_BUCKET as string,
@@ -62,6 +77,9 @@ export class CloudFileStorageService implements IFileStorageService {
     });
   }
 
+  /**
+   * It collects all the given paths of files, present in a bucket of AWS S3 and deletes them all together 
+   */
   async deleteMultipleFiles(filePaths: string[]) {
     var objects = [];
     for (var k in filePaths) {
@@ -89,6 +107,10 @@ export class CloudFileStorageService implements IFileStorageService {
     });
   }
 
+  /**
+   * It collects all the folders' paths present in a bucket of AWS S3 and deletes them all together
+   * along with the contents present inside them
+   */
   async deleteMultipleFolders(folderPaths: string[]) {
     console.log('jkrhjkwdssssssfwef');
     console.log(folderPaths);
@@ -141,6 +163,9 @@ export class CloudFileStorageService implements IFileStorageService {
     }
   }
 
+  /**
+   * It retrieves the email template present at a path in the given bucket of AWS S3 instance
+   */
   async getTemplate(): Promise<any> {
     const filePath: string = 'new-user-email-template.html';
     const s3 = this.getS3();
