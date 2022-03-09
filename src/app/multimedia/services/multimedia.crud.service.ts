@@ -151,7 +151,8 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
   }
 
   /**
-   * It creates the file response out of all the multimedia coming as input and returns back the file response
+   * It creates the file response out of all the multimedia coming as input and returns 
+   * the file response
    */
   getCommonFiles(result: Multimedia[], link: string) {
     let fileArray = [] as FileResponse[],
@@ -324,13 +325,15 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     }
     return filesArray;
   }
-
+  /**
+   * It checks files without folder and also files with folder for a team and then returns them all in 
+   * display response
+   */
   async getAllFilesForTeam(teamId: string): Promise<DisplayResponse[]> {
     let filesArray = [] as DisplayResponse[],
       i,
       j;
     const result = await this.multimediaRepository.find({ where: { team: teamId } });
-    console.log(result);
     if (result == null) {
       return filesArray;
     }
