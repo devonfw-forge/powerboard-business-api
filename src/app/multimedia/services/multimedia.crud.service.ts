@@ -58,7 +58,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
   /**
    *  It first fetches the multimedia present in the db with the album Id and attaches the album name
    *  of the multimedia to the path where the file has to be uploaded and with the help of uploadFile
-   * method it uploads the file to that path (folder path) in AWS S3 bucket. Finally persist the file in the file 
+   * method it uploads the file to that path (folder path) in AWS S3 bucket. Finally persist the file in the file
    * repository
    */
 
@@ -83,9 +83,8 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     }
   }
 
-
   /**
-   * It returns the default multimedia for a team at root level. If default multimedia is file then returns files 
+   * It returns the default multimedia for a team at root level. If default multimedia is file then returns files
    * and if default multimedia is a folder then returns the files inside that folder as default multimedia response
    */
   async getDefaultMultimediaForTeam(teamId: string): Promise<MultimediaResponse> {
@@ -108,7 +107,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
       }
       this.multimediaResponse.root = this.getFolderList(result);
       console.log('multimedia response');
-      console.log(this.multimediaResponse)
+      console.log(this.multimediaResponse);
       return this.multimediaResponse;
     }
   }
@@ -130,10 +129,10 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
   }
 
   /**
-   *It  
+   * It will add multimedia files into Slide Show
    */
   addFiles(files: Files[], albumName: string, inSlideShow: boolean, link?: string) {
-    console.log("add filleeessss");
+    console.log('add filleeessss');
     let displayArray = [] as DisplayResponse[],
       i;
     link = `${link}${albumName}/`;
@@ -146,12 +145,12 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
       this.displayResponse = {} as DisplayResponse;
     }
     console.log('display Arrraaayyyy');
-    console.log(displayArray)
+    console.log(displayArray);
     return displayArray;
   }
 
   /**
-   * It creates the file response out of all the multimedia coming as input and returns 
+   * It creates the file response out of all the multimedia coming as input and returns
    * the file response
    */
   getCommonFiles(result: Multimedia[], link: string) {
@@ -169,6 +168,9 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     return fileArray;
   }
 
+  /**
+   * It will fetch all the files in folder.
+   */
   getDisplayFilesFromFolder(result: Multimedia[], link?: string) {
     let fileArray = [] as DisplayResponse[],
       i;
@@ -216,6 +218,9 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     }
   }
 
+  /**
+   * It will delete selected files inside sub folder from DB as well as S3 bucket.
+   */
   async deleteFilesFromSubFolder(teamId: string, subFolderId: string, filesId: string[]) {
     let filesPath: string[] = [];
     const subFolder = await this.multimediaRepository.findOne(subFolderId);
@@ -237,6 +242,9 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     }
   }
 
+  /**
+   * It will delete files & folders in root from DB as well as S3 bucket.
+   */
   async deleteFilesAndFoldersFromRoot(teamId: string, filesId: string[], foldersId: string[]) {
     const commanPath = 'uploads/uploads/multimedia/' + teamId + '/';
 
@@ -271,9 +279,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
   }
 
   /**
-   * deleteMultipleFilesAndFolders method will delete multiple files & folders from root as well as subFolder
-   * @param {teamId} .Takes teamId as input
-   * @return {DeleteResponse} DeleteResponse as response having subfolder details, folderIds[] details & fileIds[] details
+   * It will delete multiple files & folders from root as well as subFolder
    */
   async deleteMultipleFilesAndFolders(teamId: string, deleteResponse: DeleteResponse): Promise<any> {
     if (deleteResponse.subFolderId === null) {
@@ -305,7 +311,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
   }
 
   /**
-   * It fetches all the files present in a particular folder for a team and returns them in the 
+   * It fetches all the files present in a particular folder for a team and returns them in the
    * form of display response
    */
   async getAllFilesInFolderForTeam(teamId: string, folderId: string): Promise<DisplayResponse[]> {
@@ -326,7 +332,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     return filesArray;
   }
   /**
-   * It checks files without folder and also files with folder for a team and then returns them all in 
+   * It checks files without folder and also files with folder for a team and then returns them all in
    * display response
    */
   async getAllFilesForTeam(teamId: string): Promise<DisplayResponse[]> {
@@ -356,6 +362,9 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     return filesArray;
   }
 
+  /**
+   * It will add selected files & folders into slide show.
+   */
   async addFilesAndFoldersIntoSlideshow(teamId: string, fileAndFolderIds: string[]): Promise<Multimedia[]> {
     let finalMultimediaList: Multimedia[] = [];
     let resetMultimedia = await this.multimediaRepository.find({
@@ -376,6 +385,9 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     return this.multimediaRepository.save(finalMultimediaList);
   }
 
+  /**
+   * It will fetch all the multimedia files which is available for slide show.
+   */
   async getMultimediaForSlideshow(teamId: string): Promise<any> {
     let result: { fileURL: string }[] = [];
     const commanPath =
