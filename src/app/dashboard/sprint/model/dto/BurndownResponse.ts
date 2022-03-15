@@ -4,4 +4,6 @@ export interface BurndownResponse {
   remainingDays: number;
   count: number;
   workUnit: string;
+  updatedAt: string
+
 }

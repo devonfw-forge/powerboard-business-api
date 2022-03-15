@@ -104,6 +104,7 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
       console.log(currentDay + '  ' + totalDays);
       const excludeDays = (totalDays / 7) * 2;
       const businessDays = totalDays - excludeDays;
+
       if (sprintForBurndown[0].smt_name == 'Work Committed') {
         return this.calculateBurnDownFirstCase(sprintForBurndown, businessDays, currentDay);
       } else if (sprintForBurndown[0].smt_name == 'Work Completed') {
@@ -127,8 +128,12 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
       this.burndownResponse.remainingWork = sprintForBurndown[0].ssm_value - sprintForBurndown[1].ssm_value;
       const ideal = Math.round((sprintForBurndown[0].ssm_value / totalDays) * currentDay);
       const actual = sprintForBurndown[1].ssm_value;
+      this.burndownResponse.updatedAt = sprintForBurndown[0].sprint_updatedAt;
       this.burndownResponse = this.getBurndownStatus(ideal, actual);
+
     }
+    console.log("Burrrrrrrrrrrnnnnnnnnnnnn")
+    console.log(this.burndownResponse)
     return this.burndownResponse;
   }
 
@@ -144,6 +149,7 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
       this.burndownResponse.remainingWork = sprintForBurndown[1].ssm_value - sprintForBurndown[0].ssm_value;
       const ideal = Math.round((sprintForBurndown[1].ssm_value / totalDays) * currentDay);
       const actual = sprintForBurndown[0].ssm_value;
+      this.burndownResponse.updatedAt = sprintForBurndown[1].sprint_updatedAt;
       this.burndownResponse = this.getBurndownStatus(ideal, actual);
     }
 
@@ -217,7 +223,10 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
         return undefined;
       } else {
         this.velocityComparisonResponse.Avg = this.getAverageVelocity(previousSprintCompleted);
+        this.velocityComparisonResponse.updatedAt = sprintMetricsResponse[0].sprint_updatedAt;
         this.velocityComparisonResponse = this.getVelocityData(sprintMetricsResponse);
+        console.log("velocccittttttttttyyyyy");
+        console.log(this.velocityComparisonResponse);
         return this.velocityComparisonResponse;
       }
     }
