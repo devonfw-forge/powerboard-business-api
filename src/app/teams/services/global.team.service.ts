@@ -1,4 +1,4 @@
-import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, NotFoundException, HttpService } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { DeleteResult, Repository } from 'typeorm';
@@ -14,6 +14,7 @@ import { IGlobalTeamsService } from './global.team.service.interface';
 import { TeamStatus } from '../model/entities/team_status.entity';
 import * as dotenv from 'dotenv';
 import { TeamResponse } from '../model/dto/TeamResponse';
+import xlsx from 'node-xlsx';
 dotenv.config();
 @Injectable()
 export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlobalTeamsService {
@@ -23,6 +24,7 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
     @InjectRepository(ADCenter) readonly centerRepository: Repository<ADCenter>,
     @Inject('IDashboardService') private readonly dashboardService: IDashboardService,
     @Inject('IFileStorageService') private readonly fileStorageService: IFileStorageService,
+    private httpService: HttpService,
   ) {
     super(teamRepository);
   }
@@ -236,5 +238,20 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
     teamExisted.isStatusChanged = false;
     teamExisted.team_status = (await this.teamStatusRepository.findOne({ where: { id: status } })) as TeamStatus;
     return this.teamRepository.save(teamExisted);
+  }
+
+  async uploadFileToAggregationService(file: any, teamId: string, type: string): Promise<any> {
+    console.log(file);
+    console.log('+++++++++++++++++++++++++++++++++++++++++++++++ reached Service +++++++++++++');
+    const url = process.env.AGGREGATION_SERVICE_URL;
+    const xlsxFile = xlsx.parse(file.buffer);
+    const response = await this.httpService
+      .post(url + 'data-upload/uploadJSONFile/' + type + '/' + teamId, xlsxFile)
+      .toPromise()
+      .then((res: any) => {
+        return res.data;
+      });
+    console.log(response);
+    return response;
   }
 }
