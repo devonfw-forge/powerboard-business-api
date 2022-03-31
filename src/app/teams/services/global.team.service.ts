@@ -254,4 +254,20 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
     console.log(response);
     return response;
   }
+
+  async updateClientRating(clientRating: any, type: string, teamId: string): Promise<any> {
+    console.log(clientRating);
+    console.log(type);
+    console.log(teamId);
+    console.log('reached end of client rating');
+    const url = process.env.AGGREGATION_SERVICE_URL;
+    const response = await this.httpService
+      .post(url + 'data-upload/uploadJson/' + type + '/' + teamId, clientRating)
+      .toPromise()
+      .then((res: any) => {
+        return res.data;
+      });
+    console.log(response);
+    return response;
+  }
 }

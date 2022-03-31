@@ -124,4 +124,16 @@ export class TeamCrudController {
     const result = await this.globalTeamsService.uploadFileToAggregationService(file, teamId, type);
     res.status(201).json(result);
   }
+
+  @Post('updateClientRating/:type/:teamId')
+  async updateClientRating(
+    @Param('teamId') teamId: string,
+    @Param('type') type: string,
+    @Body() clientRating: any,
+    @Response() res: eResponse,
+  ): Promise<void> {
+    const result = await this.globalTeamsService.updateClientRating(clientRating, type, teamId);
+    console.log(result);
+    res.status(200).json(result);
+  }
 }
