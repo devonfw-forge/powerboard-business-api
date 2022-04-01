@@ -29,9 +29,7 @@ export class DashboardService implements IDashboardService {
   dash: DashBoardResponse = {} as DashBoardResponse;
 
   /**
-   * getDashboardByTeamId method will retrieve all KPI's of particular team
-   * @param {teamId} teamId Takes teamId as input
-   * @return {DashBoardResponse} . Dashboard with all KPI's
+   * it retrieves all the KPIs of powerboard dashboard for a particular team
    */
   async getDashboardByTeamId(team: Team): Promise<DashBoardResponse> {
     this.dash.teamId = team.id;
@@ -63,9 +61,7 @@ export class DashboardService implements IDashboardService {
   }
 
   /**
-   * fetchstatus method will fetch the status of all respective KPI's of dashboard
-   * @param {dashboard} dashboard takes dashboard object as input
-   * @return {number} number as status value
+   * It calculates the consolidated status of all respective KPIs of dashboard
    */
   fetchStatus(dashboard: DashBoardResponse): number | undefined {
     let statusResult;

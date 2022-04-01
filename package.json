@@ -19,7 +19,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "sonar": "ts-node ./src/sonar-scanner.ts"
+    "sonar": "ts-node ./src/sonar-scanner.ts",
+    "compodoc": "compodoc",
+    "generate-docs": "compodoc -p tsconfig.json",
+    "serve-docs": "compodoc -s tsconfig.json"
   },
   "dependencies": {
     "@devon4node/common": "^2.0.0",
@@ -46,6 +49,7 @@
     "generate-password": "^1.6.0",
     "helmet": "^3.21.3",
     "lodash": "^4.17.15",
+    "node-xlsx": "^0.21.0",
     "nodemailer": "^6.6.3",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",

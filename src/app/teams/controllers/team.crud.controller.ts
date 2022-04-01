@@ -34,12 +34,11 @@ export class TeamCrudController {
   constructor(
     @Inject('ITeamService') public teamService: ITeamService,
     @Inject('IGlobalTeamService') public globalTeamsService: IGlobalTeamsService,
-  ) { }
+  ) {}
 
   @Post('powerboard/team')
   //@UseGuards(AuthGuard('jwt'))
   async getTeamInfoById(@Body() userTeam: UserTeamDTO, @Response() res: eResponse): Promise<void> {
-
     const result = await this.teamService.getTeamInfoById(userTeam);
     res.status(200).json(result);
   }
@@ -111,5 +110,30 @@ export class TeamCrudController {
     const result = await this.globalTeamsService.deleteLogoFromTeam(teamId);
     console.log(result);
     res.status(200).json({ message: 'File successfully Deleted' });
+  }
+
+  @Post('uploadXLSXFile/:type/:teamId')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFileXlsxp(
+    @UploadedFile() file: any,
+    @Param('teamId') teamId: string,
+    @Param('type') type: string,
+    @Response() res: eResponse,
+  ): Promise<void> {
+    console.log('===========================================reached controller================');
+    const result = await this.globalTeamsService.uploadFileToAggregationService(file, teamId, type);
+    res.status(201).json(result);
+  }
+
+  @Post('updateClientRating/:type/:teamId')
+  async updateClientRating(
+    @Param('teamId') teamId: string,
+    @Param('type') type: string,
+    @Body() clientRating: any,
+    @Response() res: eResponse,
+  ): Promise<void> {
+    const result = await this.globalTeamsService.updateClientRating(clientRating, type, teamId);
+    console.log(result);
+    res.status(200).json(result);
   }
 }

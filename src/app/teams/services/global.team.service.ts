@@ -1,4 +1,4 @@
-import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, NotFoundException, HttpService } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { DeleteResult, Repository } from 'typeorm';
@@ -14,6 +14,7 @@ import { IGlobalTeamsService } from './global.team.service.interface';
 import { TeamStatus } from '../model/entities/team_status.entity';
 import * as dotenv from 'dotenv';
 import { TeamResponse } from '../model/dto/TeamResponse';
+import xlsx from 'node-xlsx';
 dotenv.config();
 @Injectable()
 export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlobalTeamsService {
@@ -23,14 +24,13 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
     @InjectRepository(ADCenter) readonly centerRepository: Repository<ADCenter>,
     @Inject('IDashboardService') private readonly dashboardService: IDashboardService,
     @Inject('IFileStorageService') private readonly fileStorageService: IFileStorageService,
+    private httpService: HttpService,
   ) {
     super(teamRepository);
   }
   globalLink = process.env.AWS_URL + 'logo';
   /**
-   * getTeamsyBUId method will fetch the list of all teams belong to particular BU
-   * @param {Bu_id} Bu_id it takes Business Unit as input
-   * @return {TeamResponse[]} list of teams with their status
+   * It will fetch list of all the teams associated with perticular ADCenter.
    */
   async getTeamsByCenterId(CenterId: string): Promise<TeamsInADC[]> {
     const teams: Team[] = await this.teamRepository.find({ where: { ad_center: CenterId } });
@@ -60,9 +60,9 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
   }
 
   /**
-   * setLogo method will set logo for that team
-   * @param {teamId, path} .Takes teamId and path as input
-   * @return {Images} Images as response for that team
+   * It will upload a logo in team.
+   * If team not found then throw an exception,
+   * or else will call an uploadFile method of fileStorageService to upload a logo.
    */
 
   async uploadLogoForTeam(logo: any, teamId: string): Promise<TeamResponse> {
@@ -91,6 +91,9 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
     return teamsResponse;
   }
 
+  /**
+   * It will delete an existing logo from team.
+   */
   async deleteLogoFromTeam(teamId: string): Promise<void> {
     const team = (await this.teamRepository.findOne({ where: { id: teamId } })) as Team;
     const logoName = team.logo;
@@ -105,9 +108,9 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
   }
 
   /**
-   * addTeam method will add team , and system admin can do so
-   * @param {AddTeamDTO} .Takes AddTeamDTO as input
-   * @return {Team} Created Team as response
+   * It will add a team with their logo.
+   * If team is already existed then will throw an error,
+   * or else will add a team and upload a logo.
    */
   async addTeam(addteam: AddTeam, logo: any): Promise<TeamResponse> {
     const teamCode = addteam.teamCode;
@@ -141,9 +144,8 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
   }
 
   /**
-   * deleteTeamById method will delete team , and system admin can do so
-   * @param {teamId} .Takes teamId as input
-   * @return {void}
+   * It will delete an team.
+   * if team not found then will thorw an error.
    */
   async deleteTeamById(teamId: string): Promise<DeleteResult> {
     const team = await this.findTeamById(teamId);
@@ -154,9 +156,8 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
   }
 
   /**
-   * getAllTeams method will fetch all team , and system admin can do so
-   * @param {} .Takes nothing as input
-   * @return {team[]} return team array as response
+   * It will fetch all the available teams.
+   * If no team found the will throw an error.
    */
   async getAllTeams(): Promise<ViewTeamsResponse[]> {
     const teamList = await this.teamRepository.find();
@@ -179,6 +180,10 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
     return viewteamList;
   }
 
+  /**
+   * It will fetch ADCenter of the team
+   * and then will return all the teams associated with fetched ADCenter.
+   */
   async viewTeamsInADC(teamId: string) {
     const result = await this.teamRepository.findOne({ where: { id: teamId } });
     const teamList = await this.teamRepository.find({ where: { ad_center: result?.ad_center } });
@@ -202,10 +207,16 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
     return adcTeamList;
   }
 
+  /**
+   * It will fetch team details.
+   */
   async findTeamById(teamId: string): Promise<Team | undefined> {
     return this.teamRepository.findOne({ where: { id: teamId } });
   }
 
+  /**
+   * It will fetch status of the team.
+   */
   async findStatusByTeam(team: Team): Promise<number | undefined> {
     if (team.isStatusChanged) {
       const dashboard = (await this.dashboardService.getDashboardByTeamId(team)) as DashBoardResponse;
@@ -214,17 +225,49 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
       console.log(result);
       return result.team_status.id;
     } else {
-      console.log('status change ho chuka hhhhh');
-      console.log('_______________________________');
       console.log(team.team_status);
       return team.team_status.id;
     }
   }
 
+  /**
+   * It will update an status of the team.
+   */
   async updateTeamStatus(teamId: string, status: number | undefined) {
     const teamExisted = (await this.teamRepository.findOne({ where: { id: teamId } })) as Team;
     teamExisted.isStatusChanged = false;
     teamExisted.team_status = (await this.teamStatusRepository.findOne({ where: { id: status } })) as TeamStatus;
     return this.teamRepository.save(teamExisted);
+  }
+
+  async uploadFileToAggregationService(file: any, teamId: string, type: string): Promise<any> {
+    console.log(file);
+    console.log('+++++++++++++++++++++++++++++++++++++++++++++++ reached Service +++++++++++++');
+    const url = process.env.AGGREGATION_SERVICE_URL;
+    const xlsxFile = xlsx.parse(file.buffer);
+    const response = await this.httpService
+      .post(url + 'data-upload/uploadJSONFile/' + type + '/' + teamId, xlsxFile)
+      .toPromise()
+      .then((res: any) => {
+        return res.data;
+      });
+    console.log(response);
+    return response;
+  }
+
+  async updateClientRating(clientRating: any, type: string, teamId: string): Promise<any> {
+    console.log(clientRating);
+    console.log(type);
+    console.log(teamId);
+    console.log('reached end of client rating');
+    const url = process.env.AGGREGATION_SERVICE_URL;
+    const response = await this.httpService
+      .post(url + 'data-upload/uploadJson/' + type + '/' + teamId, clientRating)
+      .toPromise()
+      .then((res: any) => {
+        return res.data;
+      });
+    console.log(response);
+    return response;
   }
 }

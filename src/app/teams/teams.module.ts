@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, HttpModule } from '@nestjs/common';
 import { Team } from './model/entities/team.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TeamCrudService } from './services/team.crud.service';
@@ -20,6 +20,7 @@ import { TeamStatus } from './model/entities/team_status.entity';
     VisibilityModule,
     TeamLinksModule,
     FileStorageModule,
+    HttpModule,
   ],
   providers: [
     {

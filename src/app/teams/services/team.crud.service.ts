@@ -38,9 +38,9 @@ export class TeamCrudService extends TypeOrmCrudService<Team> implements ITeamSe
   powerboardResponse: PowerboardResponse = {} as PowerboardResponse;
 
   /**
-   * getPowerboardByUserId method will retrieve all KPI's +breadcrumb + dump_BU
-   * @param {userId,teamId} userId and TeamIdTakes userId as input
-   * @return {PowerboardResponse} Team Info as response
+   * It will fetch all the details of team
+   * i.e All the KPI's, links, multimedia, and
+   * if team not found then will throw an exception.
    */
   async getTeamInfoById(userTeam: UserTeamDTO): Promise<PowerboardResponse> {
     const teamId = userTeam.teamId;
@@ -77,6 +77,9 @@ export class TeamCrudService extends TypeOrmCrudService<Team> implements ITeamSe
     return this.powerboardResponse;
   }
 
+  /**
+   * It will fetch all the links associated with team.
+   */
   async getLinksForTeam(teamId: string, privilegeList?: string[]): Promise<any> {
     if (privilegeList?.includes('view_links')) {
       const teamLink: TeamLinkResponse[] = await this.teamLinkService.getTeamLinks(teamId);
@@ -87,9 +90,7 @@ export class TeamCrudService extends TypeOrmCrudService<Team> implements ITeamSe
   }
 
   /**
-   * getMultimediaForTeam method will fetch multimedia resonse for particular team
-   * @param {teamId} .Takes teamId as input
-   * @return {MultimediaResponse[]} Array of files as response
+   * It will fetch all the multimedia associated with team.
    */
   async getMultimediaForTeam(teamId: string): Promise<MultimediaResponse> {
     const multimedia: MultimediaResponse = await this.multimediaService.getDefaultMultimediaForTeam(teamId);
@@ -97,9 +98,8 @@ export class TeamCrudService extends TypeOrmCrudService<Team> implements ITeamSe
   }
 
   /**
-   * updateTeam method will update exsiting team , and system admin can do so
-   * @param {AddTeamDTO} .Takes AddTeamDTO as input
-   * @return {Team} Created Team as response
+   * It will update details like name, projectKey, teamcode in team, and
+   * if team not found then will throw an exception.
    */
   async updateTeam(updateTeam: UpdateTeam, teamId: string): Promise<Team> {
     const teamExisted = (await this.teamRepository.findOne(teamId)) as Team;
@@ -111,6 +111,10 @@ export class TeamCrudService extends TypeOrmCrudService<Team> implements ITeamSe
     teamExisted.teamCode = updateTeam.teamCode;
     return this.teamRepository.save(teamExisted);
   }
+
+  /**
+   * It will fetch ADCenter according to team.
+   */
   async getCenterByTeamId(teamId: string): Promise<MyCenter> {
     const result = await this.teamRepository.findOne({ where: { id: teamId } });
     let myCenter: MyCenter = {} as MyCenter;

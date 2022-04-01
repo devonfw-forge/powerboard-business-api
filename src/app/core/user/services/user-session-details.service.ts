@@ -15,6 +15,9 @@ export class UserSessionDetailsService extends TypeOrmCrudService<UserSession> i
     super(userSessionDetailsRepository);
   }
 
+  /**
+   * It registers the session of user into user session entity
+   */
   async registerUserIntoUserSession(userId: string): Promise<UserSession> {
     let userSession = new UserSession();
     console.log(userId);
@@ -29,12 +32,18 @@ export class UserSessionDetailsService extends TypeOrmCrudService<UserSession> i
     return (await this.userSessionDetailsRepository.findOne({ where: { userId: userId } })) as UserSession;
   }
 
+  /**
+   * It updates the user session of the user if his password is changed
+   */
   async updateUserSessionAfterPasswordChange(userId: string): Promise<UserSession> {
     const userSession = (await this.userSessionDetailsRepository.findOne({ where: { userId: userId } })) as UserSession;
     userSession.isPasswordChanged = true;
     return this.userSessionDetailsRepository.save(userSession);
   }
 
+  /**
+   * It updates the last logged in project of user in his user session entity
+   */
   async updateLastLoggedInProject(loggedTeam: UpdateLastLoggedTeamDTO): Promise<void> {
     const result = (await this.userSessionDetailsRepository.findOne({
       where: { userId: loggedTeam.userId },
@@ -42,11 +51,7 @@ export class UserSessionDetailsService extends TypeOrmCrudService<UserSession> i
     if (!result) {
       throw new NotFoundException('User Session not found');
     }
-    // result.lastCheckedInProjectId = loggedTeam.teamId;
-    // await this.userSessionDetailsRepository.save(result);
     const session = new UserSession();
-    console.log(';;;;;;;;;;;;;;;;;');
-    console.log(result);
     if (result) {
       session.id = result.id;
       session.lastCheckedInProjectId = loggedTeam.teamId;

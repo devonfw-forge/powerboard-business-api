@@ -19,9 +19,7 @@ export class TeamLinksCrudService extends TypeOrmCrudService<TeamLinks> implemen
   }
 
   /**
-   * getTeamLinks method will fetch the links of team
-   * @param {teamId} .Takes teamId as input
-   * @return {TeamLinkResponse} Team Links as response for that team
+   * It will fetch all the links associated with team.
    */
   teamLinkResponse: TeamLinkResponse = {} as TeamLinkResponse;
   async getTeamLinks(team_Id: string): Promise<TeamLinkResponse[]> {
@@ -48,16 +46,14 @@ export class TeamLinksCrudService extends TypeOrmCrudService<TeamLinks> implemen
   }
 
   /**
-   * deleteteamLinkById method will delete the link of team
+   * deleteteamLinkById method will delete the link from team
    */
   async deleteTeamLinkById(teamLinkId: string): Promise<any> {
     return this.teamLinkRepository.delete(teamLinkId);
   }
 
   /**
-   * createTeamLink method will add the links of team
-   * @param {teamId} .Takes teamId as input
-   * @return {TeamLinks} Team Links as response for that team
+   * It will add the link to team
    */
   async createTeamLinks(teamLinkDTO: TeamLinkDTO): Promise<TeamLinks> {
     const link = (await this.linkCategoryRepository.findOne({ where: { id: teamLinkDTO.linkType } })) as LinksCategory;
@@ -71,6 +67,10 @@ export class TeamLinksCrudService extends TypeOrmCrudService<TeamLinks> implemen
     return teamLinkOutput;
   }
 
+  /**
+   * It will fetch all available categories of links.
+   * if no link category available then will throw an error.
+   */
   async getLinksCategory(): Promise<LinksCategoryResponse[]> {
     const output = await this.linkCategoryRepository.find();
     if (!output) {

@@ -26,6 +26,9 @@ export class UserService extends TypeOrmCrudService<User> implements IUserServic
     super(userRepository);
   }
 
+  /**
+   * It will find user an user with the help of userName.
+   */
   async findUser(username: string): Promise<User | undefined> {
     return this.userRepository.findOne({
       where: {
@@ -35,9 +38,7 @@ export class UserService extends TypeOrmCrudService<User> implements IUserServic
   }
 
   /**
-   * registerUser method will register the user as well as add user to other team also
-   * @param {UserDTO} .Takes as input
-   * @return {User} created User as response
+   * It will register the user and will link that user to team.
    */
   async registerUser(userDTO: UserDTO): Promise<any> {
     console.log('This is user DTO');
@@ -72,6 +73,10 @@ export class UserService extends TypeOrmCrudService<User> implements IUserServic
     }
   }
 
+  /**
+   * It will change the password of existing user.
+   * and if user not found then will throw an exception
+   */
   async changePassword(changePassword: ChangePasswordDTO): Promise<any> {
     const output = await this.userRepository.findOne({ where: { id: changePassword.userId } });
     const user = new User();
@@ -91,6 +96,9 @@ export class UserService extends TypeOrmCrudService<User> implements IUserServic
     }
   }
 
+  /**
+   * It will delete an user of type guest.
+   */
   async deleteGuestById(guestId: string): Promise<DeleteResult> {
     const user = (await this.userRepository.findOne({ where: { id: guestId } })) as User;
     if (!user) {
