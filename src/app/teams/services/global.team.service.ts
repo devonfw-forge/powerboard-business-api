@@ -214,8 +214,6 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
       console.log(result);
       return result.team_status.id;
     } else {
-      console.log('status change ho chuka hhhhh');
-      console.log('_______________________________');
       console.log(team.team_status);
       return team.team_status.id;
     }
