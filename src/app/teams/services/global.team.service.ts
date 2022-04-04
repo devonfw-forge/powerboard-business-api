@@ -1,4 +1,11 @@
-import { ConflictException, Inject, Injectable, NotFoundException, HttpService } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  ConflictException,
+  NotAcceptableException,
+  HttpService,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { DeleteResult, Repository } from 'typeorm';
@@ -241,25 +248,29 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
   }
 
   async uploadFileToAggregationService(file: any, teamId: string, type: string): Promise<any> {
-    console.log(file);
-    console.log('+++++++++++++++++++++++++++++++++++++++++++++++ reached Service +++++++++++++');
-    const url = process.env.AGGREGATION_SERVICE_URL;
-    const xlsxFile = xlsx.parse(file.buffer);
-    const response = await this.httpService
-      .post(url + 'data-upload/uploadJSONFile/' + type + '/' + teamId, xlsxFile)
-      .toPromise()
-      .then((res: any) => {
-        return res.data;
-      });
-    console.log(response);
-    return response;
+    try {
+      const url = process.env.AGGREGATION_SERVICE_URL;
+      const xlsxFile = xlsx.parse(file.buffer);
+      await this.httpService
+        .post(url + 'data-upload/uploadJSONFile/' + type + '/' + teamId, xlsxFile)
+        .toPromise()
+        .then(res => {
+          return res.data;
+        });
+    } catch (error: any) {
+      if (error.response.data.statusCode === 404) {
+        throw new NotFoundException(error.response.data.message);
+      }
+      if (error.response.data.statusCode === 406) {
+        throw new NotAcceptableException(error.response.data.message);
+      }
+      if (error.response.data.statusCode === 409) {
+        throw new ConflictException(error.response.data.message);
+      }
+    }
   }
 
   async updateClientRating(clientRating: any, type: string, teamId: string): Promise<any> {
-    console.log(clientRating);
-    console.log(type);
-    console.log(teamId);
-    console.log('reached end of client rating');
     const url = process.env.AGGREGATION_SERVICE_URL;
     const response = await this.httpService
       .post(url + 'data-upload/uploadJson/' + type + '/' + teamId, clientRating)
@@ -267,7 +278,6 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
       .then((res: any) => {
         return res.data;
       });
-    console.log(response);
     return response;
   }
 }

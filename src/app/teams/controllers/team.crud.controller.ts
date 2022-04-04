@@ -120,7 +120,6 @@ export class TeamCrudController {
     @Param('type') type: string,
     @Response() res: eResponse,
   ): Promise<void> {
-    console.log('===========================================reached controller================');
     const result = await this.globalTeamsService.uploadFileToAggregationService(file, teamId, type);
     res.status(201).json(result);
   }
@@ -133,7 +132,6 @@ export class TeamCrudController {
     @Response() res: eResponse,
   ): Promise<void> {
     const result = await this.globalTeamsService.updateClientRating(clientRating, type, teamId);
-    console.log(result);
     res.status(200).json(result);
   }
 }
