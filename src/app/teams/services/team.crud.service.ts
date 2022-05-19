@@ -52,6 +52,7 @@ export class TeamCrudService extends TypeOrmCrudService<Team> implements ITeamSe
       throw new NotFoundException('Team Not Found');
     }
     let isSystemAdmin, privilegeList: string[] | undefined;
+
     if (userId) {
       isSystemAdmin = await this.userTeamService.isSystemAdmin(userId);
       privilegeList = await this.userPrivilegeService.getUserPrivilegeForTeam(userId, teamId, isSystemAdmin);
@@ -66,12 +67,21 @@ export class TeamCrudService extends TypeOrmCrudService<Team> implements ITeamSe
     } else {
       this.powerboardResponse.logo = `${this.globalLink}/${teamId}/` + teams.logo;
     }
+
     this.powerboardResponse.dashboard = await this.dashboardService.getDashboardByTeamId(teams);
     this.powerboardResponse.teamLinks = await this.getLinksForTeam(teams.id, privilegeList);
     this.powerboardResponse.multimedia = await this.getMultimediaForTeam(teams.id);
+
     if (isSystemAdmin) {
       this.powerboardResponse.privileges = [];
+      this.powerboardResponse.isTeamConfigured = true;
     } else {
+      const isTeamAdmin = await this.userTeamService.isTeamAdmin(userId, teamId);
+      if (isTeamAdmin && !teams.isTeamConfigured) {
+        this.powerboardResponse.isTeamConfigured = false;
+      } else {
+        this.powerboardResponse.isTeamConfigured = true;
+      }
       this.powerboardResponse.privileges = privilegeList!;
     }
     return this.powerboardResponse;

@@ -18,4 +18,5 @@ export interface IGlobalTeamsService {
   updateTeamStatus(teamId: string, status: number | undefined): Promise<any>;
   uploadFileToAggregationService(file: any, teamId: string, type: string): Promise<any>;
   updateClientRating(clientRating: any, type: string, teamId: string): Promise<any>;
+  updateTeamConfigurationCompleted(teamId: string, isTeamConfiguredStatus: boolean): Promise<Team>;
 }

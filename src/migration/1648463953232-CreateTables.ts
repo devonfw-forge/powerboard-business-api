@@ -150,9 +150,11 @@ export class CreateTables1648463953232 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE "scheduler_config" ADD CONSTRAINT "FK_3e62048601a169eeaf76e86ac9e" FOREIGN KEY ("team_id") REFERENCES "team"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
     );
+    await queryRunner.query(`ALTER TABLE "team" ADD "is_team_configured" boolean NOT NULL DEFAULT false`);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`ALTER TABLE "team" DROP COLUMN "is_team_configured"`);
     await queryRunner.query(`ALTER TABLE "user_role_privilege" DROP CONSTRAINT "FK_97a74e8a9913478806bd9258dea"`);
     await queryRunner.query(`ALTER TABLE "user_role_privilege" DROP CONSTRAINT "FK_b5953b98d1159f75a3156d071a9"`);
     await queryRunner.query(`ALTER TABLE "visibility" DROP CONSTRAINT "FK_396c9b89d74447b5dd2e60b9b24"`);

@@ -528,6 +528,7 @@ export class InsertData1648464125307 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`ALTER TABLE "team" DROP COLUMN "is_team_configured"`);
     await queryRunner.query(`ALTER TABLE "user_role_privilege" DROP CONSTRAINT "FK_97a74e8a9913478806bd9258dea"`);
     await queryRunner.query(`ALTER TABLE "user_role_privilege" DROP CONSTRAINT "FK_b5953b98d1159f75a3156d071a9"`);
     await queryRunner.query(`ALTER TABLE "visibility" DROP CONSTRAINT "FK_396c9b89d74447b5dd2e60b9b24"`);
@@ -550,6 +551,7 @@ export class InsertData1648464125307 implements MigrationInterface {
     await queryRunner.query(`ALTER TABLE "user_team" DROP CONSTRAINT "FK_f7c7dca694de337fa4a89d73ec8"`);
     await queryRunner.query(`ALTER TABLE "team" DROP CONSTRAINT "FK_659c6ff656130dcfac850b66c38"`);
     await queryRunner.query(`ALTER TABLE "team" DROP CONSTRAINT "FK_8e571805766848ea10996a178d4"`);
+    await queryRunner.query(`ALTER TABLE "scheduler_config" DROP CONSTRAINT "FK_3e62048601a169eeaf76e86ac9e"`);
     await queryRunner.query(`DROP INDEX "IDX_97a74e8a9913478806bd9258de"`);
     await queryRunner.query(`DROP INDEX "IDX_b5953b98d1159f75a3156d071a"`);
     await queryRunner.query(`DROP TABLE "user_role_privilege"`);
@@ -576,7 +578,6 @@ export class InsertData1648464125307 implements MigrationInterface {
     await queryRunner.query(`DROP TABLE "user_role"`);
     await queryRunner.query(`DROP TABLE "privileges"`);
     await queryRunner.query(`DROP TABLE "ad_center"`);
-    await queryRunner.query(`ALTER TABLE "scheduler_config" DROP CONSTRAINT "FK_3e62048601a169eeaf76e86ac9e"`);
     await queryRunner.query(`DROP TABLE "scheduler_config"`);
   }
 }

@@ -13,4 +13,5 @@ export interface PowerboardResponse {
   dashboard: DashBoardResponse;
   teamLinks: TeamLinkResponse[] | undefined;
   multimedia: MultimediaResponse;
+  isTeamConfigured: boolean;
 }

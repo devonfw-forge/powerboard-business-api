@@ -14,4 +14,5 @@ export interface IUserTeamService {
   findUserTeamsByUserId(id: string): any;
   findUserTeamForAdmin(userId: string): Promise<UserTeam>;
   isSystemAdmin(userId: string | undefined): Promise<any>;
+  isTeamAdmin(userId: string | undefined, teamId: string | undefined): Promise<any>;
 }

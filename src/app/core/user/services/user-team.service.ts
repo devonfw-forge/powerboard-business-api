@@ -126,6 +126,19 @@ export class UserTeamService extends TypeOrmCrudService<UserTeam> implements IUs
   }
 
   /**
+   * It will figure out whether the userId is Team Admin or not.
+   */
+  async isTeamAdmin(userId: string, teamId: string): Promise<boolean> {
+    const output = await this.userTeamRepository.findOne({ where: { user: userId, team: teamId } });
+    if (output) {
+      if (output.role.roleName == 'team_admin') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * It will fetch & return an UserTeam object on basis
    * of userId and teamId.
    */

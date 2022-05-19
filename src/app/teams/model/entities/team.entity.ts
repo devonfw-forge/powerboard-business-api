@@ -31,4 +31,7 @@ export class Team extends BaseEntity {
 
   @OneToMany(() => UserTeam, userTeam => userTeam.team, { nullable: true })
   userTeam!: UserTeam[];
+
+  @Column('boolean', { name: 'is_team_configured', default: false })
+  isTeamConfigured!: boolean;
 }

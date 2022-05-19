@@ -280,4 +280,13 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
       });
     return response;
   }
+
+  async updateTeamConfigurationCompleted(teamId: string, isTeamConfiguredStatus: boolean): Promise<Team> {
+    const teamExisted = (await this.teamRepository.findOne(teamId)) as Team;
+    if (!teamExisted) {
+      throw new NotFoundException('Team Not Found');
+    }
+    teamExisted.isTeamConfigured = isTeamConfiguredStatus;
+    return this.teamRepository.save(teamExisted);
+  }
 }

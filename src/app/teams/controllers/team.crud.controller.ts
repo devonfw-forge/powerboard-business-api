@@ -134,4 +134,18 @@ export class TeamCrudController {
     const result = await this.globalTeamsService.updateClientRating(clientRating, type, teamId);
     res.status(200).json(result);
   }
+
+  @Put('teamConfigured/:teamId')
+  //@UseGuards(AuthGuard('jwt'))
+  async updateTeamConfigured(
+    @Param('teamId') teamId: string,
+    @Body() status: any,
+    @Response() res: eResponse,
+  ): Promise<void> {
+    console.log('team configured =====================================================');
+    console.log(status);
+    const result = await this.globalTeamsService.updateTeamConfigurationCompleted(teamId, status.isTeamConfigured);
+    console.log(result);
+    res.status(200).json({ message: 'Team Successfully Configured' });
+  }
 }
