@@ -124,6 +124,18 @@ export class TeamCrudController {
     res.status(201).json(result);
   }
 
+  @Post('uploadJSONFile/:type/:teamId')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadJSONFile(
+    @UploadedFile() file: any,
+    @Param('teamId') teamId: string,
+    @Param('type') type: string,
+    @Response() res: eResponse,
+  ): Promise<void> {
+    const result = await this.globalTeamsService.uploadJSONFileToAggregationService(file, teamId, type);
+    res.status(201).json(result);
+  }
+
   @Post('updateClientRating/:type/:teamId')
   async updateClientRating(
     @Param('teamId') teamId: string,

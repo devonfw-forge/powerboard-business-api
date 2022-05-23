@@ -270,6 +270,30 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
     }
   }
 
+  async uploadJSONFileToAggregationService(file: any, teamId: string, type: string): Promise<any> {
+    try {
+      const url = process.env.AGGREGATION_SERVICE_URL;
+      const JSONFile = JSON.parse(file.buffer);
+      console.log(JSONFile);
+      await this.httpService
+        .post(url + 'data-upload/uploadJson/' + type + '/' + teamId, JSONFile)
+        .toPromise()
+        .then(res => {
+          return res.data;
+        });
+    } catch (error: any) {
+      if (error.response.data.statusCode === 404) {
+        throw new NotFoundException(error.response.data.message);
+      }
+      if (error.response.data.statusCode === 406) {
+        throw new NotAcceptableException(error.response.data.message);
+      }
+      if (error.response.data.statusCode === 409) {
+        throw new ConflictException(error.response.data.message);
+      }
+    }
+  }
+
   async updateClientRating(clientRating: any, type: string, teamId: string): Promise<any> {
     const url = process.env.AGGREGATION_SERVICE_URL;
     const response = await this.httpService
