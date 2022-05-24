@@ -20,7 +20,7 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
   }
 
   /**
-   * it will fetch the current sprint details from db and create a sprint detail response 
+   * it will fetch the current sprint details from db and create a sprint detail response
    */
   async getSprintDetailResponse(teamId: string): Promise<SprintDetailResponse | undefined> {
     let sprintDetailResponse: SprintDetailResponse = {} as SprintDetailResponse;
@@ -118,7 +118,7 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
 
   /**
    * it will calculate the burndown and the burndown status of current sprint if 'Work Committed' is
-   * there at index 0 of sprintForBurndown array   
+   * there at index 0 of sprintForBurndown array
    */
   calculateBurnDownFirstCase(sprintForBurndown: any, totalDays: number, currentDay: number): BurndownResponse {
     if (Number(sprintForBurndown[0].ssm_value) > Number(sprintForBurndown[1].ssm_value)) {
@@ -128,19 +128,18 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
       this.burndownResponse.remainingWork = sprintForBurndown[0].ssm_value - sprintForBurndown[1].ssm_value;
       const ideal = Math.round((sprintForBurndown[0].ssm_value / totalDays) * currentDay);
       const actual = sprintForBurndown[1].ssm_value;
-      this.burndownResponse.updatedAt = sprintForBurndown[0].sprint_updatedAt;
+      this.burndownResponse.updatedAt = sprintForBurndown[0].ss_date_time;
       this.burndownResponse = this.getBurndownStatus(ideal, actual);
-
     }
-    console.log("Burrrrrrrrrrrnnnnnnnnnnnn")
-    console.log(this.burndownResponse)
+    console.log('Burrrrrrrrrrrnnnnnnnnnnnn');
+    console.log(this.burndownResponse);
     return this.burndownResponse;
   }
 
   /**
-    * it will calculate the burndown and the burndown status of current sprint if 'Work Completed' is
-    * there at index 0 of sprintForBurndown array   
-    */
+   * it will calculate the burndown and the burndown status of current sprint if 'Work Completed' is
+   * there at index 0 of sprintForBurndown array
+   */
   calculateBurnDownSecondCase(sprintForBurndown: any, totalDays: number, currentDay: number): BurndownResponse {
     if (Number(sprintForBurndown[0].ssm_value) < Number(sprintForBurndown[1].ssm_value)) {
       this.burndownResponse.workUnit = sprintForBurndown[0].sw_work_unit;
@@ -149,7 +148,7 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
       this.burndownResponse.remainingWork = sprintForBurndown[1].ssm_value - sprintForBurndown[0].ssm_value;
       const ideal = Math.round((sprintForBurndown[1].ssm_value / totalDays) * currentDay);
       const actual = sprintForBurndown[0].ssm_value;
-      this.burndownResponse.updatedAt = sprintForBurndown[1].sprint_updatedAt;
+      this.burndownResponse.updatedAt = sprintForBurndown[1].ss_date_time;
       this.burndownResponse = this.getBurndownStatus(ideal, actual);
     }
 
@@ -174,7 +173,7 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
 
   velocityComparisonResponse = {} as VelocityComparisonResponse;
   /**
-   * it retrieves the velocity report of current sprint and also the same for previous sprints 
+   * it retrieves the velocity report of current sprint and also the same for previous sprints
    * and then creates the response for the velocity comparison
    */
   async getVelocityComparison(teamId: string): Promise<VelocityComparisonResponse | undefined> {
@@ -183,6 +182,7 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
       .addSelect('sprint.id', 'sprint_id')
       .addSelect('st.status', 'st_status')
       .addSelect('ss.id', 'ss_id')
+      .addSelect('ss.date_time', 'ss_date_time')
       .addSelect('smt.name', 'smt_name')
       .addSelect('ssm.value', 'ssm_value')
       .innerJoin(SprintStatus, 'st', 'st.id=sprint.status')
@@ -223,9 +223,9 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
         return undefined;
       } else {
         this.velocityComparisonResponse.Avg = this.getAverageVelocity(previousSprintCompleted);
-        this.velocityComparisonResponse.updatedAt = sprintMetricsResponse[0].sprint_updatedAt;
+        this.velocityComparisonResponse.updatedAt = sprintMetricsResponse[0].ss_date_time;
         this.velocityComparisonResponse = this.getVelocityData(sprintMetricsResponse);
-        console.log("velocccittttttttttyyyyy");
+        console.log('velocccittttttttttyyyyy');
         console.log(this.velocityComparisonResponse);
         return this.velocityComparisonResponse;
       }
@@ -238,25 +238,31 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
   getAverageVelocity(previousSprintCompleted: any): number {
     let sum = 0;
     for (let value of previousSprintCompleted) {
-      sum = sum + Number(value.ssm_value)
+      sum = sum + Number(value.ssm_value);
     }
     return sum / previousSprintCompleted.length;
-
   }
 
   /**
-   * it assigns the current sprint's metrics(work committed or work completed) data in the velocity 
+   * it assigns the current sprint's metrics(work committed or work completed) data in the velocity
    * comparison response
    */
   getVelocityData(sprintMetricsResponse: any): VelocityComparisonResponse {
-    if (sprintMetricsResponse[0].smt_name == 'Work Committed') {
+    for (let sprintMetric of sprintMetricsResponse) {
+      if (sprintMetric.smt_name == 'Work Completed') {
+        this.velocityComparisonResponse.Completed = Number(sprintMetric.ssm_value);
+      }
+      if (sprintMetric.smt_name == 'Work Committed') {
+        this.velocityComparisonResponse.Committed = Number(sprintMetric.ssm_value);
+      }
+    }
+    /* if (sprintMetricsResponse[0].smt_name == 'Work Committed') {
       this.velocityComparisonResponse.Committed = Number(sprintMetricsResponse[0].ssm_value);
       this.velocityComparisonResponse.Completed = Number(sprintMetricsResponse[1].ssm_value);
     } else if (sprintMetricsResponse[1].smt_name == 'Work Committed') {
       this.velocityComparisonResponse.Committed = Number(sprintMetricsResponse[1].ssm_value);
       this.velocityComparisonResponse.Committed = Number(sprintMetricsResponse[0].ssm_value);
-    }
+    } */
     return this.velocityComparisonResponse;
   }
-
 }

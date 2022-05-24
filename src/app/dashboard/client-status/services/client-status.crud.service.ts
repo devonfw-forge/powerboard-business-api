@@ -18,15 +18,15 @@ export class ClientStatusCrudService extends TypeOrmCrudService<ClientStatus> {
   clientStatus: ClientStatusResponse = {} as ClientStatusResponse;
 
   /**
-   * It will fetch the client's satisfaction rating from db for a particular team in a particular sprint 
-   * and returns it back 
+   * It will fetch the client's satisfaction rating from db for a particular team in a particular sprint
+   * and returns it back
    */
   async getClientFeedback(team_Id: string): Promise<ClientStatusResponse | undefined> {
     const sprint = (await this.sprintRepository
       .createQueryBuilder('sprint')
       .where('sprint.team_id=:team_id', { team_id: team_Id })
       .orderBy('sprint.sprint_number', 'DESC')
-      .skip(1)
+      /* .skip(1) */
       .take(1)
       .getOne()) as Sprint;
     if (sprint == null) {
