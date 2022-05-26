@@ -42,7 +42,6 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
       .orderBy('ss.date_time', 'DESC')
       .limit(2)
       .getRawMany();
-
     console.log('sprint detail response ***************************************');
     console.log(sprintDetail);
     if (sprintDetail[0] == null) {
@@ -114,6 +113,17 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
       }
       return output;
     }
+  }
+
+  async getLastUpdatedSprintDate(teamId: string): Promise<string> {
+    const sprintUpdatedDetails = (await this.sprintRepository
+      .createQueryBuilder('sprint')
+      .where('sprint.team_id =:team_Id', { team_Id: teamId })
+      .orderBy('sprint.updatedAt', 'DESC')
+      .take(1)
+      .getOne()) as Sprint;
+    console.log(sprintUpdatedDetails);
+    return sprintUpdatedDetails.updatedAt;
   }
 
   /**

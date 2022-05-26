@@ -24,7 +24,7 @@ export class DashboardService implements IDashboardService {
     @Inject('ISprintCrudService') private readonly sprintService: ISprintCrudService,
     @Inject('ITeamSpiritService') private readonly teamSpiritServiceInterface: ITeamSpiritService,
     @Inject('IClientStatusService') private readonly clientStatusService: IClientStatusService,
-  ) { }
+  ) {}
 
   dash: DashBoardResponse = {} as DashBoardResponse;
 
@@ -33,7 +33,6 @@ export class DashboardService implements IDashboardService {
    */
   async getDashboardByTeamId(team: Team): Promise<DashBoardResponse> {
     this.dash.teamId = team.id;
-
 
     const codeQuality: CodeQualityResponse | undefined = await this.codequalityService.getCodeQualitySnapshot(team.id);
 
@@ -49,13 +48,22 @@ export class DashboardService implements IDashboardService {
 
     const sprintDetail: SprintDetailResponse | undefined = await this.sprintService.getSprintDetailResponse(team.id);
     this.dash.sprintDetail = sprintDetail;
+    const sprintUpdatedDate = await this.sprintService.getLastUpdatedSprintDate(team.id);
     const burndown: BurndownResponse | undefined = await this.sprintService.getBurndown(team.id);
+
     this.dash.burndown = burndown;
     this.dash.sprintWorkUnit = burndown?.workUnit;
+    if (this.dash.burndown) {
+      this.dash.burndown.updatedAt = sprintUpdatedDate;
+    }
+
     const velocityComparisonDTO:
       | VelocityComparisonResponse
       | undefined = await this.sprintService.getVelocityComparison(team.id);
     this.dash.velocity = velocityComparisonDTO;
+    if (this.dash.velocity) {
+      this.dash.velocity.updatedAt = sprintUpdatedDate;
+    }
     this.dash.teamStatus = this.fetchStatus(this.dash);
     return this.dash;
   }
