@@ -41,6 +41,8 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
    */
   async getTeamsByCenterId(CenterId: string): Promise<TeamsInADC[]> {
     const teams: Team[] = await this.teamRepository.find({ where: { ad_center: CenterId } });
+    console.log('^^^^^^ global service ^^^^^^^^^^^^^^^^');
+    console.log(teams);
     let teamsResponse: TeamsInADC = {} as TeamsInADC;
     let teamsDTOArray: TeamsInADC[] = [],
       i;

@@ -31,6 +31,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
   folderResponse: FolderResponse = {} as FolderResponse;
   displayResponse: DisplayResponse = {} as DisplayResponse;
   globalLink = process.env.AWS_URL + 'multimedia';
+  rootFiles: Multimedia[] = [];
 
   /**
    * It creates the path consisting of team id and upload the file to that path in the AWS bucket
@@ -88,6 +89,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
    * and if default multimedia is a folder then returns the files inside that folder as default multimedia response
    */
   async getDefaultMultimediaForTeam(teamId: string): Promise<MultimediaResponse> {
+    this.rootFiles = [];
     const link = `${this.globalLink}/${teamId}/`;
     const result = await this.multimediaRepository.find({
       where: { team: teamId },
@@ -95,11 +97,14 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
         albumName: 'ASC',
       },
     });
+    console.log('==================this is multimedia repo response==============');
+    console.log(result);
     if (result == null) {
       throw new NotFoundException('No multimedia found');
     } else {
       let rootFiles = this.getCommonFiles(result, link);
-
+      console.log('88888888888888888888888Below is home file 8888888888');
+      console.log(rootFiles);
       if (rootFiles.length != 0) {
         this.multimediaResponse.display = this.getDisplay(rootFiles);
       } else {
@@ -162,6 +167,7 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
         this.fileResponse.fileName = link + result[i].fileName;
         this.fileResponse.inSlideShow = result[i].inSlideshow;
         fileArray.push(this.fileResponse);
+        this.rootFiles.push(result[i]);
         this.fileResponse = {} as FileResponse;
       }
     }
@@ -211,6 +217,9 @@ export class MultimediaCrudService extends TypeOrmCrudService<Multimedia> implem
     this.flag = true;
   }
   getStatusForFolder(albumName: string) {
+    if (this.rootFiles.length != 0) {
+      return false;
+    }
     if (this.folderName == albumName) {
       return true;
     } else {
