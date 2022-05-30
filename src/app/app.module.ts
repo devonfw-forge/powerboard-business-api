@@ -8,10 +8,13 @@ import { MultimediaModule } from './multimedia/multimedia.module';
 import { TeamLinksModule } from './team-links/team-links.module';
 import { VisibilityModule } from './visibility/visibility.module';
 
-
 @Module({
   imports: [CoreModule, DashboardModule, TeamLinksModule, MultimediaModule, VisibilityModule, EmailModule],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+/**
+ * pipeline testing
+ *
+ */
+export class AppModule {}
