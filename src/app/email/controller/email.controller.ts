@@ -9,6 +9,6 @@ export class EmailController {
   async sendEmailToNewUser(@Body() sendEmailDTO: SendEmailDTO): Promise<void> {
     console.log('Recipient');
     console.log(sendEmailDTO);
-    return this.emailService.sendTeamplateEmail(sendEmailDTO);
+    /* return this.emailService.sendTeamplateEmail(sendEmailDTO); */
   }
 }

@@ -9,7 +9,7 @@ import { ChangePasswordDTO } from '../../auth/model/ChangePasswordDTO';
 import { IUserTeamService } from './user-team.service.interface';
 import { IUserService } from './user.service.interface';
 import { IUserSessionDetailsService } from './user-session-details.service.interface';
-import { IEmailService } from '../../../email/services/email.service.interface';
+/* import { IEmailService } from '../../../email/services/email.service.interface'; */
 import { SendEmailDTO } from '../../../email/model/dto/SendEmail.dto';
 
 var generator = require('generate-password');
@@ -21,8 +21,8 @@ export class UserService extends TypeOrmCrudService<User> implements IUserServic
     //@InjectRepository(UserSessionDetails) private readonly userInfoRepository: Repository<UserSessionDetails>,
     @Inject('IUserTeamService') private readonly userTeamService: IUserTeamService,
     @Inject('IUserSessionDetailsService') private readonly userSessionDetailsService: IUserSessionDetailsService, //private readonly userTeamService: UserTeamService,
-    @Inject('IEmailService') private readonly emailService: IEmailService,
-  ) {
+  ) /* @Inject('IEmailService') private readonly emailService: IEmailService, */
+  {
     super(userRepository);
   }
 
@@ -66,7 +66,7 @@ export class UserService extends TypeOrmCrudService<User> implements IUserServic
       sendEmailDTO.username = result.username;
       sendEmailDTO.toEmail = result.email;
       sendEmailDTO.defaultPassword = password;
-      this.emailService.sendTeamplateEmail(sendEmailDTO);
+      /*   this.emailService.sendTeamplateEmail(sendEmailDTO); */
       this.userSessionDetailsService.registerUserIntoUserSession(result.id);
       return this.userTeamService.addUserToTeam(result, userDTO);
     }
