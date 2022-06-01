@@ -70,7 +70,7 @@ describe('EmailService', () => {
   //   clear();
   // });
 
-  it('should be defined after module initialization', () => {
+  /* it('should be defined after module initialization', () => {
     expect(emailService).toBeDefined();
     // expect(ses).toBeDefined();
   });
@@ -161,5 +161,5 @@ describe('EmailService', () => {
       const result = emailService.getSES();
       expect(typeof result).toBe(typeof ses);
     });
-  });
+  }); */
 });
