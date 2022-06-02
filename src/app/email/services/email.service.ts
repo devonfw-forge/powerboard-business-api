@@ -22,7 +22,7 @@ export class EmailService implements IEmailService {
     const replacements = {
       username: sendEmail.username,
       defaultPassword: sendEmail.defaultPassword,
-      // fullName: sendEmail.fullName
+      // fullName: sendEmail.fullName 1
     };
     const htmlToSend = template(replacements);
 
