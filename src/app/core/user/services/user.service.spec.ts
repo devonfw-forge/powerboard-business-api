@@ -14,6 +14,7 @@ import { TeamSpiritCrudService } from '../../../dashboard/team-spirit/services/t
 import { ITeamSpiritService } from '../../../dashboard/team-spirit/services/team-spirit.interface';
 import { EmailService } from '../../../email/services/email.service';
 import { IEmailService } from '../../../email/services/email.service.interface';
+import { CloudFileStorageService } from '../../../file-storage/services/cloud-file-storage.service';
 import { ChangePasswordDTO } from '../../auth/model/ChangePasswordDTO';
 import { UserDTO } from '../model/dto/UserDTO';
 
@@ -41,6 +42,7 @@ describe('UserService', () => {
   let userTeamService: IUserTeamService;
   let userSessionDetailsService: IUserSessionDetailsService;
   let emailService: IEmailService;
+  let fileStorageService: CloudFileStorageService;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [HttpModule],
@@ -59,6 +61,10 @@ describe('UserService', () => {
         {
           provide: 'IEmailService',
           useClass: EmailService,
+        },
+        {
+          provide: 'IFileStorageService',
+          useClass: CloudFileStorageService,
         },
         {
           provide: 'ITeamSpiritService',
@@ -98,6 +104,7 @@ describe('UserService', () => {
     userTeamService = module.get<UserTeamService>('IUserTeamService');
     userSessionDetailsService = module.get<UserSessionDetailsService>('IUserSessionDetailsService');
     emailService = module.get<EmailService>('IEmailService');
+    fileStorageService = module.get<CloudFileStorageService>('IFileStorageService');
   });
 
   it('should be defined after module initialization', () => {
@@ -112,6 +119,7 @@ describe('UserService', () => {
     expect(userTeamService).toBeDefined();
     expect(userSessionDetailsService).toBeDefined();
     expect(emailService).toBeDefined();
+    expect(fileStorageService).toBeDefined();
   });
 
   it('findUser() should return the User successfully if the user is present', async () => {

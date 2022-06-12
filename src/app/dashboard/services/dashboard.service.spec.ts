@@ -123,6 +123,7 @@ describe('DashboardService', () => {
       const team: any = {
         id: '46455bf7-ada7-495c-8019-8d7ab76d488e',
         version: 1,
+        isTeamConfigured: '',
         createdAt: '2021-07-07T12:22:21.770Z',
         updatedAt: '2021-07-07T12:22:21.770Z',
         name: 'Team A',

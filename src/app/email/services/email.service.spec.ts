@@ -1,3 +1,4 @@
+import { HttpModule } from '@nestjs/common';
 // import SES from 'aws-sdk/clients/ses';
 // import MockSES from 'aws-sdk/clients/ses';
 // import { EmailService } from './email.service';
@@ -43,6 +44,8 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { SES } from 'aws-sdk';
+import { JwtModule } from '@nestjs/jwt';
+import { CloudFileStorageService } from '../../file-storage/services/cloud-file-storage.service';
 //import { SES } from 'aws-sdk';
 import { EmailService } from './email.service';
 //import { EmailService } from './email.service';
@@ -50,19 +53,33 @@ import { IEmailService } from './email.service.interface';
 let fs = require('fs');
 describe('EmailService', () => {
   let emailService: IEmailService;
+  let fileStorageService: CloudFileStorageService;
   //let ses: SES;
   beforeEach(async () => {
     jest.useFakeTimers();
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        HttpModule,
+        //JwtModule
+        JwtModule.register({
+          secret: 'SECRET',
+          signOptions: { expiresIn: '60s' },
+        }),
+      ],
       providers: [
         {
           provide: 'IEmailService',
           useClass: EmailService,
         },
+        {
+          provide: 'IFileStorageService',
+          useClass: CloudFileStorageService,
+        },
       ],
     }).compile();
 
     emailService = module.get<EmailService>('IEmailService');
+    fileStorageService = module.get<CloudFileStorageService>('IFileStorageService');
     //ses = module.get<SES>(SES);
   });
 
@@ -72,6 +89,7 @@ describe('EmailService', () => {
 
   it('should be defined after module initialization', () => {
     expect(emailService).toBeDefined();
+    expect(fileStorageService).toBeDefined();
     // expect(ses).toBeDefined();
   });
 

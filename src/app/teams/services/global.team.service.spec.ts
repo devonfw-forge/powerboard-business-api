@@ -66,6 +66,7 @@ import { IEmailService } from '../../email/services/email.service.interface';
 import { EmailService } from '../../email/services/email.service';
 import { Files } from '../../multimedia/model/entities/files.entity';
 import { TeamStatus } from '../model/entities/team_status.entity';
+import { HttpModule } from '@nestjs/common';
 
 describe('TeamCrudService', () => {
   let teamService: TeamCrudService;
@@ -97,7 +98,7 @@ describe('TeamCrudService', () => {
   let teamStatusRepo: TeamStatusRepositoryMock;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [],
+      imports: [HttpModule],
       providers: [
         TeamCrudService,
         ClientStatusCrudService,
