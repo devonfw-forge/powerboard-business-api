@@ -2,5 +2,6 @@ export interface VelocityComparisonResponse {
   Avg: number;
   Committed: number;
   Completed: number;
-  updatedAt: string
+  jiraLink: string;
+  updatedAt: string;
 }
