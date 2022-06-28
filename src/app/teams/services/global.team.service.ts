@@ -59,8 +59,9 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
       } else {
         teamsResponse.teamLogo = `${this.globalLink}/${teams[i].id}/` + teams[i].logo!;
       }
-
+      console.log('############ before team status  ################');
       teamsResponse.teamStatus = await this.findStatusByTeam(teams[i]);
+      console.log('############ $$$$$$ after team status $$$$$$4  ################');
       teamsDTOArray.push(teamsResponse);
       teamsResponse = {} as TeamsInADC;
     }
@@ -229,6 +230,8 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
   async findStatusByTeam(team: Team): Promise<number | undefined> {
     if (team.isStatusChanged) {
       const dashboard = (await this.dashboardService.getDashboardByTeamId(team)) as DashBoardResponse;
+      console.log('$$%%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%%$%%%%%$%');
+      console.log(dashboard);
       const status = this.dashboardService.fetchStatus(dashboard);
       const result = await this.updateTeamStatus(team.id, status);
       console.log('========this is status changed=====================');
@@ -253,14 +256,21 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
 
   async uploadFileToAggregationService(file: any, teamId: string, type: string): Promise<any> {
     try {
+      const teams = await this.findTeamById(teamId);
       const url = process.env.AGGREGATION_SERVICE_URL;
       const xlsxFile = xlsx.parse(file.buffer);
-      await this.httpService
+      const response = await this.httpService
         .post(url + 'data-upload/uploadJSONFile/' + type + '/' + teamId, xlsxFile)
         .toPromise()
-        .then(res => {
+        .then(async res => {
+          console.log('$%$%$%$ inside file  aggregation   %$%$');
+          if (teams) {
+            const dashboard = await this.dashboardService.getDashboardByTeamId(teams);
+            return dashboard;
+          }
           return res.data;
         });
+      return response;
     } catch (error: any) {
       if (error.response.data.statusCode === 404) {
         throw new NotFoundException(error.response.data.message);
@@ -279,12 +289,19 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
       const url = process.env.AGGREGATION_SERVICE_URL;
       const JSONFile = JSON.parse(file.buffer);
       console.log(JSONFile);
-      await this.httpService
+      const response = await this.httpService
         .post(url + 'data-upload/uploadJson/' + type + '/' + teamId, JSONFile)
         .toPromise()
-        .then(res => {
+        .then(async res => {
+          console.log('$%$%$%$ inside JSON aggregation   %$%$');
+          const teams = await this.findTeamById(teamId);
+          if (teams) {
+            const dashboard = await this.dashboardService.getDashboardByTeamId(teams);
+            return dashboard;
+          }
           return res.data;
         });
+      return response;
     } catch (error: any) {
       if (error.response.data.statusCode === 404) {
         throw new NotFoundException(error.response.data.message);
@@ -299,14 +316,32 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
   }
 
   async updateClientRating(clientRating: any, type: string, teamId: string): Promise<any> {
-    const url = process.env.AGGREGATION_SERVICE_URL;
-    const response = await this.httpService
-      .post(url + 'data-upload/uploadJson/' + type + '/' + teamId, clientRating)
-      .toPromise()
-      .then((res: any) => {
-        return res.data;
-      });
-    return response;
+    try {
+      const url = process.env.AGGREGATION_SERVICE_URL;
+      const response = await this.httpService
+        .post(url + 'data-upload/uploadJson/' + type + '/' + teamId, clientRating)
+        .toPromise()
+        .then(async (res: any) => {
+          const teams = await this.findTeamById(teamId);
+          if (teams) {
+            const dashboard = await this.dashboardService.getDashboardByTeamId(teams);
+            return dashboard;
+          }
+
+          return res.data;
+        });
+      return response;
+    } catch (error: any) {
+      if (error.response.data.statusCode === 404) {
+        throw new NotFoundException(error.response.data.message);
+      }
+      if (error.response.data.statusCode === 406) {
+        throw new NotAcceptableException(error.response.data.message);
+      }
+      if (error.response.data.statusCode === 409) {
+        throw new ConflictException(error.response.data.message);
+      }
+    }
   }
 
   async updateTeamConfigurationCompleted(teamId: string, isTeamConfiguredStatus: boolean): Promise<Team> {
