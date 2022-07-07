@@ -403,8 +403,8 @@ describe('TeamCrudService', () => {
 
   describe('uploadLogoForTeam() ', () => {
     test('should upload logo of a team', async () => {
-      const logo: any = 'Screenshot(7)2028e7cb-69d5-4219-a748-d2449abb4cc8.png';
-      const teamId = 'fe4f8120-8a2c-47ad-bad7-86e412e323c1';
+      /* const logo: any = 'Screenshot(7)2028e7cb-69d5-4219-a748-d2449abb4cc8.png';
+      const teamId = 'fe4f8120-8a2c-47ad-bad7-86e412e323c1'; */
       const team: any = {
         id: 'fe4f8120-8a2c-47ad-bad7-86e412e323c1',
         version: 1,
@@ -440,14 +440,14 @@ describe('TeamCrudService', () => {
         },
       };
 
-      const teamResponse = {
+      /* const teamResponse = {
         id: 'fe4f8120-8a2c-47ad-bad7-86e412e323c1',
         name: 'Team E',
         projectKey: 'P112461',
         teamCode: '9900918',
         logo: 'undefined/fe4f8120-8a2c-47ad-bad7-86e412e323c1/logo_B222bf72b3-3f3b-471d-b0d8-f21a6283d00e.png',
         ad_center: '98955bf7-ada7-495c-8019-8d7ab62d488e',
-      };
+      }; */
       const fileUploaded = {
         ETag: '"50708655988b63ba7faa72b6da8e86"',
         Location:
