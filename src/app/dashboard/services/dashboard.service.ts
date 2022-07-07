@@ -35,25 +35,21 @@ export class DashboardService implements IDashboardService {
     this.dash.teamId = team.id;
 
     const codeQuality: CodeQualityResponse | undefined = await this.codequalityService.getCodeQualitySnapshot(team.id);
-    console.log('@@@@@@@@@@@@@@@ CODE QUALITY   ###################');
-    console.log(codeQuality);
+
     this.dash.codeQuality = codeQuality;
 
     const clientStatus: ClientStatusResponse | undefined = await this.clientStatusService.getClientFeedback(team.id);
-    console.log('@@@@@@@@@@@@@@@ CLIENT STATUS   ###################');
-    console.log(clientStatus);
+
     this.dash.clientStatus = clientStatus;
 
     const teamSpirit: TeamSpiritResponse | undefined = await this.teamSpiritServiceInterface.getTeamSpiritFromSurvey(
       team.name,
     );
-    console.log('@@@@@@@@@@@@@@@ TEAM SPIRIT   ###################');
-    console.log(teamSpirit);
+
     this.dash.teamSpirit = teamSpirit;
 
     const sprintDetail: SprintDetailResponse | undefined = await this.sprintService.getSprintDetailResponse(team.id);
-    console.log('@@@@@@@@@@@@@@@ SPRINT DETAILS   ###################');
-    console.log(sprintDetail);
+
     this.dash.sprintDetail = sprintDetail;
     var sprintUpdatedDate: string = '';
     if (sprintDetail) {
@@ -61,8 +57,6 @@ export class DashboardService implements IDashboardService {
     }
 
     const burndown: BurndownResponse | undefined = await this.sprintService.getBurndown(team.id);
-    console.log('@@@@@@@@@@@@@@@ BURNDOWN  ###################');
-    console.log(burndown);
 
     this.dash.burndown = burndown;
     this.dash.sprintWorkUnit = burndown?.workUnit;
@@ -73,7 +67,6 @@ export class DashboardService implements IDashboardService {
     const velocityComparisonDTO:
       | VelocityComparisonResponse
       | undefined = await this.sprintService.getVelocityComparison(team.id);
-    console.log('@@@@@@@@@@@@@@@ VELOCITY  ###################');
 
     this.dash.velocity = velocityComparisonDTO;
     if (this.dash.velocity) {

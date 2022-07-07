@@ -9,6 +9,7 @@ import {
   FilesRepositoryMock,
   LinksCategoryMock,
   MultimediaRepositoryMock,
+  SchedulerConfigRepositoryMock,
   SprintRepositoryMock,
   TeamLinksMockRepo,
   TeamRepositoryMock,
@@ -50,6 +51,7 @@ import { MyCenter } from '../../../teams/model/dto/MyCenter';
 import { PowerboardResponse } from '../../../teams/model/dto/PowerboardResponse';
 import { Team } from '../../../teams/model/entities/team.entity';
 import { TeamStatus } from '../../../teams/model/entities/team_status.entity';
+import { SchedulerConfig } from '../../../teams/model/entities/third_party_median.entity';
 import { GlobalTeamsService } from '../../../teams/services/global.team.service';
 import { IGlobalTeamsService } from '../../../teams/services/global.team.service.interface';
 import { TeamCrudService } from '../../../teams/services/team.crud.service';
@@ -102,6 +104,7 @@ describe('AuthService', () => {
   let fileStorageService: CloudFileStorageService;
   let multimediaRepo: MultimediaRepositoryMock;
   let filesRepositoryMock: FilesRepositoryMock;
+  let schedulerConfigRepositoryMock: SchedulerConfigRepositoryMock;
   // let jwtService: JwtService;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -158,6 +161,10 @@ describe('AuthService', () => {
         {
           provide: getRepositoryToken(TeamStatus),
           useClass: TeamStatusRepositoryMock,
+        },
+        {
+          provide: getRepositoryToken(SchedulerConfig),
+          useClass: SchedulerConfigRepositoryMock,
         },
         // {
         //   provide: 'IAuthService',
@@ -284,6 +291,7 @@ describe('AuthService', () => {
     teamStatusRepo = module.get<TeamStatusRepositoryMock>(getRepositoryToken(TeamStatus));
     multimediaRepo = module.get<MultimediaRepositoryMock>(getRepositoryToken(Multimedia));
     filesRepositoryMock = module.get<FilesRepositoryMock>(getRepositoryToken(Files));
+    schedulerConfigRepositoryMock = module.get<SchedulerConfigRepositoryMock>(getRepositoryToken(SchedulerConfig));
     //jwtService = module.get<JwtService>(JwtService);
   });
 
@@ -319,6 +327,7 @@ describe('AuthService', () => {
     expect(fileStorageService).toBeDefined();
     expect(multimediaRepo).toBeDefined();
     expect(filesRepositoryMock).toBeDefined();
+    expect(schedulerConfigRepositoryMock).toBeDefined();
   });
 
   describe('validateUser', () => {

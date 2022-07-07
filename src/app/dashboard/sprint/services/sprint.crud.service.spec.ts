@@ -1,6 +1,10 @@
 import { TestingModule, Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { SprintRepositoryMock } from '../../../../../test/mockCrudRepository/crudRepository.mock';
+import {
+  SchedulerConfigRepositoryMock,
+  SprintRepositoryMock,
+} from '../../../../../test/mockCrudRepository/crudRepository.mock';
+import { SchedulerConfig } from '../../../teams/model/entities/third_party_median.entity';
 //import { SprintDetailResponse } from '../model/dto/SprintDetailResponse';
 //import { SprintDetailResponse } from '../model/dto/SprintDetailResponse';
 //import { Team } from '../../../teams/model/entities/team.entity';
@@ -14,6 +18,7 @@ import { ISprintCrudService } from './sprint.crud.service.interface';
 describe('SprintCrudService', () => {
   let service: ISprintCrudService;
   let sprintRepo: SprintRepositoryMock;
+  let schedulerConfigRepositoryMock: SchedulerConfigRepositoryMock;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -27,16 +32,22 @@ describe('SprintCrudService', () => {
           provide: getRepositoryToken(Sprint),
           useClass: SprintRepositoryMock,
         },
+        {
+          provide: getRepositoryToken(SchedulerConfig),
+          useClass: SchedulerConfigRepositoryMock,
+        },
       ],
     }).compile();
 
     service = module.get<SprintCrudService>('ISprintCrudService');
     sprintRepo = module.get<SprintRepositoryMock>(getRepositoryToken(Sprint));
+    schedulerConfigRepositoryMock = module.get<SchedulerConfigRepositoryMock>(getRepositoryToken(SchedulerConfig));
   });
 
   it('should be defined after module initialization', () => {
     expect(service).toBeDefined();
     expect(sprintRepo).toBeDefined();
+    expect(schedulerConfigRepositoryMock).toBeDefined();
   });
 
   const teamId = '46455bf7-ada7-495c-8019-8d7ab76d490e';

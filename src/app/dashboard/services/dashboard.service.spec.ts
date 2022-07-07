@@ -5,9 +5,11 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import {
   ClientStatusRepositoryMock,
   CodeQualityRepositoryMock,
+  SchedulerConfigRepositoryMock,
   SprintRepositoryMock,
   TeamSpiritRepositoryMock,
 } from '../../../../test/mockCrudRepository/crudRepository.mock';
+import { SchedulerConfig } from '../../teams/model/entities/third_party_median.entity';
 import { ClientStatus } from '../client-status/model/entities/client-status.entity';
 import { ClientStatusCrudService } from '../client-status/services/client-status.crud.service';
 import { IClientStatusService } from '../client-status/services/client-status.service.interface';
@@ -34,6 +36,7 @@ describe('DashboardService', () => {
   let clientStatusRepo: ClientStatusRepositoryMock;
   let teamSpiritRepository: TeamSpiritRepositoryMock;
   let sprintRepo: SprintRepositoryMock;
+  let schedulerConfigRepositoryMock: SchedulerConfigRepositoryMock;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -73,6 +76,10 @@ describe('DashboardService', () => {
           provide: getRepositoryToken(TeamSpiritMedian),
           useClass: TeamSpiritRepositoryMock,
         },
+        {
+          provide: getRepositoryToken(SchedulerConfig),
+          useClass: SchedulerConfigRepositoryMock,
+        },
       ],
     }).compile();
 
@@ -87,6 +94,7 @@ describe('DashboardService', () => {
     codeQualityRepo = module.get<CodeQualityRepositoryMock>(getRepositoryToken(CodeQualitySnapshot));
     clientStatusRepo = module.get<ClientStatusRepositoryMock>(getRepositoryToken(ClientStatus));
     teamSpiritRepository = module.get<TeamSpiritRepositoryMock>(getRepositoryToken(TeamSpiritMedian));
+    schedulerConfigRepositoryMock = module.get<SchedulerConfigRepositoryMock>(getRepositoryToken(SchedulerConfig));
   });
 
   it('should be defined after module initialization', () => {
@@ -100,6 +108,7 @@ describe('DashboardService', () => {
     expect(codeQualityRepo).toBeDefined();
     expect(clientStatusRepo).toBeDefined();
     expect(teamSpiritRepository).toBeDefined();
+    expect(schedulerConfigRepositoryMock).toBeDefined();
   });
 
   describe('getDashboardByTeamId()', () => {
@@ -123,7 +132,7 @@ describe('DashboardService', () => {
       const team: any = {
         id: '46455bf7-ada7-495c-8019-8d7ab76d488e',
         version: 1,
-        isTeamConfigured: '',
+        isTeamConfigured: 'true',
         createdAt: '2021-07-07T12:22:21.770Z',
         updatedAt: '2021-07-07T12:22:21.770Z',
         name: 'Team A',

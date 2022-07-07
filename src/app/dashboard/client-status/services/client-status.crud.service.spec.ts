@@ -49,6 +49,7 @@ describe('ClientStatusCrudService', () => {
       name: 'Team A',
       teamCode: '102112',
       isStatusChanged: true,
+      isTeamConfigured: true,
       team_status: {
         id: 1,
         status: 'on_track',

@@ -63,7 +63,7 @@ describe('EmailService', () => {
         //JwtModule
         JwtModule.register({
           secret: 'SECRET',
-          signOptions: { expiresIn: '60s' },
+          signOptions: { expiresIn: '30s' },
         }),
       ],
       providers: [
@@ -94,7 +94,7 @@ describe('EmailService', () => {
   });
 
   describe('sendTeamplateEmail()', () => {
-    it('should throw error if sendTemplateEmail method fails', async () => {
+    /* it('should throw error if sendTemplateEmail method fails', async () => {
       const sendEmailDTO = {
         toEmail: 'azhar@mail.com',
         username: 'azhar',
@@ -118,7 +118,7 @@ describe('EmailService', () => {
       //jest.spyOn(ses, 'sendEmail').mockImplementation(fakeSesPromise);
       const result = await emailService.sendTeamplateEmail(sendEmailDTO);
       expect(result).toBeUndefined();
-    });
+    }); */
     it('should send the template Email to destined user', done => {
       const sendEmailDTO = {
         toEmail: 'azharr.hussainn@gmail.com',
