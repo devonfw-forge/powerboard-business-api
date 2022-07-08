@@ -20,7 +20,7 @@ const def: Config = {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
     synchronize: false,
-    migrationsRun: true,
+    migrationsRun: false,
     logging: true,
     entities: ['dist/**/*.entity.js'],
     migrations: ['dist/migration/**/*.js'],
