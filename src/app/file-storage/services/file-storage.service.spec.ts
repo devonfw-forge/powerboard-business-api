@@ -5,7 +5,7 @@ import { IFileStorageService } from './file-storage.service.interface';
 describe('CloudFileStorageService', () => {
   let fileStorageService: IFileStorageService;
   //let s3Service: any;
-
+  //trigger
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -22,7 +22,6 @@ describe('CloudFileStorageService', () => {
       ],
     }).compile();
 
-
     fileStorageService = module.get<CloudFileStorageService>('IFileStorageService');
     // s3Service = module.get<S3>(S3);
   });
@@ -34,7 +33,6 @@ describe('CloudFileStorageService', () => {
 
   describe('uploadFile() method ', () => {
     it('should upload the file to s3 correctly', async () => {
-
       const file: any = {
         fieldname: 'file',
         originalname: 'Screenshot (7).png',
@@ -51,16 +49,15 @@ describe('CloudFileStorageService', () => {
         Location: '46455bf7-ada7-495c-8019-8d7ab76d488e/logo_B222bf72b3-3f3b-471d-b0d8-f21a6283d00e.png',
         key: '46455bf7-ada7-495c-8019-8d7ab76d488e/logo_B222bf72b3-3f3b-471d-b0d8-f21a6283d00e.png',
         Key: '46455bf7-ada7-495c-8019-8d7ab76d488e/logo_B222bf72b3-3f3b-471d-b0d8-f21a6283d00e.png',
-        Bucket: 'powerboard'
-      }
+        Bucket: 'powerboard',
+      };
       jest.spyOn(fileStorageService, 'uploadS3').mockImplementation(() => fileUploaded);
       const result = await fileStorageService.uploadFile(file, filePath);
       expect(result).toBeDefined();
       expect(result).toHaveProperty('Key');
       expect(result).toHaveProperty('ETag');
       expect(result).toEqual(fileUploaded);
-
-    })
+    });
 
     describe('uploadS3() method ', () => {
       const file: any = {
@@ -80,9 +77,8 @@ describe('CloudFileStorageService', () => {
           upload: jest.fn().mockReturnThis(),
           promise: jest.fn(),
           deleteObject: jest.fn().mockReturnThis(),
-          listObject: jest.fn().mockReturnThis()
+          listObject: jest.fn().mockReturnThis(),
         };
-
 
         // const mS3Instance: any = {
         //   upload: () => {
@@ -100,11 +96,11 @@ describe('CloudFileStorageService', () => {
         jest.spyOn(fileStorageService, 'getS3').mockImplementation(() => mS3Instance);
         const result = fileStorageService.uploadS3(file, bucket, filePath);
         expect(result).toBeDefined();
-      })
+      });
       it('should throw error if there any', async () => {
         const mS3Instance = {
           upload: jest.fn().mockReturnThis(),
-          promise: jest.fn().mockRejectedValue(null)
+          promise: jest.fn().mockRejectedValue(null),
           // deleteObject: jest.fn().mockReturnThis(),
           // listObject: jest.fn().mockReturnThis()
         };
@@ -114,21 +110,21 @@ describe('CloudFileStorageService', () => {
         });
         jest.spyOn(fileStorageService, 'getS3').mockImplementation(() => mS3Instance);
         try {
-          fileStorageService.uploadS3(file, bucket, filePath)
+          fileStorageService.uploadS3(file, bucket, filePath);
         } catch (error) {
           expect(error).rejects.toThrow(InternalServerErrorException);
         }
 
         // const result = fileStorageService.uploadS3(file, bucket, filePath);
         // expect(result).rejects.toThrow(InternalServerErrorException);
-      })
-    })
+      });
+    });
     describe('getS3() method ', () => {
       it('should return the S3 instance', async () => {
         const result = await fileStorageService.getS3();
         expect(typeof result).toBeTruthy();
-      })
-    })
+      });
+    });
 
     describe('deleteFile() method ', () => {
       const filePath = 'somePath';
@@ -138,7 +134,6 @@ describe('CloudFileStorageService', () => {
           deleteObject: jest.fn().mockReturnThis(),
           // listObject: jest.fn().mockReturnThis(),
           promise: jest.fn(),
-
         };
         mS3Instance.promise = jest.fn().mockResolvedValue({
           Key: 'some-key',
@@ -148,7 +143,7 @@ describe('CloudFileStorageService', () => {
         const result = fileStorageService.deleteFile(filePath);
         expect(result).toBeDefined();
         expect(result).toBeTruthy();
-      })
+      });
       it('should throw error if there is any', async () => {
         const mS3Instance = {
           upload: jest.fn().mockReturnThis(),
@@ -163,21 +158,16 @@ describe('CloudFileStorageService', () => {
         } catch (error) {
           expect(error).rejects.toThrow(InternalServerErrorException);
         }
-      })
-    })
+      });
+    });
     describe('deleteMultipleFiles() method ', () => {
-      const filePaths = [
-        'path_1',
-        'path_2',
-        'path_3'
-      ]
+      const filePaths = ['path_1', 'path_2', 'path_3'];
       it('should delete the multiple files together from s3 successfully', async () => {
         const mS3Instance = {
           upload: jest.fn().mockReturnThis(),
           deleteObjects: jest.fn().mockReturnThis(),
           listObjects: jest.fn().mockReturnThis(),
           promise: jest.fn(),
-
         };
         mS3Instance.promise = jest.fn().mockResolvedValue({
           Key: 'some-key',
@@ -187,14 +177,13 @@ describe('CloudFileStorageService', () => {
         const result = fileStorageService.deleteMultipleFiles(filePaths);
         expect(result).toBeDefined();
         expect(result).toBeTruthy();
-      })
+      });
       it('should throw error if there is any', async () => {
         const mS3Instance = {
           upload: jest.fn().mockReturnThis(),
           deleteObjects: jest.fn().mockReturnThis(),
           listObjects: jest.fn().mockReturnThis(),
           promise: jest.fn().mockRejectedValue(null),
-
         };
         jest.spyOn(fileStorageService, 'getS3').mockImplementation(() => mS3Instance);
         try {
@@ -202,14 +191,10 @@ describe('CloudFileStorageService', () => {
         } catch (error) {
           expect(error).rejects.toThrow(InternalServerErrorException);
         }
-      })
-    })
+      });
+    });
     describe('deleteMultipleFolders() method ', () => {
-      const folderPaths = [
-        'path_1',
-        'path_2',
-        'path_3'
-      ]
+      const folderPaths = ['path_1', 'path_2', 'path_3'];
       it('should delete the multiple files together from s3 successfully', async () => {
         const mS3Instance = {
           upload: jest.fn().mockReturnThis(),
@@ -222,14 +207,13 @@ describe('CloudFileStorageService', () => {
         const result = fileStorageService.deleteMultipleFolders(folderPaths);
         expect(result).toBeDefined();
         expect(result).toBeTruthy();
-      })
+      });
       it('should throw error if there is any', async () => {
         const mS3Instance = {
           upload: jest.fn().mockReturnThis(),
           deleteObjects: jest.fn().mockReturnThis(),
           listObjects: jest.fn().mockReturnThis(),
           promise: jest.fn().mockRejectedValue(null),
-
         };
         jest.spyOn(fileStorageService, 'getS3').mockImplementation(() => mS3Instance);
         try {
@@ -237,9 +221,9 @@ describe('CloudFileStorageService', () => {
         } catch (error) {
           expect(error).rejects.toThrow(InternalServerErrorException);
         }
-      })
-    })
-  })
+      });
+    });
+  });
   // describe('uploadS3() method ', () => {
   //   it('should call the s3 with correct parameters to upload a file to aws', async () => {
   // const mS3Instance: any = {
@@ -369,15 +353,15 @@ describe('CloudFileStorageService', () => {
 // describe('uploadFile ', () => {
 //   it('should call the uploadS3() method with bucket and file name to upload file ', async () => {
 
-    // const file: any = {
-    //   fieldname: 'file',
-    //   originalname: 'Screenshot (7).png',
-    //   encoding: '7bit',
-    //   mimetype: 'image/png',
-    //   buffer:
-    //     '<Buffer 89 50 4e 47 0d 0a 1a 0a 00 00 00 0d 49 48 44 52 00 00 07 80 00 00 04 38 08 06 00 00 00 e8 d3 c1 43 00 00 00 01 73 52 47 42 00 ae ce 1c e9 00 00 00 04 ... 177001 more bytes>',
-    //   size: 177051,
-    // };
+// const file: any = {
+//   fieldname: 'file',
+//   originalname: 'Screenshot (7).png',
+//   encoding: '7bit',
+//   mimetype: 'image/png',
+//   buffer:
+//     '<Buffer 89 50 4e 47 0d 0a 1a 0a 00 00 00 0d 49 48 44 52 00 00 07 80 00 00 04 38 08 06 00 00 00 e8 d3 c1 43 00 00 00 01 73 52 47 42 00 ae ce 1c e9 00 00 00 04 ... 177001 more bytes>',
+//   size: 177051,
+// };
 //     const path = 'somePath'
 //     mS3Instance.promise.mockResolvedValueOnce('fake response');
 
