@@ -5,7 +5,7 @@ const def: Config = {
   host: 'localhost',
   port: 3000,
   clientUrl: 'localhost:4200',
-  globalPrefix: 'v1',
+  globalPrefix: 'bapi/v1',
   loggerConfig: {
     console: false,
     loggerLevel: 'info',
