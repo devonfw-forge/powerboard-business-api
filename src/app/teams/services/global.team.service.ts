@@ -123,12 +123,14 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
    * or else will add a team and upload a logo.
    */
   async addTeam(addteam: AddTeam, logo: any): Promise<TeamResponse> {
+    console.log('reached service for adding team');
     const teamCode = addteam.teamCode;
     const teamExisted = await this.teamRepository.findOne({ where: { teamCode: teamCode } });
     console.log(teamExisted);
     if (teamExisted) {
       throw new ConflictException('team already registered');
     } else {
+      console.log('start adding team');
       let team: Team = new Team();
       team.name = addteam.teamName;
       team.teamCode = addteam.teamCode;
