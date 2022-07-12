@@ -134,6 +134,7 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
       team.teamCode = addteam.teamCode;
       team.projectKey = addteam.projectKey;
       team.ad_center = addteam.ad_center;
+      team.isTeamConfigured = false;
       team.team_status = (await this.teamStatusRepository.findOne({ where: { id: 2 } })) as TeamStatus;
 
       const teamCreated = await this.teamRepository.save(team);
