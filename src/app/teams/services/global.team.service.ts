@@ -132,13 +132,13 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
     } else {
       console.log('start adding team');
       let team: Team = new Team();
+      team.isTeamConfigured = false;
+      team.isStatusChanged = true;
+      team.logo = null;
       team.name = addteam.teamName;
       team.teamCode = addteam.teamCode;
       team.projectKey = addteam.projectKey;
       team.ad_center = addteam.ad_center;
-      team.isTeamConfigured = false;
-      team.isStatusChanged = true;
-      team.logo = null;
       team.team_status = (await this.teamStatusRepository.findOne({ where: { id: 2 } })) as TeamStatus;
       console.log('before adding team');
       console.log(team);
