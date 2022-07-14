@@ -70,7 +70,7 @@ import { SchedulerConfig } from '../../team-links/model/entities/third_party_med
 import { GlobalTeamsService } from './global.team.service';
 import { IGlobalTeamsService } from './global.team.service.interface';
 import { TeamCrudService } from './team.crud.service';
-import { AggregationLinksCategory } from '../../team-links/model/entities/aggregation_links_category.entity';
+import { AggregationLinksCategory } from '../../team-links/model/entities/aggregation_link_type.entity';
 
 describe('TeamCrudService', () => {
   let teamService: TeamCrudService;

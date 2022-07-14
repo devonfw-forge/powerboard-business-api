@@ -80,11 +80,11 @@ export class CreateTables1648463953232 implements MigrationInterface {
     await queryRunner.query(`CREATE INDEX "IDX_97a74e8a9913478806bd9258de" ON "user_role_privilege" ("privilege_id") `);
 
     await queryRunner.query(
-      `CREATE TABLE "aggregation_links_category" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "version" integer NOT NULL DEFAULT '1', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "title" character varying(255) NOT NULL, CONSTRAINT "PK_8ff968796f95692b213824340a2" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "aggregation_link_type" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "version" integer NOT NULL DEFAULT '1', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "title" character varying(255) NOT NULL, CONSTRAINT "PK_8ff968796f95692b213824340a2" PRIMARY KEY ("id"))`,
     );
 
     await queryRunner.query(
-      `CREATE TABLE "scheduler_config" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "version" integer NOT NULL DEFAULT '1', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "name" uuid, "url" character varying(255), "start_date" TIMESTAMP, "is_active" boolean NOT NULL DEFAULT true, "aggregation_frequency" integer, "team_id" uuid, CONSTRAINT "UQ_7d27157d741c4b79248f57936ce" UNIQUE ("url"), CONSTRAINT "PK_0d47e8d985775bfc40448698d94" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "scheduler_config" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "version" integer NOT NULL DEFAULT '1', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "link_type" uuid, "url" character varying(255), "start_date" TIMESTAMP, "is_active" boolean NOT NULL DEFAULT true, "aggregation_frequency" integer, "team_id" uuid, CONSTRAINT "UQ_7d27157d741c4b79248f57936ce" UNIQUE ("url"), CONSTRAINT "PK_0d47e8d985775bfc40448698d94" PRIMARY KEY ("id"))`,
     );
 
     await queryRunner.query(
@@ -154,7 +154,7 @@ export class CreateTables1648463953232 implements MigrationInterface {
       `ALTER TABLE "user_role_privilege" ADD CONSTRAINT "FK_97a74e8a9913478806bd9258dea" FOREIGN KEY ("privilege_id") REFERENCES "privileges"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
-      `ALTER TABLE "scheduler_config" ADD CONSTRAINT "FK_7b2ee3be6cb91acc30601f89a0e" FOREIGN KEY ("name") REFERENCES "aggregation_links_category"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
+      `ALTER TABLE "scheduler_config" ADD CONSTRAINT "FK_7b2ee3be6cb91acc30601f89a0e" FOREIGN KEY ("link_type") REFERENCES "aggregation_link_type"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
       `ALTER TABLE "scheduler_config" ADD CONSTRAINT "FK_3e62048601a169eeaf76e86ac9e" FOREIGN KEY ("team_id") REFERENCES "team"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
@@ -215,6 +215,6 @@ export class CreateTables1648463953232 implements MigrationInterface {
     await queryRunner.query(`DROP TABLE "privileges"`);
     await queryRunner.query(`DROP TABLE "ad_center"`);
     await queryRunner.query(`DROP TABLE "scheduler_config"`);
-    await queryRunner.query(`DROP TABLE "aggregation_links_category"`);
+    await queryRunner.query(`DROP TABLE "aggregation_link_type"`);
   }
 }

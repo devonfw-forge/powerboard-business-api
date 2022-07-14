@@ -4,6 +4,6 @@ export interface AggregationLinkResponse {
   startDate: string;
   isActive: boolean;
   aggregationFrequency: number;
-  name: string;
+  linkType: string;
   teamId: string;
 }

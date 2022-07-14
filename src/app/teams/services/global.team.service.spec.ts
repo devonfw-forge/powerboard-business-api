@@ -70,7 +70,7 @@ import { Files } from '../../multimedia/model/entities/files.entity';
 import { TeamStatus } from '../model/entities/team_status.entity';
 import { HttpModule } from '@nestjs/common';
 import { SchedulerConfig } from '../../team-links/model/entities/third_party_median.entity';
-import { AggregationLinksCategory } from '../../team-links/model/entities/aggregation_links_category.entity';
+import { AggregationLinksCategory } from '../../team-links/model/entities/aggregation_link_type.entity';
 
 describe('TeamCrudService', () => {
   let teamService: TeamCrudService;

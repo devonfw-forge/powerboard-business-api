@@ -72,7 +72,7 @@ import { UserService } from '../../user/services/user.service';
 import { IUserService } from '../../user/services/user.service.interface';
 import { HomeResponse } from '../model/HomeResponse';
 import { AuthService } from './auth.service';
-import { AggregationLinksCategory } from '../../../team-links/model/entities/aggregation_links_category.entity';
+import { AggregationLinksCategory } from '../../../team-links/model/entities/aggregation_link_type.entity';
 //import { IAuthService } from './auth.service.interface';
 
 describe('AuthService', () => {

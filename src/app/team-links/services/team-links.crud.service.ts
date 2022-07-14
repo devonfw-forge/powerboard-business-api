@@ -5,11 +5,13 @@ import { Repository } from 'typeorm';
 import { Team } from '../../teams/model/entities/team.entity';
 import { AggregationLinkDTO } from '../model/dto/aggregationLinkDTO';
 import { AggregationLinkResponse } from '../model/dto/AggregationLinkResponse';
-import { AggregationLinksCategoryResponse } from '../model/dto/AggregationLinksCategoryResponse';
+import { AggregationLinkTypeResponse } from '../model/dto/AggregationLinkTypeResponse';
+
 import { LinksCategoryResponse } from '../model/dto/LinksCategoryResponse';
 import { TeamLinkDTO } from '../model/dto/TeamLinkDTO';
 import { TeamLinkResponse } from '../model/dto/TeamLinkResponse';
-import { AggregationLinksCategory } from '../model/entities/aggregation_links_category.entity';
+import { AggregationLinkType } from '../model/entities/aggregation_link_type.entity';
+
 import { LinksCategory } from '../model/entities/link-category.entity';
 import { TeamLinks } from '../model/entities/team-links.entity';
 import { SchedulerConfig } from '../model/entities/third_party_median.entity';
@@ -21,8 +23,8 @@ export class TeamLinksCrudService extends TypeOrmCrudService<TeamLinks> implemen
     @InjectRepository(Team) private readonly teamRespository: Repository<Team>,
     @InjectRepository(TeamLinks) private readonly teamLinkRepository: Repository<TeamLinks>,
     @InjectRepository(LinksCategory) private readonly linkCategoryRepository: Repository<LinksCategory>,
-    @InjectRepository(AggregationLinksCategory)
-    private readonly aggregationLinksCategoryRepository: Repository<AggregationLinksCategory>,
+    @InjectRepository(AggregationLinkType)
+    private readonly aggregationLinksCategoryRepository: Repository<AggregationLinkType>,
     @InjectRepository(SchedulerConfig) private readonly schedulerConfigRepository: Repository<SchedulerConfig>,
   ) {
     super(teamLinkRepository);
@@ -66,7 +68,7 @@ export class TeamLinksCrudService extends TypeOrmCrudService<TeamLinks> implemen
       for (i = 0; i < result.length; i++) {
         this.aggregationLinkResponse.id = result[i].id;
         this.aggregationLinkResponse.url = result[i].url;
-        this.aggregationLinkResponse.name = result[i].name.title;
+        this.aggregationLinkResponse.linkType = result[i].linkType.title;
         this.aggregationLinkResponse.aggregationFrequency = result[i].aggregationFrequency;
         this.aggregationLinkResponse.isActive = result[i].isActive;
         this.aggregationLinkResponse.teamId = result[i].team.id;
@@ -126,17 +128,17 @@ export class TeamLinksCrudService extends TypeOrmCrudService<TeamLinks> implemen
    * It will fetch all available categories of aggregation links.
    * if no link category available then will throw an error.
    */
-  async getAggregationLinksCategory(): Promise<AggregationLinksCategoryResponse[]> {
+  async getAggregationLinksCategory(): Promise<AggregationLinkTypeResponse[]> {
     const output = await this.aggregationLinksCategoryRepository.find();
     if (!output) {
       throw new NotFoundException('No Agggregation links Found');
     }
     console.log('output');
     console.log(output);
-    let aggregationLinksList: AggregationLinksCategoryResponse[] = [],
+    let aggregationLinksList: AggregationLinkTypeResponse[] = [],
       i;
     for (i = 0; i < output.length; i++) {
-      let aggregationLinkCategory: AggregationLinksCategoryResponse = {} as AggregationLinksCategoryResponse;
+      let aggregationLinkCategory: AggregationLinkTypeResponse = {} as AggregationLinkTypeResponse;
       aggregationLinkCategory.linkId = output[i].id;
       aggregationLinkCategory.linkTitle = output[i].title;
       aggregationLinksList.push(aggregationLinkCategory);
@@ -156,8 +158,8 @@ export class TeamLinksCrudService extends TypeOrmCrudService<TeamLinks> implemen
    */
   async createAggregationLink(aggregationLinkDTO: AggregationLinkDTO): Promise<SchedulerConfig> {
     const aggregationLinkCategory = (await this.aggregationLinksCategoryRepository.findOne({
-      where: { id: aggregationLinkDTO.name },
-    })) as AggregationLinksCategory;
+      where: { id: aggregationLinkDTO.linkType },
+    })) as AggregationLinkType;
     if (!aggregationLinkCategory) {
       throw new NotFoundException('Link Category Not Found');
     }
@@ -169,7 +171,7 @@ export class TeamLinksCrudService extends TypeOrmCrudService<TeamLinks> implemen
     const schedularConfigDetails = (await this.schedulerConfigRepository
       .createQueryBuilder('schedular_config')
       .where('schedular_config.team_id =:team_Id', { team_Id: aggregationLinkDTO.teamId })
-      .andWhere('schedular_config.name =:name', { name: aggregationLinkDTO.name })
+      .andWhere('schedular_config.link_type=:link_type', { link_type: aggregationLinkDTO.linkType })
       .take(1)
       .getOne()) as SchedulerConfig;
     if (schedularConfigDetails) {
@@ -178,7 +180,7 @@ export class TeamLinksCrudService extends TypeOrmCrudService<TeamLinks> implemen
     }
 
     let aggregationLink = new SchedulerConfig();
-    aggregationLink.name = aggregationLinkCategory;
+    aggregationLink.linkType = aggregationLinkCategory;
     aggregationLink.isActive = aggregationLinkDTO.isActive;
     aggregationLink.startDate = aggregationLinkDTO.startDate;
     aggregationLink.url = aggregationLinkDTO.url;

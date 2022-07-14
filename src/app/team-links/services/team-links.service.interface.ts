@@ -1,6 +1,7 @@
 import { AggregationLinkDTO } from '../model/dto/aggregationLinkDTO';
 import { AggregationLinkResponse } from '../model/dto/AggregationLinkResponse';
-import { AggregationLinksCategoryResponse } from '../model/dto/AggregationLinksCategoryResponse';
+import { AggregationLinkTypeResponse } from '../model/dto/AggregationLinkTypeResponse';
+
 import { LinksCategoryResponse } from '../model/dto/LinksCategoryResponse';
 import { TeamLinkDTO } from '../model/dto/TeamLinkDTO';
 import { TeamLinkResponse } from '../model/dto/TeamLinkResponse';
@@ -13,7 +14,7 @@ export interface ITeamLinksservice {
   deleteTeamLinkById(teamLinkId: string): Promise<any>;
   getLinksCategory(): Promise<LinksCategoryResponse[]>;
 
-  getAggregationLinksCategory(): Promise<AggregationLinksCategoryResponse[]>;
+  getAggregationLinksCategory(): Promise<AggregationLinkTypeResponse[]>;
   getAggregationLinks(team_Id: string): Promise<AggregationLinkResponse[]>;
   deleteAggregationLinkById(aggregationLinkId: string): Promise<any>;
   createAggregationLink(aggregationLinkDTO: AggregationLinkDTO): Promise<SchedulerConfig>;

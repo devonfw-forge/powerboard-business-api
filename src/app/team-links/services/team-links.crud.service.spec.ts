@@ -9,7 +9,7 @@ import {
 } from '../../../../test/mockCrudRepository/crudRepository.mock';
 import { Team } from '../../teams/model/entities/team.entity';
 import { TeamLinkDTO } from '../model/dto/TeamLinkDTO';
-import { AggregationLinksCategory } from '../model/entities/aggregation_links_category.entity';
+import { AggregationLinkType } from '../model/entities/aggregation_link_type.entity';
 
 import { LinksCategory } from '../model/entities/link-category.entity';
 import { TeamLinks } from '../model/entities/team-links.entity';
@@ -37,7 +37,7 @@ describe('TeamLinksCrudService', () => {
           useClass: LinksCategoryMock,
         },
         {
-          provide: getRepositoryToken(AggregationLinksCategory),
+          provide: getRepositoryToken(AggregationLinkType),
           useClass: AggregationLinksCategoryMock,
         },
         {
@@ -54,9 +54,7 @@ describe('TeamLinksCrudService', () => {
     teamLinkService = module.get<TeamLinksCrudService>(TeamLinksCrudService);
     teamLinkRepo = module.get<TeamLinksMockRepo>(getRepositoryToken(TeamLinks));
     linkCategoryRepo = module.get<LinksCategoryMock>(getRepositoryToken(LinksCategory));
-    aggregationLinkCategoryRepo = module.get<AggregationLinksCategoryMock>(
-      getRepositoryToken(AggregationLinksCategory),
-    );
+    aggregationLinkCategoryRepo = module.get<AggregationLinksCategoryMock>(getRepositoryToken(AggregationLinkType));
     schedulerConfigRepo = module.get<SchedulerConfigRepositoryMock>(getRepositoryToken(SchedulerConfig));
   });
 
@@ -117,7 +115,7 @@ describe('TeamLinksCrudService', () => {
           createdAt: '2021-04-28T05:57:33.080Z',
           updatedAt: '2021-04-28T05:57:33.080Z',
 
-          name: {
+          linkType: {
             id: '10005bf7-ada7-495c-8019-8d7ab62d488e',
             version: 1,
             createdAt: '2021-07-21T06:39:42.843Z',

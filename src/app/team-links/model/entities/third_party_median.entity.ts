@@ -1,13 +1,13 @@
 import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { BaseEntity } from '../../../shared/model/entities/base-entity.entity';
-import { AggregationLinksCategory } from './aggregation_links_category.entity';
 import { Team } from '../../../teams/model/entities/team.entity';
+import { AggregationLinkType } from './aggregation_link_type.entity';
 
 @Entity()
 export class SchedulerConfig extends BaseEntity {
-  @ManyToOne(() => AggregationLinksCategory, { eager: true, onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'name', referencedColumnName: 'id' })
-  name!: AggregationLinksCategory;
+  @ManyToOne(() => AggregationLinkType, { eager: true, onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'link_type', referencedColumnName: 'id' })
+  linkType!: AggregationLinkType;
 
   @Column('varchar', { name: 'url', length: 255, nullable: true, unique: true })
   url!: string;

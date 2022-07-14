@@ -3,6 +3,6 @@ export interface AggregationLinkDTO {
   startDate: string;
   isActive: boolean;
   aggregationFrequency: number;
-  name: string;
+  linkType: string;
   teamId: string;
 }
