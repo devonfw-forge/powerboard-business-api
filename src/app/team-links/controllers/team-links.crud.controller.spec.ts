@@ -129,7 +129,7 @@ describe('Auth Controller', () => {
     it('should create the aggregation link', async () => {
       const addAggregationLinkDTO = {
         url: 'Google',
-        name: '10005bf7-ada7-495c-8019-8d7ab62d488e',
+        linkType: '10005bf7-ada7-495c-8019-8d7ab62d488e',
         isActive: true,
         teamId: '46455bf7-ada7-495c-8019-8d7ab76d488e',
         aggregationFrequency: 10,

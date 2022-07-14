@@ -158,7 +158,7 @@ describe('TeamLinksCrudService', () => {
         {
           id: '51055bf7-ada6-495c-8019-8d7ab76d488e',
           url: 'https://powerboard-capgemini.atlassian.net/jira/software/projects/DUM/boards/3',
-          name: 'jira',
+          linkType: 'jira',
           aggregationFrequency: 12,
           isActive: true,
           teamId: '46455bf7-ada7-495c-8019-8d7ab76d488e',

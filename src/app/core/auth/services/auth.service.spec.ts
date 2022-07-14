@@ -72,7 +72,7 @@ import { UserService } from '../../user/services/user.service';
 import { IUserService } from '../../user/services/user.service.interface';
 import { HomeResponse } from '../model/HomeResponse';
 import { AuthService } from './auth.service';
-import { AggregationLinksCategory } from '../../../team-links/model/entities/aggregation_link_type.entity';
+import { AggregationLinkType } from '../../../team-links/model/entities/aggregation_link_type.entity';
 //import { IAuthService } from './auth.service.interface';
 
 describe('AuthService', () => {
@@ -170,7 +170,7 @@ describe('AuthService', () => {
           useClass: SchedulerConfigRepositoryMock,
         },
         {
-          provide: getRepositoryToken(AggregationLinksCategory),
+          provide: getRepositoryToken(AggregationLinkType),
           useClass: AggregationLinksCategoryMock,
         },
         // {
@@ -300,7 +300,7 @@ describe('AuthService', () => {
     filesRepositoryMock = module.get<FilesRepositoryMock>(getRepositoryToken(Files));
     schedulerConfigRepositoryMock = module.get<SchedulerConfigRepositoryMock>(getRepositoryToken(SchedulerConfig));
     aggregationLinkCategoryRepositoryMock = module.get<AggregationLinksCategoryMock>(
-      getRepositoryToken(AggregationLinksCategory),
+      getRepositoryToken(AggregationLinkType),
     );
     //jwtService = module.get<JwtService>(JwtService);
   });

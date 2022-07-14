@@ -70,7 +70,7 @@ import { SchedulerConfig } from '../../team-links/model/entities/third_party_med
 import { GlobalTeamsService } from './global.team.service';
 import { IGlobalTeamsService } from './global.team.service.interface';
 import { TeamCrudService } from './team.crud.service';
-import { AggregationLinksCategory } from '../../team-links/model/entities/aggregation_link_type.entity';
+import { AggregationLinkType } from '../../team-links/model/entities/aggregation_link_type.entity';
 
 describe('TeamCrudService', () => {
   let teamService: TeamCrudService;
@@ -244,7 +244,7 @@ describe('TeamCrudService', () => {
         },
 
         {
-          provide: getRepositoryToken(AggregationLinksCategory),
+          provide: getRepositoryToken(AggregationLinkType),
           useClass: AggregationLinksCategoryMock,
         },
       ],
@@ -278,7 +278,7 @@ describe('TeamCrudService', () => {
     userTeamService = module.get<UserTeamService>('IUserTeamService');
     schedulerConfigRepositoryMock = module.get<SchedulerConfigRepositoryMock>(getRepositoryToken(SchedulerConfig));
     aggregationlinksCategoryRepoMock = module.get<AggregationLinksCategoryMock>(
-      getRepositoryToken(AggregationLinksCategory),
+      getRepositoryToken(AggregationLinkType),
     );
   });
 

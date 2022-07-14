@@ -70,7 +70,7 @@ import { Files } from '../../multimedia/model/entities/files.entity';
 import { TeamStatus } from '../model/entities/team_status.entity';
 import { HttpModule } from '@nestjs/common';
 import { SchedulerConfig } from '../../team-links/model/entities/third_party_median.entity';
-import { AggregationLinksCategory } from '../../team-links/model/entities/aggregation_link_type.entity';
+import { AggregationLinkType } from '../../team-links/model/entities/aggregation_link_type.entity';
 
 describe('TeamCrudService', () => {
   let teamService: TeamCrudService;
@@ -252,7 +252,7 @@ describe('TeamCrudService', () => {
           useClass: VisibilityMock,
         },
         {
-          provide: getRepositoryToken(AggregationLinksCategory),
+          provide: getRepositoryToken(AggregationLinkType),
           useClass: AggregationLinksCategoryMock,
         },
       ],
@@ -287,7 +287,7 @@ describe('TeamCrudService', () => {
     teamStatusRepo = module.get<TeamStatusRepositoryMock>(getRepositoryToken(TeamStatus));
     schedulerConfigRepositoryMock = module.get<SchedulerConfigRepositoryMock>(getRepositoryToken(SchedulerConfig));
     aggregationLinksCategoryRepositoryMock = module.get<AggregationLinksCategoryMock>(
-      getRepositoryToken(AggregationLinksCategory),
+      getRepositoryToken(AggregationLinkType),
     );
   });
 
