@@ -523,7 +523,10 @@ export class InsertData1648464125307 implements MigrationInterface {
       `INSERT INTO "user_role_privilege"("role_id", "privilege_id") Values('557f1dfd-43e9-4cc4-8257-a6ba5c70e34d','80141dfd-43e9-4cc4-8257-a6ba5c70e34d');`,
     );
     await queryRunner.query(
-      `INSERT INTO "scheduler_config"("name","url","start_date","is_active","aggregation_frequency","team_id") Values('jira','url-sample','2022-03-28 19:30:00',true,10,'46455bf7-ada7-495c-8019-8d7ab76d489e');`,
+      `INSERT INTO "aggregation_links_category" ("id", "title") VALUES ('9cd852b8-4a8d-7d97-8aba-004600e617f1', 'jira');`,
+    );
+    await queryRunner.query(
+      `INSERT INTO "scheduler_config"("name","url","start_date","is_active","aggregation_frequency","team_id") Values('9cd852b8-4a8d-7d97-8aba-004600e617f1','url-sample','2022-03-28 19:30:00',true,10,'46455bf7-ada7-495c-8019-8d7ab76d489e');`,
     );
   }
 
@@ -551,6 +554,7 @@ export class InsertData1648464125307 implements MigrationInterface {
     await queryRunner.query(`ALTER TABLE "user_team" DROP CONSTRAINT "FK_f7c7dca694de337fa4a89d73ec8"`);
     await queryRunner.query(`ALTER TABLE "team" DROP CONSTRAINT "FK_659c6ff656130dcfac850b66c38"`);
     await queryRunner.query(`ALTER TABLE "team" DROP CONSTRAINT "FK_8e571805766848ea10996a178d4"`);
+    await queryRunner.query(`ALTER TABLE "scheduler_config" DROP CONSTRAINT "FK_7b2ee3be6cb91acc30601f89a0e"`);
     await queryRunner.query(`ALTER TABLE "scheduler_config" DROP CONSTRAINT "FK_3e62048601a169eeaf76e86ac9e"`);
     await queryRunner.query(`DROP INDEX "IDX_97a74e8a9913478806bd9258de"`);
     await queryRunner.query(`DROP INDEX "IDX_b5953b98d1159f75a3156d071a"`);
@@ -579,5 +583,6 @@ export class InsertData1648464125307 implements MigrationInterface {
     await queryRunner.query(`DROP TABLE "privileges"`);
     await queryRunner.query(`DROP TABLE "ad_center"`);
     await queryRunner.query(`DROP TABLE "scheduler_config"`);
+    await queryRunner.query(`DROP TABLE "aggregation_links_category"`);
   }
 }

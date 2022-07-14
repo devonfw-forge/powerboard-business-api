@@ -4,6 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import {
   ADCenterRepositoryMock,
+  AggregationLinksCategoryMock,
   ClientStatusRepositoryMock,
   CodeQualityRepositoryMock,
   FilesRepositoryMock,
@@ -51,7 +52,7 @@ import { MyCenter } from '../../../teams/model/dto/MyCenter';
 import { PowerboardResponse } from '../../../teams/model/dto/PowerboardResponse';
 import { Team } from '../../../teams/model/entities/team.entity';
 import { TeamStatus } from '../../../teams/model/entities/team_status.entity';
-import { SchedulerConfig } from '../../../teams/model/entities/third_party_median.entity';
+import { SchedulerConfig } from '../../../team-links/model/entities/third_party_median.entity';
 import { GlobalTeamsService } from '../../../teams/services/global.team.service';
 import { IGlobalTeamsService } from '../../../teams/services/global.team.service.interface';
 import { TeamCrudService } from '../../../teams/services/team.crud.service';
@@ -71,6 +72,7 @@ import { UserService } from '../../user/services/user.service';
 import { IUserService } from '../../user/services/user.service.interface';
 import { HomeResponse } from '../model/HomeResponse';
 import { AuthService } from './auth.service';
+import { AggregationLinksCategory } from '../../../team-links/model/entities/aggregation_links_category.entity';
 //import { IAuthService } from './auth.service.interface';
 
 describe('AuthService', () => {
@@ -105,6 +107,7 @@ describe('AuthService', () => {
   let multimediaRepo: MultimediaRepositoryMock;
   let filesRepositoryMock: FilesRepositoryMock;
   let schedulerConfigRepositoryMock: SchedulerConfigRepositoryMock;
+  let aggregationLinkCategoryRepositoryMock: AggregationLinksCategoryMock;
   // let jwtService: JwtService;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -165,6 +168,10 @@ describe('AuthService', () => {
         {
           provide: getRepositoryToken(SchedulerConfig),
           useClass: SchedulerConfigRepositoryMock,
+        },
+        {
+          provide: getRepositoryToken(AggregationLinksCategory),
+          useClass: AggregationLinksCategoryMock,
         },
         // {
         //   provide: 'IAuthService',
@@ -292,6 +299,9 @@ describe('AuthService', () => {
     multimediaRepo = module.get<MultimediaRepositoryMock>(getRepositoryToken(Multimedia));
     filesRepositoryMock = module.get<FilesRepositoryMock>(getRepositoryToken(Files));
     schedulerConfigRepositoryMock = module.get<SchedulerConfigRepositoryMock>(getRepositoryToken(SchedulerConfig));
+    aggregationLinkCategoryRepositoryMock = module.get<AggregationLinksCategoryMock>(
+      getRepositoryToken(AggregationLinksCategory),
+    );
     //jwtService = module.get<JwtService>(JwtService);
   });
 
@@ -328,6 +338,7 @@ describe('AuthService', () => {
     expect(multimediaRepo).toBeDefined();
     expect(filesRepositoryMock).toBeDefined();
     expect(schedulerConfigRepositoryMock).toBeDefined();
+    expect(aggregationLinkCategoryRepositoryMock).toBeDefined();
   });
 
   describe('validateUser', () => {

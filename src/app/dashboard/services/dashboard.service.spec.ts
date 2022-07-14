@@ -9,7 +9,7 @@ import {
   SprintRepositoryMock,
   TeamSpiritRepositoryMock,
 } from '../../../../test/mockCrudRepository/crudRepository.mock';
-import { SchedulerConfig } from '../../teams/model/entities/third_party_median.entity';
+import { SchedulerConfig } from '../../team-links/model/entities/third_party_median.entity';
 import { ClientStatus } from '../client-status/model/entities/client-status.entity';
 import { ClientStatusCrudService } from '../client-status/services/client-status.crud.service';
 import { IClientStatusService } from '../client-status/services/client-status.service.interface';
@@ -121,7 +121,12 @@ describe('DashboardService', () => {
     };
     const status = 1;
     const velocityComparisonResponse: any = { Avg: 115, Committed: 140, Completed: 18 };
-    const spirintDetailResponse: any = { Sprint_current_day: 2, sprint_number: 11, Sprint_days: 28 };
+    const spirintDetailResponse: any = {
+      Sprint_current_day: 2,
+      sprint_number: 11,
+      Sprint_days: 28,
+      updatedAt: '12-06-2022',
+    };
 
     test('test 1 if team present', async () => {
       //inputs
@@ -160,6 +165,8 @@ describe('DashboardService', () => {
       jest.spyOn(sprintService, 'getVelocityComparison').mockImplementation(() => velocityComparisonResponse);
       jest.spyOn(sprintService, 'getBurndown').mockImplementation(() => burndownResponse);
       jest.spyOn(dashboardService, 'fetchStatus').mockImplementation(() => status);
+      let date: any = '16-09-2020';
+      jest.spyOn(sprintService, 'getLastUpdatedSprintDate').mockImplementation(() => date);
       const actualOutput = await dashboardService.getDashboardByTeamId(team);
       expect(codeQualityService.getCodeQualitySnapshot).toBeCalledTimes(1);
       expect(clientStatusService.getClientFeedback).toBeCalledTimes(1);

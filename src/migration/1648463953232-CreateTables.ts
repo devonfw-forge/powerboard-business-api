@@ -78,6 +78,15 @@ export class CreateTables1648463953232 implements MigrationInterface {
     );
     await queryRunner.query(`CREATE INDEX "IDX_b5953b98d1159f75a3156d071a" ON "user_role_privilege" ("role_id") `);
     await queryRunner.query(`CREATE INDEX "IDX_97a74e8a9913478806bd9258de" ON "user_role_privilege" ("privilege_id") `);
+
+    await queryRunner.query(
+      `CREATE TABLE "aggregation_links_category" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "version" integer NOT NULL DEFAULT '1', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "title" character varying(255) NOT NULL, CONSTRAINT "PK_8ff968796f95692b213824340a2" PRIMARY KEY ("id"))`,
+    );
+
+    await queryRunner.query(
+      `CREATE TABLE "scheduler_config" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "version" integer NOT NULL DEFAULT '1', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "name" uuid, "url" character varying(255), "start_date" TIMESTAMP, "is_active" boolean NOT NULL DEFAULT true, "aggregation_frequency" integer, "team_id" uuid, CONSTRAINT "UQ_7d27157d741c4b79248f57936ce" UNIQUE ("url"), CONSTRAINT "PK_0d47e8d985775bfc40448698d94" PRIMARY KEY ("id"))`,
+    );
+
     await queryRunner.query(
       `ALTER TABLE "team" ADD CONSTRAINT "FK_8e571805766848ea10996a178d4" FOREIGN KEY ("ad_center_id") REFERENCES "ad_center"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
     );
@@ -145,7 +154,7 @@ export class CreateTables1648463953232 implements MigrationInterface {
       `ALTER TABLE "user_role_privilege" ADD CONSTRAINT "FK_97a74e8a9913478806bd9258dea" FOREIGN KEY ("privilege_id") REFERENCES "privileges"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
-      `CREATE TABLE "scheduler_config" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "version" integer NOT NULL DEFAULT '1', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "name" character varying(255), "url" character varying(255), "start_date" TIMESTAMP, "is_active" boolean NOT NULL DEFAULT true, "aggregation_frequency" integer, "team_id" uuid, CONSTRAINT "UQ_8a1a331271d6291dcc5432172e8" UNIQUE ("name"), CONSTRAINT "UQ_7d27157d741c4b79248f57936ce" UNIQUE ("url"), CONSTRAINT "PK_0d47e8d985775bfc40448698d94" PRIMARY KEY ("id"))`,
+      `ALTER TABLE "scheduler_config" ADD CONSTRAINT "FK_7b2ee3be6cb91acc30601f89a0e" FOREIGN KEY ("name") REFERENCES "aggregation_links_category"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
       `ALTER TABLE "scheduler_config" ADD CONSTRAINT "FK_3e62048601a169eeaf76e86ac9e" FOREIGN KEY ("team_id") REFERENCES "team"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
@@ -177,6 +186,8 @@ export class CreateTables1648463953232 implements MigrationInterface {
     await queryRunner.query(`ALTER TABLE "user_team" DROP CONSTRAINT "FK_f7c7dca694de337fa4a89d73ec8"`);
     await queryRunner.query(`ALTER TABLE "team" DROP CONSTRAINT "FK_659c6ff656130dcfac850b66c38"`);
     await queryRunner.query(`ALTER TABLE "team" DROP CONSTRAINT "FK_8e571805766848ea10996a178d4"`);
+    await queryRunner.query(`ALTER TABLE "scheduler_config" DROP CONSTRAINT "FK_7b2ee3be6cb91acc30601f89a0e"`);
+    await queryRunner.query(`ALTER TABLE "scheduler_config" DROP CONSTRAINT "FK_3e62048601a169eeaf76e86ac9e"`);
     await queryRunner.query(`DROP INDEX "IDX_97a74e8a9913478806bd9258de"`);
     await queryRunner.query(`DROP INDEX "IDX_b5953b98d1159f75a3156d071a"`);
     await queryRunner.query(`DROP TABLE "user_role_privilege"`);
@@ -203,7 +214,7 @@ export class CreateTables1648463953232 implements MigrationInterface {
     await queryRunner.query(`DROP TABLE "user_role"`);
     await queryRunner.query(`DROP TABLE "privileges"`);
     await queryRunner.query(`DROP TABLE "ad_center"`);
-    await queryRunner.query(`ALTER TABLE "scheduler_config" DROP CONSTRAINT "FK_3e62048601a169eeaf76e86ac9e"`);
     await queryRunner.query(`DROP TABLE "scheduler_config"`);
+    await queryRunner.query(`DROP TABLE "aggregation_links_category"`);
   }
 }

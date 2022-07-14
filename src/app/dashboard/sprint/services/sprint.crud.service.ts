@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { Repository } from 'typeorm';
-import { SchedulerConfig } from '../../../teams/model/entities/third_party_median.entity';
 import { BurndownResponse } from '../model/dto/BurndownResponse';
 import { SprintDetailResponse } from '../model/dto/SprintDetailResponse';
 import { VelocityComparisonResponse } from '../model/dto/VelocityComparisonResponse';
@@ -16,10 +15,7 @@ import { ISprintCrudService } from './sprint.crud.service.interface';
 
 @Injectable()
 export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISprintCrudService {
-  constructor(
-    @InjectRepository(Sprint) private readonly sprintRepository: Repository<Sprint>,
-    @InjectRepository(SchedulerConfig) private readonly schedularRepository: Repository<SchedulerConfig>,
-  ) {
+  constructor(@InjectRepository(Sprint) private readonly sprintRepository: Repository<Sprint>) {
     super(sprintRepository);
   }
 
@@ -239,31 +235,11 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
         this.velocityComparisonResponse.Avg = this.getAverageVelocity(previousSprintCompleted);
         this.velocityComparisonResponse.updatedAt = sprintMetricsResponse[0].ss_date_time;
         this.velocityComparisonResponse = this.getVelocityData(sprintMetricsResponse);
-        var jiraLink = (await this.getJiraLink(teamId)) as string;
-        this.velocityComparisonResponse.jiraLink = jiraLink;
         console.log('velocccittttttttttyyyyy');
         console.log(this.velocityComparisonResponse);
         return this.velocityComparisonResponse;
       }
     }
-  }
-
-  async getJiraLink(teamId: string): Promise<string | null> {
-    var jira_name: string = 'jira';
-    const schedularConfigDetails = (await this.schedularRepository
-      .createQueryBuilder('schedular_config')
-      .where('schedular_config.team_id =:team_Id', { team_Id: teamId })
-      .andWhere('schedular_config.name =:name', { name: jira_name })
-      .orderBy('schedular_config.updatedAt', 'DESC')
-      .take(1)
-      .getOne()) as SchedulerConfig;
-
-    if (schedularConfigDetails) {
-      console.log('***************************  SECHDULAR  *************');
-      console.log(schedularConfigDetails);
-      return schedularConfigDetails.url;
-    }
-    return null;
   }
 
   /**

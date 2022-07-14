@@ -95,4 +95,58 @@ describe('Auth Controller', () => {
       expect(mockResponse.status).toBeCalledWith(200);
     });
   });
+
+  describe('getAggregationLinksCategory', () => {
+    it('should return the aggregation links category', async () => {
+      const mockResponse: any = {
+        status: jest.fn().mockReturnThis(),
+        send: jest.fn(),
+        json: jest.fn(),
+      };
+      await teamLinksController.getAggregationLinksCategory(mockResponse);
+      expect(teamLinksService.getAggregationLinksCategory).toBeCalled();
+      expect(mockResponse.status).toBeCalledTimes(1);
+      expect(mockResponse.status).toBeCalledWith(200);
+    });
+  });
+
+  describe('deleteAggregationLinkById', () => {
+    it('should delete the aggregation link by its id', async () => {
+      const aggregationLinkId = '51055bf5-ada5-495c-8019-8d7ab76d488e';
+      const mockResponse: any = {
+        status: jest.fn().mockReturnThis(),
+        send: jest.fn(),
+        json: jest.fn(),
+      };
+      await teamLinksController.deleteAggregationLinkById(aggregationLinkId, mockResponse);
+      expect(teamLinksService.deleteAggregationLinkById).toBeCalledWith(aggregationLinkId);
+      expect(mockResponse.status).toBeCalledTimes(1);
+      expect(mockResponse.status).toBeCalledWith(200);
+    });
+  });
+
+  describe('addAggregationLink', () => {
+    it('should create the aggregation link', async () => {
+      const addAggregationLinkDTO = {
+        url: 'Google',
+        name: '10005bf7-ada7-495c-8019-8d7ab62d488e',
+        isActive: true,
+        teamId: '46455bf7-ada7-495c-8019-8d7ab76d488e',
+        aggregationFrequency: 10,
+        startDate: '',
+      };
+
+      const mockResponse: any = {
+        status: jest.fn().mockReturnThis(),
+        send: jest.fn(),
+        json: jest.fn(),
+      };
+
+      //jest.spyOn(teamLinksService.createTeamLinks)
+      await teamLinksController.addAggregationLinkToTeam(addAggregationLinkDTO, mockResponse);
+      expect(teamLinksService.createAggregationLink).toBeCalledWith(addAggregationLinkDTO);
+      expect(mockResponse.status).toBeCalledTimes(1);
+      expect(mockResponse.status).toBeCalledWith(201);
+    });
+  });
 });

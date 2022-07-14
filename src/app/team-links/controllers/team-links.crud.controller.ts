@@ -5,6 +5,7 @@ import { TeamLinks } from '../model/entities/team-links.entity';
 import { TeamLinkDTO } from '../model/dto/TeamLinkDTO';
 import { Response as eResponse } from 'express';
 import { ITeamLinksservice } from '../services/team-links.service.interface';
+import { AggregationLinkDTO } from '../model/dto/aggregationLinkDTO';
 
 @Crud({
   model: {
@@ -44,5 +45,33 @@ export class TeamLinksCrudController {
   async getLinksCategory(@Response() res: eResponse): Promise<void> {
     const result = await this.teamLinksService.getLinksCategory();
     res.status(200).json(result);
+  }
+
+  //get all the aggregation links categories
+  @Get('getAggregationLinksCategory')
+  //@UseGuards(AuthGuard('jwt'))
+  async getAggregationLinksCategory(@Response() res: eResponse): Promise<void> {
+    const result = await this.teamLinksService.getAggregationLinksCategory();
+    res.status(200).json(result);
+  }
+
+  @Delete('deleteAggregationLink/:id')
+  //@UseGuards(AuthGuard('jwt'))
+  async deleteAggregationLinkById(@Param('id') aggregationLinkId: string, @Response() res: eResponse): Promise<void> {
+    const result = await this.teamLinksService.deleteAggregationLinkById(aggregationLinkId);
+    console.log(result);
+    res.status(200).json({ message: 'Aggregation Link successfully Deleted' });
+  }
+
+  @Post('aggregationLink/create')
+  // @UseGuards(AuthGuard('jwt'))
+  async addAggregationLinkToTeam(
+    @Body() aggregationLinkDTO: AggregationLinkDTO,
+    @Response() res: eResponse,
+  ): Promise<void> {
+    console.log('-------------- aggregation links controller----------');
+    console.log(aggregationLinkDTO);
+    const result = await this.teamLinksService.createAggregationLink(aggregationLinkDTO);
+    res.status(201).json(result);
   }
 }
