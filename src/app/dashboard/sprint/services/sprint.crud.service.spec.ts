@@ -4,7 +4,7 @@ import {
   SchedulerConfigRepositoryMock,
   SprintRepositoryMock,
 } from '../../../../../test/mockCrudRepository/crudRepository.mock';
-import { SchedulerConfig } from '../../../teams/model/entities/third_party_median.entity';
+import { SchedulerConfig } from '../../../team-links/model/entities/third_party_median.entity';
 //import { SprintDetailResponse } from '../model/dto/SprintDetailResponse';
 //import { SprintDetailResponse } from '../model/dto/SprintDetailResponse';
 //import { Team } from '../../../teams/model/entities/team.entity';

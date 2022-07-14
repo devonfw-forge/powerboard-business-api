@@ -70,6 +70,7 @@ export class TeamCrudService extends TypeOrmCrudService<Team> implements ITeamSe
 
     this.powerboardResponse.dashboard = await this.dashboardService.getDashboardByTeamId(teams);
     this.powerboardResponse.teamLinks = await this.getLinksForTeam(teams.id, privilegeList);
+    this.powerboardResponse.aggregationLinks = await this.getAggregationLinksForTeam(teams.id);
     this.powerboardResponse.multimedia = await this.getMultimediaForTeam(teams.id);
 
     if (isSystemAdmin) {
@@ -94,6 +95,18 @@ export class TeamCrudService extends TypeOrmCrudService<Team> implements ITeamSe
     if (privilegeList?.includes('view_links')) {
       const teamLink: TeamLinkResponse[] = await this.teamLinkService.getTeamLinks(teamId);
       return teamLink;
+    } else {
+      return [];
+    }
+  }
+
+  /**
+   * It will fetch all the aggregation links associated with team.
+   */
+  async getAggregationLinksForTeam(teamId: string): Promise<any> {
+    const aggregationLinks: any = await this.teamLinkService.getAggregationLinks(teamId);
+    if (aggregationLinks) {
+      return aggregationLinks;
     } else {
       return [];
     }

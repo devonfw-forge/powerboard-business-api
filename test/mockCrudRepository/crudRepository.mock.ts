@@ -55,3 +55,4 @@ export class UserSessionDetailsRepositoryMock extends MockRepository {}
 export class TeamStatusRepositoryMock extends MockRepository {}
 export class FilesRepositoryMock extends MockRepository {}
 export class SchedulerConfigRepositoryMock extends MockRepository {}
+export class AggregationLinksCategoryMock extends MockRepository {}

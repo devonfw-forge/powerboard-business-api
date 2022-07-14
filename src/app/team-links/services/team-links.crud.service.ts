@@ -1,19 +1,31 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { Repository } from 'typeorm';
+import { Team } from '../../teams/model/entities/team.entity';
+import { AggregationLinkDTO } from '../model/dto/aggregationLinkDTO';
+import { AggregationLinkResponse } from '../model/dto/AggregationLinkResponse';
+import { AggregationLinkTypeResponse } from '../model/dto/AggregationLinkTypeResponse';
+
 import { LinksCategoryResponse } from '../model/dto/LinksCategoryResponse';
 import { TeamLinkDTO } from '../model/dto/TeamLinkDTO';
 import { TeamLinkResponse } from '../model/dto/TeamLinkResponse';
+import { AggregationLinkType } from '../model/entities/aggregation_link_type.entity';
+
 import { LinksCategory } from '../model/entities/link-category.entity';
 import { TeamLinks } from '../model/entities/team-links.entity';
+import { SchedulerConfig } from '../model/entities/third_party_median.entity';
 import { ITeamLinksservice } from './team-links.service.interface';
 
 @Injectable()
 export class TeamLinksCrudService extends TypeOrmCrudService<TeamLinks> implements ITeamLinksservice {
   constructor(
+    @InjectRepository(Team) private readonly teamRespository: Repository<Team>,
     @InjectRepository(TeamLinks) private readonly teamLinkRepository: Repository<TeamLinks>,
     @InjectRepository(LinksCategory) private readonly linkCategoryRepository: Repository<LinksCategory>,
+    @InjectRepository(AggregationLinkType)
+    private readonly aggregationLinksCategoryRepository: Repository<AggregationLinkType>,
+    @InjectRepository(SchedulerConfig) private readonly schedulerConfigRepository: Repository<SchedulerConfig>,
   ) {
     super(teamLinkRepository);
   }
@@ -42,6 +54,29 @@ export class TeamLinksCrudService extends TypeOrmCrudService<TeamLinks> implemen
         this.teamLinkResponse = {} as TeamLinkResponse;
       }
       return teamLinksArray;
+    }
+  }
+
+  aggregationLinkResponse: AggregationLinkResponse = {} as AggregationLinkResponse;
+  async getAggregationLinks(team_Id: string): Promise<AggregationLinkResponse[]> {
+    let aggregationLinksArray = [] as AggregationLinkResponse[],
+      i;
+    const result = await this.schedulerConfigRepository.find({ where: { team: team_Id } });
+    if (result == null) {
+      return aggregationLinksArray;
+    } else {
+      for (i = 0; i < result.length; i++) {
+        this.aggregationLinkResponse.id = result[i].id;
+        this.aggregationLinkResponse.url = result[i].url;
+        this.aggregationLinkResponse.linkType = result[i].linkType.title;
+        this.aggregationLinkResponse.aggregationFrequency = result[i].aggregationFrequency;
+        this.aggregationLinkResponse.isActive = result[i].isActive;
+        this.aggregationLinkResponse.teamId = result[i].team.id;
+        this.aggregationLinkResponse.startDate = result[i].startDate;
+        aggregationLinksArray.push(this.aggregationLinkResponse);
+        this.aggregationLinkResponse = {} as AggregationLinkResponse;
+      }
+      return aggregationLinksArray;
     }
   }
 
@@ -87,5 +122,73 @@ export class TeamLinksCrudService extends TypeOrmCrudService<TeamLinks> implemen
       linksList.push(linkCategory);
     }
     return linksList;
+  }
+
+  /**
+   * It will fetch all available categories of aggregation links.
+   * if no link category available then will throw an error.
+   */
+  async getAggregationLinksCategory(): Promise<AggregationLinkTypeResponse[]> {
+    const output = await this.aggregationLinksCategoryRepository.find();
+    if (!output) {
+      throw new NotFoundException('No Agggregation links Found');
+    }
+    console.log('output');
+    console.log(output);
+    let aggregationLinksList: AggregationLinkTypeResponse[] = [],
+      i;
+    for (i = 0; i < output.length; i++) {
+      let aggregationLinkCategory: AggregationLinkTypeResponse = {} as AggregationLinkTypeResponse;
+      aggregationLinkCategory.linkId = output[i].id;
+      aggregationLinkCategory.linkTitle = output[i].title;
+      aggregationLinksList.push(aggregationLinkCategory);
+    }
+    return aggregationLinksList;
+  }
+
+  /**
+   * deleteAggregationLinkById method will delete the aggregation link from team
+   */
+  async deleteAggregationLinkById(aggregationlinkId: string): Promise<any> {
+    return this.schedulerConfigRepository.delete(aggregationlinkId);
+  }
+
+  /**
+   * It will add the link to team
+   */
+  async createAggregationLink(aggregationLinkDTO: AggregationLinkDTO): Promise<SchedulerConfig> {
+    const aggregationLinkCategory = (await this.aggregationLinksCategoryRepository.findOne({
+      where: { id: aggregationLinkDTO.linkType },
+    })) as AggregationLinkType;
+    if (!aggregationLinkCategory) {
+      throw new NotFoundException('Link Category Not Found');
+    }
+
+    const team = (await this.teamRespository.findOne({ where: { id: aggregationLinkDTO.teamId } })) as Team;
+    if (!team) {
+      throw new NotFoundException('Team Not Found');
+    }
+    const schedularConfigDetails = (await this.schedulerConfigRepository
+      .createQueryBuilder('schedular_config')
+      .where('schedular_config.team_id =:team_Id', { team_Id: aggregationLinkDTO.teamId })
+      .andWhere('schedular_config.link_type=:link_type', { link_type: aggregationLinkDTO.linkType })
+      .take(1)
+      .getOne()) as SchedulerConfig;
+    if (schedularConfigDetails) {
+      let linkName = aggregationLinkCategory.title;
+      throw new ConflictException(linkName + ' link already exists');
+    }
+
+    let aggregationLink = new SchedulerConfig();
+    aggregationLink.linkType = aggregationLinkCategory;
+    aggregationLink.isActive = aggregationLinkDTO.isActive;
+    aggregationLink.startDate = aggregationLinkDTO.startDate;
+    aggregationLink.url = aggregationLinkDTO.url;
+    aggregationLink.aggregationFrequency = aggregationLinkDTO.aggregationFrequency;
+    aggregationLink.team = team;
+    console.log(aggregationLink);
+    const aggregationLinkOutput = await this.schedulerConfigRepository.save(aggregationLink);
+    console.log(aggregationLinkOutput);
+    return aggregationLinkOutput;
   }
 }

@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import {
   ADCenterRepositoryMock,
+  AggregationLinksCategoryMock,
   ClientStatusRepositoryMock,
   CodeQualityRepositoryMock,
   FilesRepositoryMock,
@@ -65,10 +66,11 @@ import { Visibility } from '../../visibility/model/entities/visibility.entity';
 import { UpdateTeam } from '../model/dto/updateTeam.interface';
 import { UserTeamDTO } from '../model/dto/UserTeamDTO';
 import { TeamStatus } from '../model/entities/team_status.entity';
-import { SchedulerConfig } from '../model/entities/third_party_median.entity';
+import { SchedulerConfig } from '../../team-links/model/entities/third_party_median.entity';
 import { GlobalTeamsService } from './global.team.service';
 import { IGlobalTeamsService } from './global.team.service.interface';
 import { TeamCrudService } from './team.crud.service';
+import { AggregationLinkType } from '../../team-links/model/entities/aggregation_link_type.entity';
 
 describe('TeamCrudService', () => {
   let teamService: TeamCrudService;
@@ -98,6 +100,7 @@ describe('TeamCrudService', () => {
   let emailService: IEmailService;
   let teamStatusRepo: TeamStatusRepositoryMock;
   let schedulerConfigRepositoryMock: SchedulerConfigRepositoryMock;
+  let aggregationlinksCategoryRepoMock: AggregationLinksCategoryMock;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -239,6 +242,11 @@ describe('TeamCrudService', () => {
           provide: getRepositoryToken(Visibility),
           useClass: VisibilityMock,
         },
+
+        {
+          provide: getRepositoryToken(AggregationLinkType),
+          useClass: AggregationLinksCategoryMock,
+        },
       ],
     }).compile();
     //userTeamService = module.get<UserTeamService>('IUserTeamService');
@@ -269,6 +277,9 @@ describe('TeamCrudService', () => {
     teamStatusRepo = module.get<TeamStatusRepositoryMock>(getRepositoryToken(TeamStatus));
     userTeamService = module.get<UserTeamService>('IUserTeamService');
     schedulerConfigRepositoryMock = module.get<SchedulerConfigRepositoryMock>(getRepositoryToken(SchedulerConfig));
+    aggregationlinksCategoryRepoMock = module.get<AggregationLinksCategoryMock>(
+      getRepositoryToken(AggregationLinkType),
+    );
   });
 
   it('should be defined after module initialization', () => {
@@ -298,6 +309,7 @@ describe('TeamCrudService', () => {
     expect(fileRepo).toBeDefined();
     expect(teamStatusRepo).toBeDefined();
     expect(schedulerConfigRepositoryMock).toBeDefined();
+    expect(aggregationlinksCategoryRepoMock).toBeDefined();
   });
 
   describe('updateTeam() should update the team', () => {
@@ -491,12 +503,13 @@ describe('TeamCrudService', () => {
         center: 'ADCenter Bangalore',
         team_code: '10012345',
         project_key: 'P12343',
-        logo: 'undefined/46455bf7-ada7-495c-8019-8d7ab76d488e/',
+        logo: 'undefinedlogo/46455bf7-ada7-495c-8019-8d7ab76d488e/',
         dashboard: dashboard,
         teamLinks: links,
         multimedia: multimedia,
         privileges: [],
         isTeamConfigured: true,
+        aggregationLinks: [],
       };
 
       //test
@@ -537,7 +550,7 @@ describe('TeamCrudService', () => {
         'view_links',
       ];
 
-      const expectedOutput: any = {
+      /* const expectedOutput: any = {
         team_id: '46455bf7-ada7-495c-8019-8d7ab76d488e',
         team_name: 'Team A',
         center: 'ADCenter Bangalore',
@@ -548,7 +561,7 @@ describe('TeamCrudService', () => {
         teamLinks: links,
         multimedia: multimedia,
         privileges: priviledgeList,
-      };
+      }; */
       jest.spyOn(userTeamService, 'isSystemAdmin').mockImplementation(() => isSystemAdmin);
       jest.spyOn(globalTeamService, 'findTeamById').mockReturnValue(team);
       jest.spyOn(userPrivilegeService, 'getUserPrivilegeForTeam').mockImplementation(() => priviledgeList);
