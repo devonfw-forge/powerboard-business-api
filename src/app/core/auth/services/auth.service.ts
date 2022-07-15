@@ -82,7 +82,8 @@ export class AuthService implements IAuthService {
       let loginResponse: LoginResponse = {} as LoginResponse;
       loginResponse.userId = payload.id;
       loginResponse.isPasswordChanged = isPassword;
-      if (userSession.lastCheckedInProjectId != null) {
+      let team = await this.globalTeamsService.findTeamById(userSession.lastCheckedInProjectId);
+      if (team != null) {
         visitedTeam = userSession.lastCheckedInProjectId;
         loginResponse.powerboardResponse = await this.getPowerboard(visitedTeam, payload.id);
       } else {
