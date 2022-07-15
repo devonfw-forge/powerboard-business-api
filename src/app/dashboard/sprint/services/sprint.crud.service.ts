@@ -97,17 +97,18 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
       const end_date = new Date(sprintForBurndown[0].sprint_end_date);
       const diff = Math.abs(new Date().getTime() - start_date.getTime());
       const diff1 = Math.abs(end_date.getTime() - start_date.getTime());
-      const currentDay = Math.ceil(diff / (1000 * 60 * 60 * 24));
+      let currentDay = Math.ceil(diff / (1000 * 60 * 60 * 24));
       const totalDays = Math.ceil(diff1 / (1000 * 60 * 60 * 24));
+      if (currentDay > totalDays) {
+        currentDay = totalDays;
+      }
       console.log(start_date + '  ' + end_date);
       console.log(currentDay + '  ' + totalDays);
-      const excludeDays = (totalDays / 7) * 2;
-      const businessDays = totalDays - excludeDays;
 
       if (sprintForBurndown[0].smt_name == 'Work Committed') {
-        return this.calculateBurnDownFirstCase(sprintForBurndown, businessDays, currentDay);
+        return this.calculateBurnDownFirstCase(sprintForBurndown, totalDays, currentDay);
       } else if (sprintForBurndown[0].smt_name == 'Work Completed') {
-        return this.calculateBurnDownSecondCase(sprintForBurndown, businessDays, currentDay);
+        return this.calculateBurnDownSecondCase(sprintForBurndown, totalDays, currentDay);
       } else {
         console.log('work spillover');
       }
