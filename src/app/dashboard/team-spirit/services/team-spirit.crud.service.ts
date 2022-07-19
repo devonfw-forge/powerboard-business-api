@@ -19,7 +19,7 @@ export class TeamSpiritCrudService extends TypeOrmCrudService<TeamSpiritMedian> 
   /**
    * It will fetch an team spirit rating of a perticular team
    */
-  async getTeamSpiritFromSurvey(teamName: string): Promise<TeamSpiritResponse | undefined> {
+  async getTeamSpiritFromSurvey(teamName: string): Promise<TeamSpiritResponse | null> {
     const surveyResult: TeamSpiritMedian = (await this.teamSpiritRepository
       .createQueryBuilder('team_spirit_median')
       .where('team_spirit_median.team_name=:team_name', { team_name: teamName })
@@ -31,7 +31,7 @@ export class TeamSpiritCrudService extends TypeOrmCrudService<TeamSpiritMedian> 
       teamSpiritResponse.teamSpiritRating = surveyResult.surveyMedian;
       return teamSpiritResponse;
     } else {
-      return undefined;
+      return null;
     }
   }
 }

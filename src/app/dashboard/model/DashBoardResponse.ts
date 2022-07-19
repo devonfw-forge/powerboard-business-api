@@ -5,15 +5,14 @@ import { TeamSpiritResponse } from '../team-spirit/model/dto/TeamSpiritResponse.
 import { BurndownResponse } from '../sprint/model/dto/BurndownResponse';
 import { VelocityComparisonResponse } from '../sprint/model/dto/VelocityComparisonResponse';
 
-
 export interface DashBoardResponse {
   teamId: string;
   sprintWorkUnit?: string;
-  teamStatus: number | undefined;
-  codeQuality: CodeQualityResponse | undefined;
-  clientStatus: ClientStatusResponse | undefined;
-  teamSpirit: TeamSpiritResponse | undefined;
-  burndown: BurndownResponse | undefined;
-  sprintDetail: SprintDetailResponse | undefined;
-  velocity: VelocityComparisonResponse | undefined;
+  teamStatus: number | null;
+  codeQuality: CodeQualityResponse | null;
+  clientStatus: ClientStatusResponse | null;
+  teamSpirit: TeamSpiritResponse | null;
+  burndown: BurndownResponse | null;
+  sprintDetail: SprintDetailResponse | null;
+  velocity: VelocityComparisonResponse | null;
 }

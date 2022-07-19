@@ -22,7 +22,7 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
   /**
    * it will fetch the current sprint details from db and create a sprint detail response
    */
-  async getSprintDetailResponse(teamId: string): Promise<SprintDetailResponse | undefined> {
+  async getSprintDetailResponse(teamId: string): Promise<SprintDetailResponse | null> {
     let sprintDetailResponse: SprintDetailResponse = {} as SprintDetailResponse;
 
     const sprintDetail = await this.sprintRepository
@@ -45,18 +45,20 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
     console.log('sprint detail response ***************************************');
     console.log(sprintDetail);
     if (sprintDetail[0] == null) {
-      return undefined;
+      return null;
     } else {
       var end_date = new Date(sprintDetail[0].sprint_end_date);
       var start_date = new Date(sprintDetail[0].sprint_start_date);
       var currentDate = new Date();
       const diff1 = Math.abs(currentDate.getTime() - start_date.getTime());
       const diff2 = Math.abs(end_date.getTime() - start_date.getTime());
-      const Sprint_current_day = Math.ceil(diff1 / (1000 * 60 * 60 * 24));
-      const Sprint_days = Math.ceil(diff2 / (1000 * 60 * 60 * 24));
-      sprintDetailResponse.Sprint_current_day = Sprint_current_day;
+      const sprint_current_day = Math.ceil(diff1 / (1000 * 60 * 60 * 24));
+      const sprint_days = Math.ceil(diff2 / (1000 * 60 * 60 * 24));
+      if (sprint_current_day <= sprint_days) {
+        sprintDetailResponse.Sprint_current_day = sprint_current_day;
+      }
       sprintDetailResponse.sprint_number = sprintDetail[0].sprint_sprint_number;
-      sprintDetailResponse.Sprint_days = Sprint_days;
+      sprintDetailResponse.Sprint_days = sprint_days;
       return sprintDetailResponse;
     }
   }
@@ -65,7 +67,7 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
   /**
    * it will retrieve the burndown report of current sprint and create a burndown response for the team
    */
-  async getBurndown(teamId: string): Promise<BurndownResponse | undefined> {
+  async getBurndown(teamId: string): Promise<BurndownResponse | null> {
     let output: BurndownResponse = {} as BurndownResponse;
 
     const sprintForBurndown = await this.sprintRepository
@@ -91,7 +93,7 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
     console.log('Get Burndown ***************************');
     console.log(sprintForBurndown);
     if (sprintForBurndown[0] == null) {
-      return undefined;
+      return null;
     } else {
       const start_date = new Date(sprintForBurndown[0].sprint_start_date);
       const end_date = new Date(sprintForBurndown[0].sprint_end_date);
@@ -187,7 +189,7 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
    * it retrieves the velocity report of current sprint and also the same for previous sprints
    * and then creates the response for the velocity comparison
    */
-  async getVelocityComparison(teamId: string): Promise<VelocityComparisonResponse | undefined> {
+  async getVelocityComparison(teamId: string): Promise<VelocityComparisonResponse | null> {
     const sprintMetricsResponse = await this.sprintRepository
       .createQueryBuilder('sprint')
       .addSelect('sprint.id', 'sprint_id')
@@ -209,7 +211,7 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
     console.log('Get Velocity Comparison ****************************************');
     console.log(sprintMetricsResponse);
     if (sprintMetricsResponse == null) {
-      return undefined;
+      return null;
     } else {
       const previousSprintCompleted = await this.sprintRepository
         .createQueryBuilder('sprint')
@@ -231,7 +233,7 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
       console.log(previousSprintCompleted);
       if (previousSprintCompleted.length == 0 || previousSprintCompleted == null) {
         console.log('ho gya');
-        return undefined;
+        return null;
       } else {
         this.velocityComparisonResponse.Avg = this.getAverageVelocity(previousSprintCompleted);
         this.velocityComparisonResponse.updatedAt = sprintMetricsResponse[0].ss_date_time;

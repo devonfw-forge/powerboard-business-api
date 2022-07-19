@@ -254,7 +254,7 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
   /**
    * It will update an status of the team.
    */
-  async updateTeamStatus(teamId: string, status: number | undefined) {
+  async updateTeamStatus(teamId: string, status: number | null) {
     const teamExisted = (await this.teamRepository.findOne({ where: { id: teamId } })) as Team;
     teamExisted.isStatusChanged = false;
     teamExisted.team_status = (await this.teamStatusRepository.findOne({ where: { id: status } })) as TeamStatus;

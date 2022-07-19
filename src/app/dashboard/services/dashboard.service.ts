@@ -34,21 +34,21 @@ export class DashboardService implements IDashboardService {
   async getDashboardByTeamId(team: Team): Promise<DashBoardResponse> {
     this.dash.teamId = team.id;
 
-    const codeQuality: CodeQualityResponse | undefined = await this.codequalityService.getCodeQualitySnapshot(team.id);
+    const codeQuality: CodeQualityResponse | null = await this.codequalityService.getCodeQualitySnapshot(team.id);
 
     this.dash.codeQuality = codeQuality;
 
-    const clientStatus: ClientStatusResponse | undefined = await this.clientStatusService.getClientFeedback(team.id);
+    const clientStatus: ClientStatusResponse | null = await this.clientStatusService.getClientFeedback(team.id);
 
     this.dash.clientStatus = clientStatus;
 
-    const teamSpirit: TeamSpiritResponse | undefined = await this.teamSpiritServiceInterface.getTeamSpiritFromSurvey(
+    const teamSpirit: TeamSpiritResponse | null = await this.teamSpiritServiceInterface.getTeamSpiritFromSurvey(
       team.name,
     );
 
     this.dash.teamSpirit = teamSpirit;
 
-    const sprintDetail: SprintDetailResponse | undefined = await this.sprintService.getSprintDetailResponse(team.id);
+    const sprintDetail: SprintDetailResponse | null = await this.sprintService.getSprintDetailResponse(team.id);
 
     this.dash.sprintDetail = sprintDetail;
     var sprintUpdatedDate: string = '';
@@ -56,7 +56,7 @@ export class DashboardService implements IDashboardService {
       sprintUpdatedDate = await this.sprintService.getLastUpdatedSprintDate(team.id);
     }
 
-    const burndown: BurndownResponse | undefined = await this.sprintService.getBurndown(team.id);
+    const burndown: BurndownResponse | null = await this.sprintService.getBurndown(team.id);
 
     this.dash.burndown = burndown;
     this.dash.sprintWorkUnit = burndown?.workUnit;
@@ -64,9 +64,9 @@ export class DashboardService implements IDashboardService {
       this.dash.burndown.updatedAt = sprintUpdatedDate;
     }
 
-    const velocityComparisonDTO:
-      | VelocityComparisonResponse
-      | undefined = await this.sprintService.getVelocityComparison(team.id);
+    const velocityComparisonDTO: VelocityComparisonResponse | null = await this.sprintService.getVelocityComparison(
+      team.id,
+    );
 
     this.dash.velocity = velocityComparisonDTO;
     if (this.dash.velocity) {
@@ -79,9 +79,9 @@ export class DashboardService implements IDashboardService {
   /**
    * It calculates the consolidated status of all respective KPIs of dashboard
    */
-  fetchStatus(dashboard: DashBoardResponse): number | undefined {
+  fetchStatus(dashboard: DashBoardResponse): number | null {
     let statusResult;
-    if (dashboard?.clientStatus == null) {
+    if (dashboard?.clientStatus == null || dashboard.codeQuality == null) {
       statusResult = 2;
       return statusResult;
     } else {

@@ -21,7 +21,7 @@ export class ClientStatusCrudService extends TypeOrmCrudService<ClientStatus> {
    * It will fetch the client's satisfaction rating from db for a particular team in a particular sprint
    * and returns it back
    */
-  async getClientFeedback(team_Id: string): Promise<ClientStatusResponse | undefined> {
+  async getClientFeedback(team_Id: string): Promise<ClientStatusResponse | null> {
     const sprint = (await this.sprintRepository
       .createQueryBuilder('sprint')
       .where('sprint.team_id=:team_id', { team_id: team_Id })
@@ -30,7 +30,22 @@ export class ClientStatusCrudService extends TypeOrmCrudService<ClientStatus> {
       .take(1)
       .getOne()) as Sprint;
     if (sprint == null) {
-      return undefined;
+      /*  console.log("#@#@#@#@#@# check sprint is nulll #@#@#@#@#");
+      const clientStatus = (await this.clientRepository
+        .createQueryBuilder('client_status')
+        .orderBy('client_status.updatedAt', 'DESC')
+        .limit(1)
+        .getOne()) as ClientStatus;
+        console.log(clientStatus);
+        if(clientStatus == null){
+          return null;
+        }
+        else {
+          this.clientStatus.clientSatisfactionRating = clientStatus.client_rating;
+          this.clientStatus.sprintNumber = null;
+          return this.clientStatus;
+        } */
+      return null;
     }
 
     const clientStatus = (await this.clientRepository
@@ -39,7 +54,7 @@ export class ClientStatusCrudService extends TypeOrmCrudService<ClientStatus> {
       .limit(1)
       .getOne()) as ClientStatus;
     if (clientStatus == null) {
-      return undefined;
+      return null;
     } else {
       this.clientStatus.clientSatisfactionRating = clientStatus.client_rating;
       this.clientStatus.sprintNumber = sprint.sprint_number;
