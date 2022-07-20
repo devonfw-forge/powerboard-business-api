@@ -22,42 +22,44 @@ export class ClientStatusCrudService extends TypeOrmCrudService<ClientStatus> {
    * and returns it back
    */
   async getClientFeedback(team_Id: string): Promise<ClientStatusResponse | null> {
-    const sprint = (await this.sprintRepository
+    let selectedSprintId: string = '';
+    let selectedSprintNumber: number = 0;
+
+    const activeSprints: any = (await this.sprintRepository
       .createQueryBuilder('sprint')
-      .where('sprint.team_id=:team_id', { team_id: team_Id })
-      .orderBy('sprint.sprint_number', 'DESC')
-      /* .skip(1) */
-      .take(1)
-      .getOne()) as Sprint;
-    if (sprint == null) {
-      /*  console.log("#@#@#@#@#@# check sprint is nulll #@#@#@#@#");
-      const clientStatus = (await this.clientRepository
-        .createQueryBuilder('client_status')
-        .orderBy('client_status.updatedAt', 'DESC')
-        .limit(1)
-        .getOne()) as ClientStatus;
-        console.log(clientStatus);
-        if(clientStatus == null){
-          return null;
+      .where('sprint.team_id =:team_Id', { team_Id: team_Id })
+      .orderBy('sprint.end_date', 'DESC')
+      .getRawMany()) as Sprint[];
+    console.log('$$$$$$$$$$$$  these are list of sprints   $$$$$$');
+    console.log(activeSprints);
+    if (activeSprints) {
+      let sprintFound: boolean = false;
+      let date = new Date();
+      for (let sprint of activeSprints) {
+        if (date > sprint.sprint_end_date) {
+          selectedSprintId = sprint.sprint_id;
+          selectedSprintNumber = sprint.sprint_sprint_number;
+          sprintFound = true;
+          break;
         }
-        else {
-          this.clientStatus.clientSatisfactionRating = clientStatus.client_rating;
-          this.clientStatus.sprintNumber = null;
-          return this.clientStatus;
-        } */
+      }
+      if (!sprintFound) {
+        return null;
+      }
+    } else {
       return null;
     }
 
     const clientStatus = (await this.clientRepository
       .createQueryBuilder('client_status')
-      .where('client_status.sprintId=:sprintId', { sprintId: sprint.id })
+      .where('client_status.sprintId=:sprintId', { sprintId: selectedSprintId })
       .limit(1)
       .getOne()) as ClientStatus;
     if (clientStatus == null) {
       return null;
     } else {
       this.clientStatus.clientSatisfactionRating = clientStatus.client_rating;
-      this.clientStatus.sprintNumber = sprint.sprint_number;
+      this.clientStatus.sprintNumber = selectedSprintNumber;
       return this.clientStatus;
     }
   }
