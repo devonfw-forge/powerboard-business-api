@@ -379,11 +379,11 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
         }
       }
       if (!sprintFound) {
-        throw new NotFoundException('Cannnot upload client rating');
+        throw new NotFoundException('Cannnot upload client rating, Reason: No sprints found');
       }
       return 'can upload client rating';
     } else {
-      throw new NotFoundException('Cannot upload client rating, no sprints found');
+      throw new NotFoundException('Cannnot upload client rating, Reason: No sprints found');
     }
   }
 }
