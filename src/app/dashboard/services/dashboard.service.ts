@@ -63,16 +63,18 @@ export class DashboardService implements IDashboardService {
     if (this.dash.burndown) {
       this.dash.burndown.updatedAt = sprintUpdatedDate;
     }
-
+    console.log('%%%%%%%% abive velocity comparision in dashboard');
     const velocityComparisonDTO: VelocityComparisonResponse | null = await this.sprintService.getVelocityComparison(
       team.id,
     );
-
+    console.log('##@#@#@#@#@#@#@#@ Below velocity comparision dashboard');
     this.dash.velocity = velocityComparisonDTO;
     if (this.dash.velocity) {
       this.dash.velocity.updatedAt = sprintUpdatedDate;
     }
+    console.log('$$$$$$$$$$$$$$$ before fetch status in dashboard  $$$$$');
     this.dash.teamStatus = this.fetchStatus(this.dash);
+    console.log('%%%%%%%%% After fetch status in dashboard');
     return this.dash;
   }
 

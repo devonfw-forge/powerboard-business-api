@@ -20,4 +20,5 @@ export interface IGlobalTeamsService {
   uploadJSONFileToAggregationService(file: any, teamId: string, type: string): Promise<any>;
   updateClientRating(clientRating: any, type: string, teamId: string): Promise<any>;
   updateTeamConfigurationCompleted(teamId: string, isTeamConfiguredStatus: boolean): Promise<Team>;
+  canUploadClientRating(teamId: string): Promise<string>;
 }

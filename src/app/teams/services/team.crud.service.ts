@@ -67,9 +67,11 @@ export class TeamCrudService extends TypeOrmCrudService<Team> implements ITeamSe
     } else {
       this.powerboardResponse.logo = `${this.globalLink}/${teamId}/` + teams.logo;
     }
-
+    console.log('@@@@@@@@@@@@@ Above dashboard @@@@@@@');
     this.powerboardResponse.dashboard = await this.dashboardService.getDashboardByTeamId(teams);
+    console.log('@@@@@@@@@@@@@@@@ Below dashboard');
     this.powerboardResponse.teamLinks = await this.getLinksForTeam(teams.id, privilegeList);
+    console.log('$$$$$$$$$$$$$  Below get links');
     this.powerboardResponse.aggregationLinks = await this.getAggregationLinksForTeam(teams.id);
     this.powerboardResponse.multimedia = await this.getMultimediaForTeam(teams.id);
 

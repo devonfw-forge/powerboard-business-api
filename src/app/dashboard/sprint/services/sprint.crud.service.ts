@@ -210,7 +210,7 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
 
     console.log('Get Velocity Comparison ****************************************');
     console.log(sprintMetricsResponse);
-    if (sprintMetricsResponse == null) {
+    if (sprintMetricsResponse.length == 0) {
       return null;
     } else {
       const previousSprintCompleted = await this.sprintRepository
@@ -232,16 +232,20 @@ export class SprintCrudService extends TypeOrmCrudService<Sprint> implements ISp
       console.log('Previous sprint completed ***********************');
       console.log(previousSprintCompleted);
       if (previousSprintCompleted.length == 0 || previousSprintCompleted == null) {
-        console.log('ho gya');
-        return null;
+        this.velocityComparisonResponse.Avg = 0;
       } else {
         this.velocityComparisonResponse.Avg = this.getAverageVelocity(previousSprintCompleted);
-        this.velocityComparisonResponse.updatedAt = sprintMetricsResponse[0].ss_date_time;
-        this.velocityComparisonResponse = this.getVelocityData(sprintMetricsResponse);
-        console.log('velocccittttttttttyyyyy');
-        console.log(this.velocityComparisonResponse);
-        return this.velocityComparisonResponse;
       }
+
+      this.velocityComparisonResponse.updatedAt = sprintMetricsResponse[0].ss_date_time;
+
+      this.velocityComparisonResponse = this.getVelocityData(sprintMetricsResponse);
+
+      console.log('velocccittttttttttyyyyy');
+
+      console.log(this.velocityComparisonResponse);
+
+      return this.velocityComparisonResponse;
     }
   }
 
