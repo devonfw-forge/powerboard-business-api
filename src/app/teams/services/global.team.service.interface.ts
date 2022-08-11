@@ -15,9 +15,10 @@ export interface IGlobalTeamsService {
   viewTeamsInADC(teamId: string): any;
   findTeamById(teamId: string): Promise<Team | undefined>;
   findStatusByTeam(team: Team): Promise<number | undefined>;
-  updateTeamStatus(teamId: string, status: number | undefined): Promise<any>;
+  updateTeamStatus(teamId: string, status: number | null): Promise<any>;
   uploadFileToAggregationService(file: any, teamId: string, type: string): Promise<any>;
   uploadJSONFileToAggregationService(file: any, teamId: string, type: string): Promise<any>;
   updateClientRating(clientRating: any, type: string, teamId: string): Promise<any>;
   updateTeamConfigurationCompleted(teamId: string, isTeamConfiguredStatus: boolean): Promise<Team>;
+  canUploadClientRating(teamId: string): Promise<string>;
 }

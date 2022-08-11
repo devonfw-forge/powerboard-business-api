@@ -3,9 +3,9 @@ import { SprintDetailResponse } from '../model/dto/SprintDetailResponse';
 import { VelocityComparisonResponse } from '../model/dto/VelocityComparisonResponse';
 
 export interface ISprintCrudService {
-  getSprintDetailResponse(teamId: string): Promise<SprintDetailResponse | undefined>;
-  getBurndown(teamId: string): Promise<BurndownResponse | undefined>;
-  getVelocityComparison(teamId: string): Promise<VelocityComparisonResponse | undefined>;
+  getSprintDetailResponse(teamId: string): Promise<SprintDetailResponse | null>;
+  getBurndown(teamId: string): Promise<BurndownResponse | null>;
+  getVelocityComparison(teamId: string): Promise<VelocityComparisonResponse | null>;
   getLastUpdatedSprintDate(teamId: string): Promise<string>;
   // sprintWorkUnit(teamId: string): Promise<SprintWorkUnitResponse | undefined>
 }

@@ -22,11 +22,13 @@ import { TeamStatus } from '../model/entities/team_status.entity';
 import * as dotenv from 'dotenv';
 import { TeamResponse } from '../model/dto/TeamResponse';
 import xlsx from 'node-xlsx';
+import { Sprint } from '../../dashboard/sprint/model/entities/sprint.entity';
 dotenv.config();
 @Injectable()
 export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlobalTeamsService {
   constructor(
     @InjectRepository(Team) private readonly teamRepository: Repository<Team>,
+    @InjectRepository(Sprint) private readonly sprintRepository: Repository<Sprint>,
     @InjectRepository(TeamStatus) private readonly teamStatusRepository: Repository<TeamStatus>,
     @InjectRepository(ADCenter) readonly centerRepository: Repository<ADCenter>,
     @Inject('IDashboardService') private readonly dashboardService: IDashboardService,
@@ -254,7 +256,7 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
   /**
    * It will update an status of the team.
    */
-  async updateTeamStatus(teamId: string, status: number | undefined) {
+  async updateTeamStatus(teamId: string, status: number | null) {
     const teamExisted = (await this.teamRepository.findOne({ where: { id: teamId } })) as Team;
     teamExisted.isStatusChanged = false;
     teamExisted.team_status = (await this.teamStatusRepository.findOne({ where: { id: status } })) as TeamStatus;
@@ -358,5 +360,30 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
     }
     teamExisted.isTeamConfigured = isTeamConfiguredStatus;
     return this.teamRepository.save(teamExisted);
+  }
+
+  async canUploadClientRating(teamId: string): Promise<string> {
+    const activeSprints: any = (await this.sprintRepository
+      .createQueryBuilder('sprint')
+      .where('sprint.team_id =:team_Id', { team_Id: teamId })
+      .orderBy('sprint.end_date', 'DESC')
+      .getRawMany()) as Sprint[];
+    console.log(activeSprints);
+    if (activeSprints) {
+      let sprintFound: boolean = false;
+      let date = new Date();
+      for (let sprint of activeSprints) {
+        if (date > sprint.sprint_end_date) {
+          sprintFound = true;
+          break;
+        }
+      }
+      if (!sprintFound) {
+        throw new NotFoundException('Cannnot upload client rating, Reason: No sprints found');
+      }
+      return 'can upload client rating';
+    } else {
+      throw new NotFoundException('Cannnot upload client rating, Reason: No sprints found');
+    }
   }
 }

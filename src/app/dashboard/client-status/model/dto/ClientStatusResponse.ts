@@ -1,4 +1,4 @@
 export interface ClientStatusResponse {
   clientSatisfactionRating: number;
-  sprintNumber: number;
+  sprintNumber: number | null;
 }

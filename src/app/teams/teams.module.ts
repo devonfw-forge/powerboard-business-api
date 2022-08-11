@@ -11,10 +11,11 @@ import { MultimediaModule } from '../multimedia/multimedia.module';
 import { FileStorageModule } from '../file-storage/file-storage.module';
 import { GlobalTeamsService } from './services/global.team.service';
 import { TeamStatus } from './model/entities/team_status.entity';
+import { Sprint } from '../dashboard/sprint/model/entities/sprint.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Team, ADCenter, TeamStatus]),
+    TypeOrmModule.forFeature([Team, ADCenter, TeamStatus, Sprint]),
     DashboardModule,
     MultimediaModule,
     VisibilityModule,

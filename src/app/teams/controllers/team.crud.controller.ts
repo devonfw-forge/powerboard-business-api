@@ -147,6 +147,13 @@ export class TeamCrudController {
     res.status(200).json(result);
   }
 
+  @Get('dataUpload/canUploadClientRating/:teamId')
+  //@UseGuards(AuthGuard('jwt'))
+  async canUploadClientRating(@Param('teamId') teamId: string, @Response() res: eResponse): Promise<void> {
+    const result = await this.globalTeamsService.canUploadClientRating(teamId);
+    res.status(200).json(result);
+  }
+
   @Put('teamConfigured/:teamId')
   //@UseGuards(AuthGuard('jwt'))
   async updateTeamConfigured(

@@ -17,11 +17,11 @@ export class CodeQualitySnapshotCrudService
   }
 
   /**
-  * It will fetch the code quality from db for a particular team in a particular sprint 
-  * and returns it back 
-  */
+   * It will fetch the code quality from db for a particular team in a particular sprint
+   * and returns it back
+   */
   codeQualityResponse: CodeQualityResponse = {} as CodeQualityResponse;
-  async getCodeQualitySnapshot(team_Id: string): Promise<CodeQualityResponse | undefined> {
+  async getCodeQualitySnapshot(team_Id: string): Promise<CodeQualityResponse | null> {
     const result = (await this.codeQualityRepository
       .createQueryBuilder('code_quality_snapshot')
       .where('code_quality_snapshot.team_id=:team_id', { team_id: team_Id })
@@ -29,7 +29,7 @@ export class CodeQualitySnapshotCrudService
       .limit(1)
       .getOne()) as CodeQualitySnapshot;
     if (result == null) {
-      return undefined;
+      return null;
     } else {
       this.codeQualityResponse.bugs = result.bugs;
       this.codeQualityResponse.codeSmells = result.codeSmells;
