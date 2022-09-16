@@ -43,7 +43,7 @@ export class DashboardService implements IDashboardService {
     this.dash.clientStatus = clientStatus;
 
     const teamSpirit: TeamSpiritResponse | null = await this.teamSpiritServiceInterface.getTeamSpiritFromSurvey(
-      team.name,
+      team.id,
     );
 
     this.dash.teamSpirit = teamSpirit;

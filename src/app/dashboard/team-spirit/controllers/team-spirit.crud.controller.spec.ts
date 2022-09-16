@@ -28,11 +28,11 @@ describe('TeamSpiritController', () => {
 
   describe('getTeamSpiritFromSurvery()', () => {
     it('should fetch the team spirit rating for the team', async () => {
-      const teamName = 'Team A';
+      const teamId = '46455bf7-ada7-495c-8019-8d7ab76d488e';
 
       const teamSpiritRating = 7;
       jest.spyOn(teamSpiritService, 'getTeamSpiritFromSurvey').mockImplementation(() => teamSpiritRating);
-      const result = await teamSpiritController.getTeamSpiritFromSurvery(teamName);
+      const result = await teamSpiritController.getTeamSpiritFromSurvery(teamId);
       expect(result).toBe(teamSpiritRating);
     });
   });

@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, NotImplementedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { Repository } from 'typeorm';
@@ -18,6 +18,7 @@ import { IUserPrivilegeService } from '../../core/user/services/user-privilege.s
 import { ITeamService } from './team.service.interface';
 import { IGlobalTeamsService } from './global.team.service.interface';
 import * as dotenv from 'dotenv';
+import { ITeamSpiritService } from '../../dashboard/team-spirit/services/team-spirit.interface';
 dotenv.config();
 @Injectable()
 export class TeamCrudService extends TypeOrmCrudService<Team> implements ITeamService {
@@ -31,6 +32,7 @@ export class TeamCrudService extends TypeOrmCrudService<Team> implements ITeamSe
     @Inject('IUserTeamService') private readonly userTeamService: IUserTeamService,
     @Inject('IUserPrivilegeService') private readonly userPrivilegeService: IUserPrivilegeService,
     @Inject('IGlobalTeamService') private readonly globalTeamService: IGlobalTeamsService,
+    @Inject('ITeamSpiritService') private readonly teamSpiritService: ITeamSpiritService,
   ) {
     super(teamRepository);
   }
@@ -67,11 +69,9 @@ export class TeamCrudService extends TypeOrmCrudService<Team> implements ITeamSe
     } else {
       this.powerboardResponse.logo = `${this.globalLink}/${teamId}/` + teams.logo;
     }
-    console.log('@@@@@@@@@@@@@ Above dashboard @@@@@@@');
+
     this.powerboardResponse.dashboard = await this.dashboardService.getDashboardByTeamId(teams);
-    console.log('@@@@@@@@@@@@@@@@ Below dashboard');
     this.powerboardResponse.teamLinks = await this.getLinksForTeam(teams.id, privilegeList);
-    console.log('$$$$$$$$$$$$$  Below get links');
     this.powerboardResponse.aggregationLinks = await this.getAggregationLinksForTeam(teams.id);
     this.powerboardResponse.multimedia = await this.getMultimediaForTeam(teams.id);
 
@@ -126,15 +126,47 @@ export class TeamCrudService extends TypeOrmCrudService<Team> implements ITeamSe
    * It will update details like name, projectKey, teamcode in team, and
    * if team not found then will throw an exception.
    */
-  async updateTeam(updateTeam: UpdateTeam, teamId: string): Promise<Team> {
-    const teamExisted = (await this.teamRepository.findOne(teamId)) as Team;
+  async updateTeam(updateTeam: UpdateTeam, teamId: string): Promise<any> {
+    let error: string="";
+    console.log("reached update team service=====================");
+    console.log(updateTeam);
+    const teamExisted: Team = (await this.teamRepository.findOne(teamId)) as Team;
     if (!teamExisted) {
       throw new NotFoundException('Team Not Found');
     }
-    teamExisted.name = updateTeam.teamName;
-    teamExisted.projectKey = updateTeam.projectKey;
-    teamExisted.teamCode = updateTeam.teamCode;
-    return this.teamRepository.save(teamExisted);
+    try{
+      teamExisted.name = updateTeam.teamName;
+      teamExisted.projectKey = updateTeam.projectKey;
+      teamExisted.teamCode = updateTeam.teamCode;
+      console.log("update team method");
+      await this.teamRepository.save(teamExisted);
+      error = ",";
+    }
+    catch(E){
+      error="Unable to update Team,";
+    }
+    try{
+      const teamSpirit = await this.globalTeamService.checkTeamSpiritTeamName(updateTeam.teamSpiritTeamName);
+      if(teamSpirit){
+        const data = await this.teamSpiritService.updateTeamSpiritName(teamId, updateTeam.teamSpiritTeamName);
+        if(data){
+          if(data == "restart"){
+            this.globalTeamService.restartTeamSpiritScheduler(teamId);
+          }
+          if(data == "start"){
+            this.globalTeamService.triggerTeamSpiritScheduler(teamId);
+          }
+        }
+      }
+      error=error+"";
+    }
+    catch(E){
+      error = error+"Team Name not found in Team Spirit application";
+    }
+    if(error.length>1){
+      throw new NotImplementedException(error);
+    }
+    return "Team Updated Successfully";
   }
 
   /**

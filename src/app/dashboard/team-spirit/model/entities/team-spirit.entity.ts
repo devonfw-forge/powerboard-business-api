@@ -1,13 +1,13 @@
-import { Sprint } from '../../../sprint/model/entities/sprint.entity';
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../../../shared/model/entities/base-entity.entity';
+import { Team } from '../../../../teams/model/entities/team.entity';
 
 @Entity()
 export class TeamSpirit extends BaseEntity {
-  @Column('int', { nullable: false })
-  team_spirit_rating!: number;
+  @Column('varchar', {  name: 'team_name', length: 255, unique: true, nullable: false })
+  teamName!: string;
 
-  @OneToOne(() => Sprint, { eager: true, onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'sprint_id', referencedColumnName: 'id' })
-  sprint!: Sprint;
+  @ManyToOne(() => Team, { eager: true, onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'team_id', referencedColumnName: 'id' })
+  team!: Team;
 }
