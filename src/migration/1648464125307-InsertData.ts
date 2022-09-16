@@ -214,26 +214,26 @@ export class InsertData1648464125307 implements MigrationInterface {
     );
 
     await queryRunner.query(
-      `INSERT INTO "team_spirit" ("id","team_spirit_rating", "sprint_id") VALUES ('20111bf8-ada5-495c-8019-8d7ab76d488e', 8, '20355bf8-ada5-495c-8019-8d7ab76d488e');`,
+      `INSERT INTO "team_spirit" ("id","team_name", "team_id") VALUES ('20111bf8-ada5-495c-8019-8d7ab76d488e', 'Team A', '46455bf7-ada7-495c-8019-8d7ab76d488e');`,
     );
     await queryRunner.query(
-      `INSERT INTO "team_spirit" ("id","team_spirit_rating", "sprint_id") VALUES ('20112bf8-ada5-495c-8019-8d7ab76d488e', 9, '20555bf8-ada5-495c-8019-8d7ab76d488e');`,
+      `INSERT INTO "team_spirit" ("id","team_name", "team_id") VALUES ('20112bf8-ada5-495c-8019-8d7ab76d488e', 'Team B', '46455bf7-ada7-495c-8019-8d7ab76d489e');`,
     );
     await queryRunner.query(
-      `INSERT INTO "team_spirit" ("id","team_spirit_rating", "sprint_id") VALUES ('20113bf8-ada5-495c-8019-8d7ab76d488e', 7, '20455bf8-ada5-495c-8019-8d7ab76d488e');`,
+      `INSERT INTO "team_spirit" ("id","team_name", "team_id") VALUES ('20113bf8-ada5-495c-8019-8d7ab76d488e', 'Team C', '46455bf7-ada7-495c-8019-8d7ab76d490e');`,
     );
     await queryRunner.query(
-      `INSERT INTO "team_spirit_median" ("id", "survey_median","start_date","end_date","survey_code","team_name") VALUES ('70013bf8-ada5-495c-8019-8d7ab76d488e', 8,'2021-05-15 14:15:36','2021-05-25 14:15:30' ,'AZR32' ,'Team A');`,
+      `INSERT INTO "team_spirit_median" ("id", "survey_median","start_date","end_date","survey_code","team_id") VALUES ('70013bf8-ada5-495c-8019-8d7ab76d488e', 8,'2021-05-15 14:15:36','2021-05-25 14:15:30' ,'AZR32' ,'46455bf7-ada7-495c-8019-8d7ab76d488e');`,
     );
 
     await queryRunner.query(
-      `INSERT INTO "team_spirit_median" ("id", "survey_median","start_date","end_date","survey_code","team_name") VALUES ('70023bf8-ada5-495c-8019-8d7ab76d488e', 9,'2021-06-22 13:20:34','2021-07-02 13:25:40' ,'AZ4r52' ,'Team C');`,
+      `INSERT INTO "team_spirit_median" ("id", "survey_median","start_date","end_date","survey_code","team_id") VALUES ('70023bf8-ada5-495c-8019-8d7ab76d488e', 9,'2021-06-22 13:20:34','2021-07-02 13:25:40' ,'AZ4r52' ,'46455bf7-ada7-495c-8019-8d7ab76d490e');`,
     );
     await queryRunner.query(
-      `INSERT INTO "team_spirit_median" ("id", "survey_median","start_date","end_date","survey_code","team_name") VALUES ('70033bf8-ada5-495c-8019-8d7ab76d488e', 7,'2021-06-22 13:20:34','2021-07-02 13:25:40' ,'AZ4r52' ,'Team B');`,
+      `INSERT INTO "team_spirit_median" ("id", "survey_median","start_date","end_date","survey_code","team_id") VALUES ('70033bf8-ada5-495c-8019-8d7ab76d488e', 7,'2021-06-22 13:20:34','2021-07-02 13:25:40' ,'AZ4r52' ,'46455bf7-ada7-495c-8019-8d7ab76d489e');`,
     );
     await queryRunner.query(
-      `INSERT INTO "team_spirit_median" ("id", "survey_median","start_date","end_date","survey_code","team_name") VALUES ('70043bf8-ada5-495c-8019-8d7ab76d488e', 7,'2021-06-22 13:20:34','2021-07-02 13:25:40' ,'AZ4r52' ,'Team D');`,
+      `INSERT INTO "team_spirit_median" ("id", "survey_median","start_date","end_date","survey_code","team_id") VALUES ('70043bf8-ada5-495c-8019-8d7ab76d488e', 7,'2021-06-22 13:20:34','2021-07-02 13:25:40' ,'AZ4r52' ,'46455bf7-ada7-495c-8019-8d7ab76d491e');`,
     );
 
     await queryRunner.query(
@@ -556,6 +556,7 @@ export class InsertData1648464125307 implements MigrationInterface {
     await queryRunner.query(`ALTER TABLE "team" DROP CONSTRAINT "FK_8e571805766848ea10996a178d4"`);
     await queryRunner.query(`ALTER TABLE "scheduler_config" DROP CONSTRAINT "FK_7b2ee3be6cb91acc30601f89a0e"`);
     await queryRunner.query(`ALTER TABLE "scheduler_config" DROP CONSTRAINT "FK_3e62048601a169eeaf76e86ac9e"`);
+    await queryRunner.query(`ALTER TABLE "cron_job" DROP CONSTRAINT "FK_6f8e6ea60e1c237e91a86a6094e"`);
     await queryRunner.query(`DROP INDEX "IDX_97a74e8a9913478806bd9258de"`);
     await queryRunner.query(`DROP INDEX "IDX_b5953b98d1159f75a3156d071a"`);
     await queryRunner.query(`DROP TABLE "user_role_privilege"`);
@@ -584,5 +585,6 @@ export class InsertData1648464125307 implements MigrationInterface {
     await queryRunner.query(`DROP TABLE "ad_center"`);
     await queryRunner.query(`DROP TABLE "scheduler_config"`);
     await queryRunner.query(`DROP TABLE "aggregation_link_type"`);
+    await queryRunner.query(`DROP TABLE "cron_job"`);
   }
 }

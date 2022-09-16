@@ -1,5 +1,7 @@
 import { TeamSpiritResponse } from '../model/dto/TeamSpiritResponse.dto';
 
 export interface ITeamSpiritService {
-  getTeamSpiritFromSurvey(teamName: string): Promise<TeamSpiritResponse | null>;
+  getTeamSpiritFromSurvey(teamId: string): Promise<TeamSpiritResponse | undefined>;
+  updateTeamSpiritName(teamId: string, teamSpiritName: string): Promise<any>;
+  getTeamSpiritTeamName(teamId: string): Promise<string>;
 }

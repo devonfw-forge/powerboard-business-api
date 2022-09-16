@@ -22,13 +22,11 @@ import { TeamStatus } from '../model/entities/team_status.entity';
 import * as dotenv from 'dotenv';
 import { TeamResponse } from '../model/dto/TeamResponse';
 import xlsx from 'node-xlsx';
-import { Sprint } from '../../dashboard/sprint/model/entities/sprint.entity';
 dotenv.config();
 @Injectable()
 export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlobalTeamsService {
   constructor(
     @InjectRepository(Team) private readonly teamRepository: Repository<Team>,
-    @InjectRepository(Sprint) private readonly sprintRepository: Repository<Sprint>,
     @InjectRepository(TeamStatus) private readonly teamStatusRepository: Repository<TeamStatus>,
     @InjectRepository(ADCenter) readonly centerRepository: Repository<ADCenter>,
     @Inject('IDashboardService') private readonly dashboardService: IDashboardService,
@@ -130,7 +128,13 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
     const teamExisted = await this.teamRepository.findOne({ where: { teamCode: teamCode } });
     console.log(teamExisted);
     if (teamExisted) {
-      throw new ConflictException('team already registered');
+      if (teamExisted.name == addteam.teamName) {
+        throw new ConflictException('Team name already exist');
+      } else if (teamExisted.projectKey == addteam.projectKey) {
+        throw new ConflictException('Project Key already exist');
+      } else {
+        throw new ConflictException('Team Code already exist');
+      }
     } else {
       console.log('start adding team');
       let team: Team = new Team();
@@ -256,7 +260,7 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
   /**
    * It will update an status of the team.
    */
-  async updateTeamStatus(teamId: string, status: number | null) {
+  async updateTeamStatus(teamId: string, status: number | undefined) {
     const teamExisted = (await this.teamRepository.findOne({ where: { id: teamId } })) as Team;
     teamExisted.isStatusChanged = false;
     teamExisted.team_status = (await this.teamStatusRepository.findOne({ where: { id: status } })) as TeamStatus;
@@ -353,6 +357,78 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
     }
   }
 
+  async triggerTeamSpiritScheduler(teamId: string): Promise<any> {
+    try {
+      const url = process.env.AGGREGATION_SERVICE_URL;
+      const response = await this.httpService
+        .get(url + 'data-aggregation/team-spirit-rating/' + teamId)
+        .toPromise()
+        .then(async (res: any) => {
+          return res.data;
+        });
+      return response;
+    } catch (error: any) {
+      /* if (error.response.data.statusCode === 404) {
+        throw new NotFoundException(error.response.data.message);
+      }
+      if (error.response.data.statusCode === 406) {
+        throw new NotAcceptableException(error.response.data.message);
+      }
+      if (error.response.data.statusCode === 409) {
+        throw new ConflictException(error.response.data.message);
+      } */
+      console.log(error.response.data.message);
+    }
+  }
+
+  async restartTeamSpiritScheduler(teamId: string): Promise<any> {
+    try {
+      const url = process.env.AGGREGATION_SERVICE_URL;
+      const response = await this.httpService
+        .get(url + 'data-aggregation/restart-team-spirit-scheduler/' + teamId)
+        .toPromise()
+        .then(async (res: any) => {
+          return res.data;
+        });
+      return response;
+    } catch (error: any) {
+      /* if (error.response.data.statusCode === 404) {
+        throw new NotFoundException(error.response.data.message);
+      }
+      if (error.response.data.statusCode === 406) {
+        throw new NotAcceptableException(error.response.data.message);
+      }
+      if (error.response.data.statusCode === 409) {
+        throw new ConflictException(error.response.data.message);
+      } */
+      console.log(error.response.data.message);
+    }
+  }
+
+  async checkTeamSpiritTeamName(teamName: string): Promise<any> {
+    try {
+      const url = process.env.AGGREGATION_SERVICE_URL;
+      const response = await this.httpService
+        .get(url + 'data-aggregation/check-team-spirit-team-name/' + teamName)
+        .toPromise()
+        .then(async (res: any) => {
+          return res.data;
+        });
+      return response;
+    } catch (error: any) {
+      if (error.response.data.statusCode === 404) {
+        throw new NotFoundException(error.response.data.message);
+      }
+      if (error.response.data.statusCode === 406) {
+        throw new NotAcceptableException(error.response.data.message);
+      }
+      if (error.response.data.statusCode === 409) {
+        throw new ConflictException(error.response.data.message);
+      }
+      console.log(error.response.data.message);
+    }
+  }
+
   async updateTeamConfigurationCompleted(teamId: string, isTeamConfiguredStatus: boolean): Promise<Team> {
     const teamExisted = (await this.teamRepository.findOne(teamId)) as Team;
     if (!teamExisted) {
@@ -360,30 +436,5 @@ export class GlobalTeamsService extends TypeOrmCrudService<Team> implements IGlo
     }
     teamExisted.isTeamConfigured = isTeamConfiguredStatus;
     return this.teamRepository.save(teamExisted);
-  }
-
-  async canUploadClientRating(teamId: string): Promise<string> {
-    const activeSprints: any = (await this.sprintRepository
-      .createQueryBuilder('sprint')
-      .where('sprint.team_id =:team_Id', { team_Id: teamId })
-      .orderBy('sprint.end_date', 'DESC')
-      .getRawMany()) as Sprint[];
-    console.log(activeSprints);
-    if (activeSprints) {
-      let sprintFound: boolean = false;
-      let date = new Date();
-      for (let sprint of activeSprints) {
-        if (date > sprint.sprint_end_date) {
-          sprintFound = true;
-          break;
-        }
-      }
-      if (!sprintFound) {
-        throw new NotFoundException('Cannnot upload client rating, Reason: No sprints found');
-      }
-      return 'can upload client rating';
-    } else {
-      throw new NotFoundException('Cannnot upload client rating, Reason: No sprints found');
-    }
   }
 }

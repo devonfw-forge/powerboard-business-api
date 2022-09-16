@@ -16,7 +16,7 @@ export class TeamSpiritMedian extends BaseEntity {
   @Column('varchar', { name: 'survey_code', nullable: true })
   surveyCode!: string;
 
-  @ManyToOne(() => Team, { nullable: true, onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'team_name', referencedColumnName: 'name' })
-  teamName!: Team;
+  @ManyToOne(() => Team, { eager: true, onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'team_id', referencedColumnName: 'id' })
+  team!: Team;
 }

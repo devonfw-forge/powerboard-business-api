@@ -11,15 +11,19 @@ import { MultimediaModule } from '../multimedia/multimedia.module';
 import { FileStorageModule } from '../file-storage/file-storage.module';
 import { GlobalTeamsService } from './services/global.team.service';
 import { TeamStatus } from './model/entities/team_status.entity';
-import { Sprint } from '../dashboard/sprint/model/entities/sprint.entity';
+import { TeamSpiritCrudService } from '../dashboard/team-spirit/services/team-spirit.crud.service';
+import { TeamSpiritModule } from '../dashboard/team-spirit/team-spirit.module';
+import { TeamSpirit } from '../dashboard/team-spirit/model/entities/team-spirit.entity';
+import { TeamSpiritMedian } from '../dashboard/team-spirit/model/entities/team-spirit-median.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Team, ADCenter, TeamStatus, Sprint]),
+    TypeOrmModule.forFeature([Team, ADCenter, TeamStatus, TeamSpirit, TeamSpiritMedian]),
     DashboardModule,
     MultimediaModule,
     VisibilityModule,
     TeamLinksModule,
+    TeamSpiritModule,
     FileStorageModule,
     HttpModule,
   ],
@@ -32,6 +36,10 @@ import { Sprint } from '../dashboard/sprint/model/entities/sprint.entity';
       provide: 'IGlobalTeamService',
       useClass: GlobalTeamsService,
     },
+    {
+      provide: 'ITeamSpiritService',
+      useClass: TeamSpiritCrudService
+    }
   ],
   controllers: [TeamCrudController],
   exports: ['ITeamService', 'IGlobalTeamService'],

@@ -53,10 +53,10 @@ export class CreateTables1648463953232 implements MigrationInterface {
       `CREATE TABLE "sprint_snapshot_metric" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "version" integer NOT NULL DEFAULT '1', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "value" character varying NOT NULL, "snapshot_id" uuid, "metric_id" uuid, CONSTRAINT "PK_126e53ff91d28e182cd19086006" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
-      `CREATE TABLE "team_spirit_median" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "version" integer NOT NULL DEFAULT '1', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "survey_median" integer, "start_date" TIMESTAMP, "end_date" TIMESTAMP, "survey_code" character varying, "team_name" character varying(255), CONSTRAINT "PK_a2ed3e2dab5c35a596b4913a55b" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "team_spirit_median" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "version" integer NOT NULL DEFAULT '1', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "survey_median" integer, "start_date" TIMESTAMP, "end_date" TIMESTAMP, "survey_code" character varying, "team_id" uuid, CONSTRAINT "PK_a2ed3e2dab5c35a596b4913a55b" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
-      `CREATE TABLE "team_spirit" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "version" integer NOT NULL DEFAULT '1', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "team_spirit_rating" integer NOT NULL, "sprint_id" uuid, CONSTRAINT "REL_c258101a9e329fc1cf1ca46019" UNIQUE ("sprint_id"), CONSTRAINT "PK_f4f2b4281be72d5392d9efb8466" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "team_spirit" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "version" integer NOT NULL DEFAULT '1', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "team_name" character varying(255) NOT NULL, "team_id" uuid, CONSTRAINT "PK_f4f2b4281be72d5392d9efb8466" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE TABLE "multimedia" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "version" integer NOT NULL DEFAULT '1', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "album_name" character varying(1000), "file_name" character varying(1000), "in_slideshow" boolean NOT NULL DEFAULT false, "multimedia_team_id" uuid, CONSTRAINT "PK_8de2f47ce83e221b35e05e52d0d" PRIMARY KEY ("id"))`,
@@ -85,6 +85,10 @@ export class CreateTables1648463953232 implements MigrationInterface {
 
     await queryRunner.query(
       `CREATE TABLE "scheduler_config" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "version" integer NOT NULL DEFAULT '1', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "link_type" uuid, "url" character varying(255), "start_date" TIMESTAMP, "is_active" boolean NOT NULL DEFAULT true, "aggregation_frequency" integer, "team_id" uuid, CONSTRAINT "UQ_7d27157d741c4b79248f57936ce" UNIQUE ("url"), CONSTRAINT "PK_0d47e8d985775bfc40448698d94" PRIMARY KEY ("id"))`,
+    );
+
+    await queryRunner.query(
+      `CREATE TABLE "cron_job" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "version" integer NOT NULL DEFAULT '1', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "status" character varying(255), "application" character varying(255), "team_id" uuid, CONSTRAINT "PK_079e460d545fb484c4778998d8d" PRIMARY KEY ("id"))`,
     );
 
     await queryRunner.query(
@@ -127,10 +131,10 @@ export class CreateTables1648463953232 implements MigrationInterface {
       `ALTER TABLE "sprint_snapshot_metric" ADD CONSTRAINT "FK_32ee1ecd7212edf6dad1a86ee6a" FOREIGN KEY ("metric_id") REFERENCES "sprint_metric"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
-      `ALTER TABLE "team_spirit_median" ADD CONSTRAINT "FK_103f28512266352104e3edea624" FOREIGN KEY ("team_name") REFERENCES "team"("name") ON DELETE CASCADE ON UPDATE NO ACTION`,
+      `ALTER TABLE "team_spirit_median" ADD CONSTRAINT "FK_103f28512266352104e3edea624" FOREIGN KEY ("team_id") REFERENCES "team"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
-      `ALTER TABLE "team_spirit" ADD CONSTRAINT "FK_c258101a9e329fc1cf1ca460195" FOREIGN KEY ("sprint_id") REFERENCES "sprint"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
+      `ALTER TABLE "team_spirit" ADD CONSTRAINT "FK_c258101a9e329fc1cf1ca460195" FOREIGN KEY ("team_id") REFERENCES "team"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
       `ALTER TABLE "multimedia" ADD CONSTRAINT "FK_2ff4d18f9dd41c4eb24e891d47f" FOREIGN KEY ("multimedia_team_id") REFERENCES "team"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
@@ -160,6 +164,9 @@ export class CreateTables1648463953232 implements MigrationInterface {
       `ALTER TABLE "scheduler_config" ADD CONSTRAINT "FK_3e62048601a169eeaf76e86ac9e" FOREIGN KEY ("team_id") REFERENCES "team"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
     );
     await queryRunner.query(`ALTER TABLE "team" ADD "is_team_configured" boolean NOT NULL DEFAULT false`);
+    await queryRunner.query(
+      `ALTER TABLE "cron_job" ADD CONSTRAINT "FK_6f8e6ea60e1c237e91a86a6094e" FOREIGN KEY ("team_id") REFERENCES "team"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
@@ -188,6 +195,7 @@ export class CreateTables1648463953232 implements MigrationInterface {
     await queryRunner.query(`ALTER TABLE "team" DROP CONSTRAINT "FK_8e571805766848ea10996a178d4"`);
     await queryRunner.query(`ALTER TABLE "scheduler_config" DROP CONSTRAINT "FK_7b2ee3be6cb91acc30601f89a0e"`);
     await queryRunner.query(`ALTER TABLE "scheduler_config" DROP CONSTRAINT "FK_3e62048601a169eeaf76e86ac9e"`);
+    await queryRunner.query(`ALTER TABLE "cron_job" DROP CONSTRAINT "FK_6f8e6ea60e1c237e91a86a6094e"`);
     await queryRunner.query(`DROP INDEX "IDX_97a74e8a9913478806bd9258de"`);
     await queryRunner.query(`DROP INDEX "IDX_b5953b98d1159f75a3156d071a"`);
     await queryRunner.query(`DROP TABLE "user_role_privilege"`);
@@ -216,5 +224,6 @@ export class CreateTables1648463953232 implements MigrationInterface {
     await queryRunner.query(`DROP TABLE "ad_center"`);
     await queryRunner.query(`DROP TABLE "scheduler_config"`);
     await queryRunner.query(`DROP TABLE "aggregation_link_type"`);
+    await queryRunner.query(`DROP TABLE "cron_job"`);
   }
 }
